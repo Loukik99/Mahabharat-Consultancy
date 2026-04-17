@@ -1,0 +1,11 @@
+{
+  "name": "mahabharat-landing",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 5175"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}

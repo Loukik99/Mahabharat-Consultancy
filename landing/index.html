@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mahabharat Consultancy — One Stop Service Center</title>
+  <meta name="description" content="Government services, home repairs, housekeeping, manpower, and e-commerce assistance — all under one roof." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ─── NAVBAR ──────────────────────────────────────────── -->
+  <nav id="navbar">
+    <div class="nav-accent-line"></div>
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <img src="assets/logo.jpeg" alt="Mahabharat Consultancy" class="nav-logo-img" />
+        <div class="nav-logo-text">
+          <span class="nav-brand">Mahabharat <em>Consultancy</em></span>
+          <span class="nav-tagline">ONE STOP SOLUTION</span>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="#hero">Home</a>
+        <a href="#services">Services</a>
+        <a href="#testimonials">About</a>
+        <a href="#cta">Contact</a>
+      </div>
+      <div class="nav-actions">
+        <a href="#" class="nav-btn-ghost" data-app-link="/login">Sign In</a>
+        <a href="#" class="nav-btn-primary" data-app-link="/signup">Get Started</a>
+      </div>
+      <button id="nav-toggle" class="nav-mobile-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div id="nav-mobile" class="nav-mobile">
+      <a href="#hero">Home</a>
+      <a href="#services">Services</a>
+      <a href="#testimonials">About</a>
+      <a href="#cta">Contact</a>
+      <div class="nav-mobile-actions">
+        <a href="#" class="nav-btn-ghost" data-app-link="/login">Sign In</a>
+        <a href="#" class="nav-btn-primary" data-app-link="/signup">Get Started</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ─── HERO ────────────────────────────────────────────── -->
+  <section id="hero" class="hero-section">
+    <div class="hero-inner">
+      <span class="hero-label animate-fade">MAHABHARAT CONSULTANCY SERVICES</span>
+      <h1 class="hero-headline animate-fade" style="animation-delay:.1s">
+        One Platform,<br/>
+        <em>Endless Solutions.</em>
+      </h1>
+      <p class="hero-sub animate-fade" style="animation-delay:.2s">
+        Government documents, home repairs, and e-commerce setup — all in one place.<br/>
+        Professional, reliable, and at your doorstep.
+      </p>
+      <div class="hero-buttons animate-fade" style="animation-delay:.3s">
+        <a href="#" class="btn-primary" data-app-link="/services">Explore Services &rarr;</a>
+        <a href="#services" class="btn-outline">See What We Offer</a>
+      </div>
+      <div class="hero-stats animate-fade" style="animation-delay:.4s">
+        <div class="stat"><span class="stat-n">19+</span><span class="stat-l">Services</span></div>
+        <div class="stat-div"></div>
+        <div class="stat"><span class="stat-n">5,000+</span><span class="stat-l">Customers</span></div>
+        <div class="stat-div"></div>
+        <div class="stat"><span class="stat-n">98%</span><span class="stat-l">Satisfaction</span></div>
+      </div>
+    </div>
+    <div class="hero-glow hero-glow-1"></div>
+    <div class="hero-glow hero-glow-2"></div>
+  </section>
+
+  <!-- ─── MARQUEE ──────────────────────────────────────────── -->
+  <div class="marquee-wrap">
+    <div class="marquee-track">
+      <span>Aadhar Card</span><span class="dot">◆</span>
+      <span>PAN Card</span><span class="dot">◆</span>
+      <span>Passport</span><span class="dot">◆</span>
+      <span>Driving License</span><span class="dot">◆</span>
+      <span>Income Certificate</span><span class="dot">◆</span>
+      <span>AC Repair</span><span class="dot">◆</span>
+      <span>Plumbing</span><span class="dot">◆</span>
+      <span>Electrician</span><span class="dot">◆</span>
+      <span>Deep Cleaning</span><span class="dot">◆</span>
+      <span>Pest Control</span><span class="dot">◆</span>
+      <span>GST Registration</span><span class="dot">◆</span>
+      <span>Amazon Setup</span><span class="dot">◆</span>
+      <span>Security Guard</span><span class="dot">◆</span>
+      <span>Aadhar Card</span><span class="dot">◆</span>
+      <span>PAN Card</span><span class="dot">◆</span>
+      <span>Passport</span><span class="dot">◆</span>
+      <span>Driving License</span><span class="dot">◆</span>
+      <span>Income Certificate</span><span class="dot">◆</span>
+      <span>AC Repair</span><span class="dot">◆</span>
+      <span>Deep Cleaning</span><span class="dot">◆</span>
+      <span>GST Registration</span><span class="dot">◆</span>
+    </div>
+  </div>
+
+  <!-- ─── SERVICES GRID ────────────────────────────────────── -->
+  <section id="services" class="services-section">
+    <div class="section-container">
+      <div class="section-head animate-on-scroll">
+        <span class="section-label">What We Offer</span>
+        <h2 class="section-title">All Services <em>Under One Roof</em></h2>
+        <p class="section-sub">From government paperwork to home maintenance — every service you need, handled by verified professionals.</p>
+      </div>
+
+      <div class="services-grid">
+
+        <a href="#" class="service-card" data-app-link="/services?category=government">
+          <div class="service-icon" style="background:linear-gradient(135deg,#2563eb,#7c3aed)">
+            <svg width="26" height="26" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 21h18M3 7v1a3 3 0 006 0V7m6 1a3 3 0 006 0V7M3 7l9-4 9 4"/></svg>
+          </div>
+          <div class="service-info">
+            <span class="service-count">6 services</span>
+            <h3>Government Services</h3>
+            <p>Aadhar, PAN, Passport, Driving License, Income &amp; Caste Certificates</p>
+          </div>
+          <div class="service-footer">
+            <span class="service-price">From ₹299</span>
+            <span class="service-arrow">→</span>
+          </div>
+        </a>
+
+        <a href="#" class="service-card" data-app-link="/services?category=home">
+          <div class="service-icon" style="background:linear-gradient(135deg,#059669,#0891b2)">
+            <svg width="26" height="26" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><path d="M9 21V12h6v9"/></svg>
+          </div>
+          <div class="service-info">
+            <span class="service-count">4 services</span>
+            <h3>Home Services</h3>
+            <p>AC Repair, Plumbing, Electrician, Painting — backed with 30-day warranty</p>
+          </div>
+          <div class="service-footer">
+            <span class="service-price">From ₹299</span>
+            <span class="service-arrow">→</span>
+          </div>
+        </a>
+
+        <a href="#" class="service-card" data-app-link="/services?category=housekeeping">
+          <div class="service-icon" style="background:linear-gradient(135deg,#7c3aed,#c026d3)">
+            <svg width="26" height="26" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 12l9-9 9 9"/><path d="M9 21V12h6v9"/><path d="M12 3v3"/></svg>
+          </div>
+          <div class="service-info">
+            <span class="service-count">3 services</span>
+            <h3>Housekeeping</h3>
+            <p>Deep Cleaning, Office Cleaning, Pest Control with safe eco-friendly chemicals</p>
+          </div>
+          <div class="service-footer">
+            <span class="service-price">From ₹1,499</span>
+            <span class="service-arrow">→</span>
+          </div>
+        </a>
+
+        <a href="#" class="service-card" data-app-link="/services?category=manpower">
+          <div class="service-icon" style="background:linear-gradient(135deg,#d97706,#dc2626)">
+            <svg width="26" height="26" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+          </div>
+          <div class="service-info">
+            <span class="service-count">3 services</span>
+            <h3>Manpower Supply</h3>
+            <p>Security Guards, Office Assistants, Professional Cooks — trained &amp; verified</p>
+          </div>
+          <div class="service-footer">
+            <span class="service-price">From ₹12,000/mo</span>
+            <span class="service-arrow">→</span>
+          </div>
+        </a>
+
+        <a href="#" class="service-card" data-app-link="/services?category=ecommerce">
+          <div class="service-icon" style="background:linear-gradient(135deg,#e11d48,#c026d3)">
+            <svg width="26" height="26" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+          </div>
+          <div class="service-info">
+            <span class="service-count">3 services</span>
+            <h3>E-Commerce Setup</h3>
+            <p>Amazon &amp; Flipkart Seller Registration, GST Filing, Store Optimization</p>
+          </div>
+          <div class="service-footer">
+            <span class="service-price">From ₹1,999</span>
+            <span class="service-arrow">→</span>
+          </div>
+        </a>
+
+        <!-- How it works card -->
+        <div class="service-card service-card--steps animate-on-scroll">
+          <h3 class="steps-title">How It Works</h3>
+          <ol class="steps-list">
+            <li><span class="step-num">01</span> Pick a service &amp; fill your details</li>
+            <li><span class="step-num">02</span> Agent is assigned &amp; contacts you</li>
+            <li><span class="step-num">03</span> Task completed via official portal</li>
+            <li><span class="step-num">04</span> Pay via UPI after completion</li>
+          </ol>
+          <a href="#" class="btn-primary btn-sm" data-app-link="/signup">Start Now →</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── TESTIMONIALS ─────────────────────────────────────── -->
+  <section id="testimonials" class="testimonials-section">
+    <div class="section-container">
+      <div class="section-head animate-on-scroll">
+        <span class="section-label">Customer Stories</span>
+        <h2 class="section-title">Trusted by <em>Thousands</em></h2>
+      </div>
+      <div class="t-grid">
+        <div class="t-card animate-on-scroll">
+          <div class="t-stars">★★★★★</div>
+          <p>"Got my Aadhar card done in 3 days. The agent called me, visited the center on my behalf, and sent updates throughout. Incredible service!"</p>
+          <div class="t-author">
+            <div class="t-av">R</div>
+            <div><strong>Rajiv Sharma</strong><span>Mumbai</span></div>
+          </div>
+        </div>
+        <div class="t-card animate-on-scroll" style="animation-delay:.12s">
+          <div class="t-stars">★★★★★</div>
+          <p>"Booked an AC repair and the technician arrived within 2 hours. Professional, fast, and reasonably priced. Won't go anywhere else!"</p>
+          <div class="t-author">
+            <div class="t-av">P</div>
+            <div><strong>Priya Desai</strong><span>Pune</span></div>
+          </div>
+        </div>
+        <div class="t-card animate-on-scroll" style="animation-delay:.24s">
+          <div class="t-stars">★★★★★</div>
+          <p>"Set up my Amazon seller account with their help. They handled GST registration and product listing too. My store went live in a week!"</p>
+          <div class="t-author">
+            <div class="t-av">A</div>
+            <div><strong>Amit Kulkarni</strong><span>Nashik</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── CTA ──────────────────────────────────────────────── -->
+  <section id="cta" class="cta-section">
+    <div class="section-container">
+      <div class="cta-box animate-on-scroll">
+        <div class="cta-glow-1"></div>
+        <div class="cta-glow-2"></div>
+        <div class="cta-left">
+          <span class="section-label">Get Started Today</span>
+          <h2 class="cta-headline">Ready for an <em>Extraordinary</em><br/>Experience?</h2>
+          <p>Join thousands of satisfied customers. Apply for government services or book home services in minutes. No advance payment required.</p>
+          <div class="cta-buttons">
+            <a href="#" class="btn-primary" data-app-link="/services?category=government">Apply for Documents →</a>
+            <a href="#" class="btn-outline" data-app-link="/services?category=home">Book Home Service</a>
+          </div>
+        </div>
+        <div class="cta-right">
+          <h4>Need Help?</h4>
+          <a href="tel:+919876543210" class="cta-phone">+91 98765 43210</a>
+          <p class="cta-hours">Mon–Sat, 9 AM – 8 PM</p>
+          <a href="mailto:info@mahabharat.com" class="cta-email">info@mahabharat.com</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─── FOOTER ───────────────────────────────────────────── -->
+  <footer id="footer">
+    <div class="footer-accent-line"></div>
+    <div class="section-container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="footer-logo">
+            <img src="assets/logo.jpeg" alt="MB" class="footer-logo-img" />
+            <div>
+              <strong>Mahabharat <em>Consultancy</em></strong>
+              <span>ONE STOP SOLUTION</span>
+            </div>
+          </div>
+          <p>Making government services simple and home services accessible to everyone across Maharashtra.</p>
+        </div>
+        <div class="footer-col">
+          <h4>G2C Services</h4>
+          <a href="#" data-app-link="/services?category=government">Government Services</a>
+          <a href="#" data-app-link="/services?category=government">Aadhar Card</a>
+          <a href="#" data-app-link="/services?category=government">PAN Card</a>
+          <a href="#" data-app-link="/services?category=government">Passport</a>
+          <a href="#" data-app-link="/services?category=government">Driving License</a>
+        </div>
+        <div class="footer-col">
+          <h4>B2C Services</h4>
+          <a href="#" data-app-link="/services?category=home">Home Services</a>
+          <a href="#" data-app-link="/services?category=housekeeping">Housekeeping</a>
+          <a href="#" data-app-link="/services?category=manpower">Manpower Supply</a>
+          <a href="#" data-app-link="/services?category=ecommerce">E-Commerce Setup</a>
+        </div>
+        <div class="footer-col">
+          <h4>Contact</h4>
+          <a href="tel:+919876543210" class="footer-contact-item">📞 +91 98765 43210</a>
+          <a href="mailto:info@mahabharat.com" class="footer-contact-item">✉️ info@mahabharat.com</a>
+          <span class="footer-contact-item">📍 Mumbai, Maharashtra</span>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 Mahabharat Consultancy Services. All rights reserved.</p>
+        <div class="footer-bottom-links">
+          <span>Privacy Policy</span>
+          <span>Terms of Service</span>
+          <span>Refund Policy</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
