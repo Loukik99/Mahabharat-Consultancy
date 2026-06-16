@@ -18,19 +18,20 @@ export function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const dashLink = user?.role === "admin" ? "/admin" : user?.role === "staff" ? "/staff" : "/dashboard";
+  const dashLink = user?.role === "admin" ? "/admin" : user?.role === "agent" ? "/agent" : "/dashboard";
   const handleLogout = () => { logout(); navigate("/login"); setOpen(false); };
   const isActive = (path: string) => location.pathname === path;
 
   const navLinks = [
     { to: "/", label: "Home" },
     { to: "/services", label: "Services" },
+    { to: "/jobs", label: "Govt Jobs" },
     ...(user ? [{ to: dashLink, label: "Dashboard" }] : []),
   ];
 
   const roleColors: Record<string, string> = {
     admin: "bg-orange-500 text-white",
-    staff: "bg-emerald-500 text-white",
+    agent: "bg-emerald-500 text-white",
     customer: "bg-blue-500 text-white",
   };
 

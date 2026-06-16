@@ -1,23 +1,33 @@
 import { Badge } from "@/components/ui/badge";
-import type { BookingStatus, PaymentStatus } from "@/types";
+import type { RequestStatus, PaymentStatus } from "@/types";
+import { labelForStatus } from "@/api/requests.api";
 
 const variants: Record<string, string> = {
-  pending: "bg-yellow-100 text-yellow-800 hover:bg-yellow-100",
-  verified: "bg-blue-100 text-blue-800 hover:bg-blue-100",
-  submitted: "bg-indigo-100 text-indigo-800 hover:bg-indigo-100",
-  booked: "bg-purple-100 text-purple-800 hover:bg-purple-100",
-  assigned: "bg-cyan-100 text-cyan-800 hover:bg-cyan-100",
-  in_progress: "bg-orange-100 text-orange-800 hover:bg-orange-100",
-  completed: "bg-green-100 text-green-800 hover:bg-green-100",
-  rejected: "bg-red-100 text-red-800 hover:bg-red-100",
-  cancelled: "bg-gray-100 text-gray-700 hover:bg-gray-100",
-  failed: "bg-red-100 text-red-800 hover:bg-red-100",
+  submitted: "bg-indigo-100 text-indigo-800",
+  documents_required: "bg-amber-100 text-amber-800",
+  in_review: "bg-blue-100 text-blue-800",
+  in_progress: "bg-orange-100 text-orange-800",
+  waiting_otp: "bg-purple-100 text-purple-800",
+  waiting_payment: "bg-yellow-100 text-yellow-800",
+  completed: "bg-green-100 text-green-800",
+  delivered: "bg-emerald-100 text-emerald-800",
+  rejected: "bg-red-100 text-red-800",
+  cancelled: "bg-gray-100 text-gray-700",
+  // payment statuses
+  pending: "bg-yellow-100 text-yellow-800",
+  received: "bg-green-100 text-green-800",
 };
 
-export function StatusBadge({ status }: { status: BookingStatus | PaymentStatus | string }) {
+const paymentLabels: Record<string, string> = {
+  pending: "Payment Pending",
+  received: "Payment Received",
+};
+
+export function StatusBadge({ status }: { status: RequestStatus | PaymentStatus | string }) {
+  const label = paymentLabels[status] ?? labelForStatus(status as RequestStatus) ?? status;
   return (
     <Badge variant="outline" className={`border-0 text-[11px] font-semibold ${variants[status] || "bg-gray-100 text-gray-700"}`}>
-      {status.replace("_", " ").toUpperCase()}
+      {label}
     </Badge>
   );
 }

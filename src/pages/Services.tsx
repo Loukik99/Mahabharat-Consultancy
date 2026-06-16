@@ -1,80 +1,120 @@
 import { useState, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import type { ServiceCategory } from "@/types";
 import { getServices } from "@/api/services.api";
+import { serviceCategories, categoryById } from "@/data/catalog";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { IndianRupee, Search } from "lucide-react";
+import { Search, ArrowRight, Clock, SearchX } from "lucide-react";
 
-const cats: { key: ServiceCategory | ""; label: string }[] = [
-  { key: "", label: "All" },
-  { key: "government", label: "Government" },
-  { key: "home", label: "Home" },
-  { key: "housekeeping", label: "Housekeeping" },
-  { key: "manpower", label: "Manpower" },
-  { key: "ecommerce", label: "E-Commerce" },
-];
-
-const catColors: Record<string, string> = {
-  government: "bg-blue-50 text-blue-700",
-  home: "bg-green-50 text-green-700",
-  housekeeping: "bg-violet-50 text-violet-700",
-  manpower: "bg-orange-50 text-orange-700",
-  ecommerce: "bg-rose-50 text-rose-700",
-};
-
-export default function ServicesPage() {
+export default function Services() {
   const [params, setParams] = useSearchParams();
-  const [search, setSearch] = useState("");
-  const active = (params.get("category") || "") as ServiceCategory | "";
+  const cat = params.get("cat") || "all";
+  const [search, setSearch] = useState(params.get("q") || "");
 
-  const services = useMemo(() => getServices(active || undefined, search || undefined), [active, search]);
+  const services = useMemo(
+    () => getServices(cat, search.trim() || undefined),
+    [cat, search],
+  );
+
+  const setCat = (id: string) => {
+    const next = new URLSearchParams(params);
+    if (id === "all") next.delete("cat");
+    else next.set("cat", id);
+    setParams(next, { replace: true });
+  };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <h1 className="text-2xl font-bold tracking-tight">Our Services</h1>
-      <p className="text-muted-foreground text-sm mb-6">Browse and book from our wide range of services</p>
+      <p className="mt-1 text-sm text-muted-foreground">
+        Browse our government and online services. Pricing is shared on request.
+      </p>
 
-      <div className="flex flex-col sm:flex-row gap-4 mb-7">
-        <div className="relative max-w-xs">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-          <Input placeholder="Search services..." className="pl-9" value={search} onChange={e => setSearch(e.target.value)} />
-        </div>
-        <div className="flex flex-wrap gap-1.5">
-          {cats.map(c => (
-            <button key={c.key} onClick={() => setParams(c.key ? { category: c.key } : {})}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${active === c.key ? "bg-blue-600 text-white" : "bg-muted text-muted-foreground hover:bg-muted/80"}`}>
-              {c.label}
-            </button>
-          ))}
-        </div>
+      {/* Search */}
+      <div className="relative mt-6 max-w-md">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
+        <Input
+          placeholder="Search services…"
+          className="pl-9"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </div>
 
+      {/* Category chips */}
+      <div className="mt-4 flex flex-wrap gap-1.5">
+        <button
+          onClick={() => setCat("all")}
+          className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+            cat === "all" ? "bg-blue-600 text-white" : "bg-muted text-muted-foreground hover:bg-muted/80"
+          }`}
+        >
+          All
+        </button>
+        {serviceCategories.map((c) => (
+          <button
+            key={c.id}
+            onClick={() => setCat(c.id)}
+            className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
+              cat === c.id ? "bg-blue-600 text-white" : "bg-muted text-muted-foreground hover:bg-muted/80"
+            }`}
+          >
+            {c.name}
+          </button>
+        ))}
+      </div>
+
+      {/* Grid */}
       {services.length === 0 ? (
-        <p className="text-muted-foreground text-center py-16">No services found.</p>
+        <Card className="mt-8">
+          <CardContent className="flex flex-col items-center py-16 text-center text-muted-foreground">
+            <SearchX size={40} className="mb-3 text-muted-foreground/40" />
+            <p>No services found.</p>
+            <p className="mt-1 text-sm">Try a different category or search term.</p>
+          </CardContent>
+        </Card>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {services.map(s => (
-            <Link key={s.id} to={`/services/${s.id}`}>
-              <Card className="hover:shadow-md transition-shadow group h-full">
-                <CardContent className="pt-5 pb-4">
-                  <span className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold ${catColors[s.category]} mb-2`}>
-                    {s.category.replace("ecommerce", "E-Commerce").toUpperCase()}
-                  </span>
-                  <h3 className="font-semibold group-hover:text-blue-600 transition-colors">{s.name}</h3>
-                  <p className="text-muted-foreground text-sm mt-1 line-clamp-2">{s.description}</p>
-                  <div className="flex items-center justify-between mt-4 pt-3 border-t">
-                    <span className="flex items-center text-lg font-bold">
-                      <IndianRupee size={16} className="text-green-600" />{s.price.toLocaleString("en-IN")}
+        <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {services.map((s) => {
+            const category = categoryById(s.category);
+            return (
+              <Link key={s.id} to={`/services/${s.id}`} className="group">
+                <Card className="h-full transition-shadow hover:shadow-md">
+                  <CardContent className="flex h-full flex-col pt-5">
+                    <div className="mb-2 flex flex-wrap items-center gap-2">
+                      {category && (
+                        <Badge variant="secondary" className="font-medium">
+                          {category.name}
+                        </Badge>
+                      )}
+                      {s.popular && (
+                        <Badge className="border-transparent bg-amber-100 text-amber-700 hover:bg-amber-100">
+                          Popular
+                        </Badge>
+                      )}
+                    </div>
+                    <h3 className="font-semibold transition-colors group-hover:text-blue-600">{s.name}</h3>
+                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{s.description}</p>
+
+                    <div className="mt-auto flex items-center justify-between gap-2 border-t pt-3">
+                      <Badge variant="outline" className="font-medium">
+                        {s.priceLabel}
+                      </Badge>
+                      {s.processingTime && (
+                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <Clock size={12} /> {s.processingTime}
+                        </span>
+                      )}
+                    </div>
+                    <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-blue-600 transition-all group-hover:gap-2">
+                      View details <ArrowRight size={14} />
                     </span>
-                    <span className="text-blue-600 font-medium text-sm">
-                      {s.category === "government" ? "Apply Now" : "Book Now"} &rarr;
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
         </div>
       )}
     </div>

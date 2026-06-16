@@ -1,21 +1,38 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import type { User } from "@/types";
 import { login as authLogin, register as authRegister } from "@/api/auth.api";
+import { getUser } from "@/api/users.api";
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => User | null;
+  login: (emailOrPhone: string, password: string) => User | null;
   register: (data: { name: string; email: string; phone: string; password: string }) => User;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
+const SESSION_KEY = "mc2_session";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null>(() => {
+    // Restore session across reloads.
+    try {
+      const id = localStorage.getItem(SESSION_KEY);
+      return id ? getUser(id) : null;
+    } catch {
+      return null;
+    }
+  });
 
-  const login = (email: string, password: string) => {
-    const u = authLogin(email, password);
+  useEffect(() => {
+    try {
+      if (user) localStorage.setItem(SESSION_KEY, user.id);
+      else localStorage.removeItem(SESSION_KEY);
+    } catch { /* ignore */ }
+  }, [user]);
+
+  const login = (emailOrPhone: string, password: string) => {
+    const u = authLogin(emailOrPhone, password);
     if (u) setUser(u);
     return u;
   };
