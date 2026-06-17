@@ -1,8 +1,11 @@
 import axios from "axios";
 
-// Base URL of the backend API. Override per environment with VITE_API_URL
-// (e.g. the Render/Railway URL in production). Defaults to local dev.
-const baseURL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+// Base URL of the backend API.
+// - Dev default: "/api" (same-origin) which the Vite dev server proxies to the
+//   backend — avoids CORS/mixed-content issues behind a preview proxy.
+// - Production (e.g. GitHub Pages): set VITE_API_URL to the absolute hosted
+//   backend URL, e.g. https://mahabharat-api.onrender.com/api
+const baseURL = import.meta.env.VITE_API_URL || "/api";
 
 const TOKEN_KEY = "mc2_token";
 
