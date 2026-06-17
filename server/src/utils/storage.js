@@ -9,18 +9,37 @@ fs.mkdirSync(uploadRoot, { recursive: true });
 
 const FOLDER = "mahabharat";
 
+const WORD_MIMES = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+const EXCEL_MIMES = ["application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
+
+// All subfolders we organise uploads into (pre-created so they're visible).
+const SUBFOLDERS = ["images", "pdfs", "word", "excel", "videos", "documents"];
+
 /**
  * Sort uploads by kind so they land in separate folders / Cloudinary types.
- * - images  → resource_type "image"  (folder mahabharat/images)
- * - videos  → resource_type "video"  (folder mahabharat/videos)
- * - pdfs    → resource_type "raw"    (folder mahabharat/pdfs)   byte-exact
- * - other docs (doc/xls…) → "raw"    (folder mahabharat/documents) byte-exact
+ * - images → resource_type "image"  (mahabharat/images)
+ * - videos → resource_type "video"  (mahabharat/videos)
+ * - pdfs   → "raw" (mahabharat/pdfs)        byte-exact
+ * - word   → "raw" (mahabharat/word)        byte-exact
+ * - excel  → "raw" (mahabharat/excel)       byte-exact
+ * - other  → "raw" (mahabharat/documents)   byte-exact
  */
 function classify(mime = "") {
   if (mime.startsWith("image/")) return { subfolder: "images", resourceType: "image" };
   if (mime.startsWith("video/")) return { subfolder: "videos", resourceType: "video" };
   if (mime === "application/pdf") return { subfolder: "pdfs", resourceType: "raw" };
+  if (WORD_MIMES.includes(mime)) return { subfolder: "word", resourceType: "raw" };
+  if (EXCEL_MIMES.includes(mime)) return { subfolder: "excel", resourceType: "raw" };
   return { subfolder: "documents", resourceType: "raw" };
+}
+
+/** Pre-create the type subfolders so they appear in the Media Library even
+ *  before any file of that type is uploaded. Idempotent; safe to call on boot. */
+async function ensureFolders() {
+  if (env.storageMode !== "cloudinary") return;
+  for (const sub of SUBFOLDERS) {
+    try { await cloudinary.api.create_folder(`${FOLDER}/${sub}`); } catch { /* exists / ignore */ }
+  }
 }
 
 /**
@@ -101,4 +120,4 @@ async function removeStoredFile(meta) {
   }
 }
 
-module.exports = { persistFile, sendStoredFile, removeStoredFile, uploadRoot };
+module.exports = { persistFile, sendStoredFile, removeStoredFile, ensureFolders, uploadRoot };

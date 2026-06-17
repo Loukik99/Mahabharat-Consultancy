@@ -13,6 +13,10 @@ const { connectDB } = require("./config/db");
       await seedDatabase();
     }
 
+    // Ensure Cloudinary type subfolders exist (so they're visible when empty).
+    const { ensureFolders } = require("./utils/storage");
+    ensureFolders().catch(() => {});
+
     app.listen(env.port, () => {
       console.log(`🚀 API running on http://localhost:${env.port}  (${env.nodeEnv})`);
     });
