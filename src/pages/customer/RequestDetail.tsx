@@ -3,7 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import * as Req from "@/api/requests.api";
 import { recordPayment } from "@/api/payments.api";
 import { getService } from "@/api/services.api";
-import { site, waLink } from "@/config/site";
+import { site, waLink, upiPayLink } from "@/config/site";
 import { StatusTimeline } from "@/components/StatusTimeline";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -36,36 +36,6 @@ const MAX_BYTES = 5 * 1024 * 1024;
 
 const PAYMENT_STAGE: RequestStatus[] = ["waiting_payment", "completed", "delivered"];
 
-// A simple inline decorative QR placeholder (NOT a scannable code).
-function QrPlaceholder() {
-  const cells = [
-    "11111110101111111",
-    "10000010001000001",
-    "10111010111011101",
-    "10111010001011101",
-    "10111010101011101",
-    "10000010111000001",
-    "11111110101111111",
-    "00000000110000000",
-    "10110111011010110",
-    "01001000100101001",
-    "11011101110110110",
-    "00100010001001000",
-    "11111110101101011",
-    "00000010110010010",
-    "11111010011011101",
-    "10000010101001001",
-    "10111011110110111",
-  ];
-  return (
-    <svg viewBox={`0 0 ${cells.length} ${cells.length}`} className="h-40 w-40" aria-hidden="true" role="presentation">
-      <rect width={cells.length} height={cells.length} fill="white" />
-      {cells.map((row, y) =>
-        row.split("").map((c, x) => (c === "1" ? <rect key={`${x}-${y}`} x={x} y={y} width="1" height="1" fill="#1a1a2e" /> : null)),
-      )}
-    </svg>
-  );
-}
 
 export default function RequestDetail() {
   const { id } = useParams();
@@ -432,14 +402,27 @@ export default function RequestDetail() {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
-                  <div className="border-2 border-dashed rounded-xl p-4 flex flex-col items-center gap-2">
+                  <div className="border-2 border-dashed rounded-xl p-4 flex flex-col items-center gap-2.5">
                     <p className="text-xs font-semibold flex items-center gap-1.5"><QrCode size={14} /> Scan to Pay (GPay/UPI)</p>
-                    <QrPlaceholder />
+                    <img src="Scanner.jpeg" alt="Scan to pay via UPI" className="h-52 w-52 object-contain rounded-lg" />
                     <div className="text-center">
                       <p className="font-mono text-sm font-semibold">{site.upiId}</p>
-                      <p className="text-xs text-muted-foreground">{site.upiPayeeName}</p>
+                      <p className="text-xs text-muted-foreground">{site.upiPayeeName} · {site.upiBank}</p>
                     </div>
-                    <p className="text-[10px] text-muted-foreground text-center">Demo placeholder — replace with the real UPI QR.</p>
+                    <div className="flex gap-2 w-full">
+                      <Button asChild size="sm" variant="outline" className="flex-1">
+                        <a href={upiPayLink(r.requestNumber)}>Pay to UPI ID</a>
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="flex-1"
+                        onClick={() => { navigator.clipboard?.writeText(site.upiId); toast.success("UPI ID copied"); }}
+                      >
+                        Copy UPI ID
+                      </Button>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground text-center">Scan the QR, or tap "Pay to UPI ID" to open your UPI app.</p>
                   </div>
 
                   <div className="space-y-3">
