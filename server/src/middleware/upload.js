@@ -13,6 +13,10 @@ const ALLOWED = new Set([
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   "application/vnd.ms-excel",
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  // video (note: large videos may exceed MAX_UPLOAD_MB — raise it if needed)
+  "video/mp4",
+  "video/webm",
+  "video/quicktime",
 ]);
 
 const fileFilter = (_req, file, cb) => {

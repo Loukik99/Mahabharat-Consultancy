@@ -10,16 +10,30 @@ fs.mkdirSync(uploadRoot, { recursive: true });
 const FOLDER = "mahabharat";
 
 /**
+ * Sort uploads by kind so they land in separate folders / Cloudinary types.
+ * - images  → resource_type "image"  (folder mahabharat/images)
+ * - videos  → resource_type "video"  (folder mahabharat/videos)
+ * - pdfs    → resource_type "raw"    (folder mahabharat/pdfs)   byte-exact
+ * - other docs (doc/xls…) → "raw"    (folder mahabharat/documents) byte-exact
+ */
+function classify(mime = "") {
+  if (mime.startsWith("image/")) return { subfolder: "images", resourceType: "image" };
+  if (mime.startsWith("video/")) return { subfolder: "videos", resourceType: "video" };
+  if (mime === "application/pdf") return { subfolder: "pdfs", resourceType: "raw" };
+  return { subfolder: "documents", resourceType: "raw" };
+}
+
+/**
  * Persist an uploaded file (multer memoryStorage → req.file).
  * Returns storage metadata to embed on the request document/deliverable.
  */
 async function persistFile(file) {
+  const { subfolder, resourceType } = classify(file.mimetype);
+
   if (env.storageMode === "cloudinary") {
-    // resource_type "raw" stores/returns the file byte-exact (no image
-    // re-encoding), which is what we want for documents (PDFs, scans, Excel).
     const result = await new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
-        { folder: FOLDER, resource_type: "raw", type: "authenticated" },
+        { folder: `${FOLDER}/${subfolder}`, resource_type: resourceType, type: "authenticated" },
         (err, res) => (err ? reject(err) : resolve(res))
       );
       stream.end(file.buffer);
@@ -35,9 +49,11 @@ async function persistFile(file) {
     };
   }
 
-  // Local disk fallback
+  // Local disk fallback — mirror the same subfolder layout.
+  const dir = path.join(uploadRoot, subfolder);
+  fs.mkdirSync(dir, { recursive: true });
   const safe = file.originalname.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const storedName = `${Date.now()}-${Math.round(Math.random() * 1e6)}-${safe}`;
+  const storedName = `${subfolder}/${Date.now()}-${Math.round(Math.random() * 1e6)}-${safe}`;
   await fs.promises.writeFile(path.join(uploadRoot, storedName), file.buffer);
   return {
     provider: "local",
