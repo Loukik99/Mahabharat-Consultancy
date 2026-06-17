@@ -1,16 +1,16 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import type { RequestStatus, ServiceCategoryId } from "@/types";
+import type { RequestStatus, ServiceCategoryId, ServiceRequest } from "@/types";
 import { REQUEST_STATUS_FLOW } from "@/types";
 import { listRequests, labelForStatus } from "@/api/requests.api";
-import { getService } from "@/api/services.api";
-import { getUser } from "@/api/users.api";
-import { serviceCategories } from "@/data/catalog";
+import { getCustomers, getAgents } from "@/api/users.api";
+import { serviceById, serviceCategories } from "@/data/catalog";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
 import { Eye, Filter, Search } from "lucide-react";
 
 const ADMIN_LINKS = [
@@ -43,16 +43,45 @@ export default function AdminRequests() {
   const [category, setCategory] = useState<ServiceCategoryId | "all">("all");
   const [search, setSearch] = useState("");
 
-  const requests = useMemo(() => listRequests({ status, category }), [status, category]);
+  const [loading, setLoading] = useState(true);
+  const [requests, setRequests] = useState<ServiceRequest[]>([]);
+  const [nameById, setNameById] = useState<Record<string, string>>({});
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const [reqs, customers, agents] = await Promise.all([
+          listRequests({}),
+          getCustomers(),
+          getAgents(),
+        ]);
+        if (!active) return;
+        setRequests(reqs);
+        const map: Record<string, string> = {};
+        [...customers, ...agents].forEach((u) => { map[u.id] = u.name; });
+        setNameById(map);
+      } catch (e) {
+        toast.error((e as Error).message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, []);
 
   const filtered = useMemo(() => {
     const q = search.trim().toLowerCase();
-    if (!q) return requests;
     return requests.filter((r) => {
-      const customer = getUser(r.userId)?.name ?? "";
-      return r.requestNumber.toLowerCase().includes(q) || customer.toLowerCase().includes(q);
+      if (status !== "all" && r.status !== status) return false;
+      if (category !== "all" && r.category !== category) return false;
+      if (q) {
+        const customer = (nameById[r.userId] ?? "").toLowerCase();
+        if (!r.requestNumber.toLowerCase().includes(q) && !customer.includes(q)) return false;
+      }
+      return true;
     });
-  }, [requests, search]);
+  }, [requests, nameById, status, category, search]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -84,28 +113,34 @@ export default function AdminRequests() {
       </CardContent></Card>
 
       <Card><CardContent className="pt-4 overflow-x-auto">
-        <Table>
-          <TableHeader><TableRow>
-            <TableHead>Request #</TableHead><TableHead>Service</TableHead><TableHead>Customer</TableHead><TableHead>Agent</TableHead><TableHead>Status</TableHead><TableHead>Created</TableHead><TableHead></TableHead>
-          </TableRow></TableHeader>
-          <TableBody>
-            {filtered.map((r) => {
-              const agent = r.assignedAgentId ? getUser(r.assignedAgentId) : null;
-              return (
-                <TableRow key={r.id}>
-                  <TableCell className="font-medium">{r.requestNumber}</TableCell>
-                  <TableCell>{getService(r.serviceId)?.name ?? r.serviceId}</TableCell>
-                  <TableCell>{getUser(r.userId)?.name ?? "—"}</TableCell>
-                  <TableCell>{agent ? agent.name : <span className="text-muted-foreground">Unassigned</span>}</TableCell>
-                  <TableCell><StatusBadge status={r.status} /></TableCell>
-                  <TableCell className="text-muted-foreground">{new Date(r.createdAt).toLocaleDateString("en-IN")}</TableCell>
-                  <TableCell><Link to={`/admin/requests/${r.id}`} className="text-orange-600 flex items-center gap-1 text-xs"><Eye size={14} /> View</Link></TableCell>
-                </TableRow>
-              );
-            })}
-            {filtered.length === 0 && <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No requests found.</TableCell></TableRow>}
-          </TableBody>
-        </Table>
+        {loading ? (
+          <div className="flex justify-center py-16">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+          </div>
+        ) : (
+          <Table>
+            <TableHeader><TableRow>
+              <TableHead>Request #</TableHead><TableHead>Service</TableHead><TableHead>Customer</TableHead><TableHead>Agent</TableHead><TableHead>Status</TableHead><TableHead>Created</TableHead><TableHead></TableHead>
+            </TableRow></TableHeader>
+            <TableBody>
+              {filtered.map((r) => {
+                const agentName = r.assignedAgentId ? nameById[r.assignedAgentId] : null;
+                return (
+                  <TableRow key={r.id}>
+                    <TableCell className="font-medium">{r.requestNumber}</TableCell>
+                    <TableCell>{serviceById(r.serviceId)?.name ?? r.serviceId}</TableCell>
+                    <TableCell>{nameById[r.userId] ?? "—"}</TableCell>
+                    <TableCell>{agentName ? agentName : <span className="text-muted-foreground">Unassigned</span>}</TableCell>
+                    <TableCell><StatusBadge status={r.status} /></TableCell>
+                    <TableCell className="text-muted-foreground">{new Date(r.createdAt).toLocaleDateString("en-IN")}</TableCell>
+                    <TableCell><Link to={`/admin/requests/${r.id}`} className="text-orange-600 flex items-center gap-1 text-xs"><Eye size={14} /> View</Link></TableCell>
+                  </TableRow>
+                );
+              })}
+              {filtered.length === 0 && <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No requests found.</TableCell></TableRow>}
+            </TableBody>
+          </Table>
+        )}
       </CardContent></Card>
     </div>
   );

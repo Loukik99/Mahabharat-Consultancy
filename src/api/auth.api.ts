@@ -1,31 +1,25 @@
 import type { User } from "@/types";
-import { users, uid, persist, logAudit } from "@/data/store";
+import { api, tokenStore } from "@/lib/apiClient";
 
-export function login(emailOrPhone: string, password: string): User | null {
-  const id = emailOrPhone.trim().toLowerCase();
-  const u = users.find(
-    (u) => (u.email.toLowerCase() === id || u.phone === emailOrPhone.trim()) && u.password === password && u.isActive,
-  );
-  if (u) logAudit(u.id, u.role, "login", "user", u.id);
-  return u || null;
+interface AuthResult { token: string; user: User; }
+
+export async function login(emailOrPhone: string, password: string): Promise<User> {
+  const { data } = await api.post<{ token: string; user: User }>("/auth/login", { emailOrPhone, password });
+  tokenStore.set(data.token);
+  return data.user;
 }
 
-export function register(data: { name: string; email: string; phone: string; password: string }): User {
-  if (users.find((u) => u.email.toLowerCase() === data.email.toLowerCase())) {
-    throw new Error("Email already registered");
-  }
-  if (users.find((u) => u.phone === data.phone)) {
-    throw new Error("Mobile number already registered");
-  }
-  const user: User = {
-    id: uid("u"),
-    ...data,
-    role: "customer",
-    isActive: true,
-    createdAt: new Date().toISOString(),
-  };
-  users.push(user);
-  logAudit(user.id, "customer", "register", "user", user.id);
-  persist();
-  return user;
+export async function register(input: { name: string; email: string; phone: string; password: string }): Promise<User> {
+  const { data } = await api.post<AuthResult>("/auth/register", input);
+  tokenStore.set(data.token);
+  return data.user;
+}
+
+export async function fetchMe(): Promise<User> {
+  const { data } = await api.get<{ user: User }>("/auth/me");
+  return data.user;
+}
+
+export function logout(): void {
+  tokenStore.clear();
 }

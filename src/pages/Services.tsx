@@ -1,7 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { getServices } from "@/api/services.api";
+import { getServices, getCategories } from "@/api/services.api";
 import { serviceCategories, categoryById } from "@/data/catalog";
+import type { Service, ServiceCategory } from "@/types";
+import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -11,11 +13,38 @@ export default function Services() {
   const [params, setParams] = useSearchParams();
   const cat = params.get("cat") || "all";
   const [search, setSearch] = useState(params.get("q") || "");
+  const [services, setServices] = useState<Service[]>([]);
+  const [categories, setCategories] = useState<ServiceCategory[]>(serviceCategories);
+  const [loading, setLoading] = useState(true);
 
-  const services = useMemo(
-    () => getServices(cat, search.trim() || undefined),
-    [cat, search],
-  );
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const cats = await getCategories();
+        if (active) setCategories(cats);
+      } catch {
+        if (active) setCategories(serviceCategories);
+      }
+    })();
+    return () => { active = false; };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        setLoading(true);
+        const d = await getServices(cat, search.trim() || undefined);
+        if (active) setServices(d);
+      } catch (e) {
+        toast.error((e as Error).message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, [cat, search]);
 
   const setCat = (id: string) => {
     const next = new URLSearchParams(params);
@@ -52,7 +81,7 @@ export default function Services() {
         >
           All
         </button>
-        {serviceCategories.map((c) => (
+        {categories.map((c) => (
           <button
             key={c.id}
             onClick={() => setCat(c.id)}
@@ -66,7 +95,11 @@ export default function Services() {
       </div>
 
       {/* Grid */}
-      {services.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center py-20">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+        </div>
+      ) : services.length === 0 ? (
         <Card className="mt-8">
           <CardContent className="flex flex-col items-center py-16 text-center text-muted-foreground">
             <SearchX size={40} className="mb-3 text-muted-foreground/40" />

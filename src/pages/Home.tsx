@@ -1,7 +1,9 @@
-import { useState, type FormEvent } from "react";
+import { useState, useEffect, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { serviceCategories } from "@/data/catalog";
-import { getServices } from "@/api/services.api";
+import { getServices, getCategories } from "@/api/services.api";
+import type { Service, ServiceCategory } from "@/types";
+import { toast } from "sonner";
 import { site, waLink } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -60,7 +62,28 @@ const WHY = [
 export default function Home() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
-  const popular = getServices().filter((s) => s.popular).slice(0, 8);
+  const [categories, setCategories] = useState<ServiceCategory[]>(serviceCategories);
+  const [services, setServices] = useState<Service[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const [cats, svcs] = await Promise.all([getCategories(), getServices()]);
+        if (active) {
+          setCategories(cats);
+          setServices(svcs);
+        }
+      } catch (e) {
+        // Fall back to static categories for icon metadata.
+        if (active) setCategories(serviceCategories);
+        toast.error((e as Error).message);
+      }
+    })();
+    return () => { active = false; };
+  }, []);
+
+  const popular = services.filter((s) => s.popular).slice(0, 8);
 
   const onSearch = (e: FormEvent) => {
     e.preventDefault();
@@ -125,7 +148,7 @@ export default function Home() {
           <p className="mt-1 text-sm text-muted-foreground">Choose a category to get started.</p>
         </div>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {serviceCategories.map((cat) => {
+          {categories.map((cat) => {
             const Icon = ICONS[cat.icon] ?? Sparkles;
             return (
               <Link key={cat.id} to={`/services?cat=${cat.id}`} className="group">

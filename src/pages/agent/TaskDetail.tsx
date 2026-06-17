@@ -1,11 +1,9 @@
-import { useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import * as Req from "@/api/requests.api";
 import { getService } from "@/api/services.api";
-import { getUser, maskedPhone } from "@/api/users.api";
-import { requestOtpCall, getCallLogs } from "@/api/calls.api";
-import type { CallLog } from "@/types";
+import type { Service, ServiceRequest } from "@/types";
 import { StatusTimeline } from "@/components/StatusTimeline";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -24,13 +22,15 @@ import {
   FileWarning, KeyRound, Lock, CheckCircle, XCircle,
 } from "lucide-react";
 
-const fileToDataUrl = (file: File) =>
-  new Promise<string>((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result as string);
-    r.onerror = rej;
-    r.readAsDataURL(file);
-  });
+// The agent-scoped API enriches each request with display fields that are
+// not part of the base persisted model. The customer's phone is never sent.
+type AgentRequest = ServiceRequest & {
+  serviceName: string;
+  customerName: string;
+  assignedAgentName?: string;
+};
+
+type CallLogEntry = { id: string; purpose: string; status: string; at: string };
 
 const ACCEPTED = [
   "image/jpeg", "image/png", "image/jpg", "image/webp", "application/pdf",
@@ -46,11 +46,10 @@ export default function TaskDetail() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
-  // tick is used to force a re-read of the synchronous mock store
-  const [tick, setTick] = useState(0);
-  const refresh = () => setTick((t) => t + 1);
-
-  const request = useMemo(() => (id ? Req.getRequest(id) : null), [id, tick]);
+  const [request, setRequest] = useState<AgentRequest | null>(null);
+  const [service, setService] = useState<Service | null>(null);
+  const [callLogs, setCallLogs] = useState<CallLogEntry[]>([]);
+  const [loading, setLoading] = useState(true);
 
   // Local UI state
   const [docsDialogOpen, setDocsDialogOpen] = useState(false);
@@ -59,10 +58,50 @@ export default function TaskDetail() {
   const [remarkText, setRemarkText] = useState("");
   const [remarkInternal, setRemarkInternal] = useState(false);
 
-  const callLogs: CallLog[] = useMemo(
-    () => (id ? getCallLogs(id) : []),
-    [id, tick]
-  );
+  // In-flight disable flags
+  const [statusBusy, setStatusBusy] = useState(false);
+  const [docsBusy, setDocsBusy] = useState(false);
+  const [otpBusy, setOtpBusy] = useState(false);
+  const [uploadBusy, setUploadBusy] = useState(false);
+  const [readyBusy, setReadyBusy] = useState(false);
+  const [remarkBusy, setRemarkBusy] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      if (!id) { setLoading(false); return; }
+      setLoading(true);
+      try {
+        const r = (await Req.getRequest(id)) as AgentRequest | null;
+        if (!active) return;
+        setRequest(r);
+        if (r && r.assignedAgentId === user!.id) {
+          const [svc, calls] = await Promise.all([
+            getService(r.serviceId),
+            Req.getCallLogs(r.id),
+          ]);
+          if (!active) return;
+          setService(svc);
+          setCallLogs(calls);
+        }
+      } catch (e) {
+        toast.error((e as Error).message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, [id, user]);
+
+  if (loading) {
+    return (
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex justify-center py-24">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+        </div>
+      </div>
+    );
+  }
 
   // ── Least-privilege guard ───────────────────────────────────────
   if (!request || request.assignedAgentId !== user!.id) {
@@ -87,50 +126,67 @@ export default function TaskDetail() {
   }
 
   const r = request;
-  const service = getService(r.serviceId);
-  const customer = getUser(r.userId);
   const requiredDocs = service?.requiredDocuments ?? [];
   const officialLinks = service?.officialLinks ?? [];
 
   const uploadedLabels = new Set(r.documents.map((d) => d.label.toLowerCase()));
   const missingDocs = requiredDocs.filter((d) => !uploadedLabels.has(d.toLowerCase()));
 
-  const defaultPurpose = `OTP for ${service?.name ?? "service"}`;
+  const defaultPurpose = `OTP for ${r.serviceName}`;
   const otpValue = otpPurpose ?? defaultPurpose;
 
   // ── Actions ─────────────────────────────────────────────────────
-  const handleStatus = (status: Parameters<typeof Req.setStatus>[1], successMsg: string) => {
-    Req.setStatus(r.id, status, { id: user!.id, role: "agent" });
-    toast.success(successMsg);
-    refresh();
+  const handleStatus = async (
+    status: Parameters<typeof Req.setStatus>[1],
+    successMsg: string,
+  ) => {
+    setStatusBusy(true);
+    try {
+      const updated = (await Req.setStatus(r.id, status)) as AgentRequest;
+      setRequest(updated);
+      toast.success(successMsg);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setStatusBusy(false);
+    }
   };
 
-  const handleRequestDocuments = () => {
+  const handleRequestDocuments = async () => {
     const note = docsMissingText.trim();
     if (!note) {
       toast.error("Please describe which documents are missing.");
       return;
     }
-    Req.setStatus(r.id, "documents_required", { id: user!.id, role: "agent" }, note);
-    Req.addComment(r.id, {
-      byUserId: user!.id,
-      byRole: "agent",
-      message: `Documents required: ${note}`,
-    });
-    toast.success("Customer notified about the required documents.");
-    setDocsMissingText("");
-    setDocsDialogOpen(false);
-    refresh();
+    setDocsBusy(true);
+    try {
+      await Req.setStatus(r.id, "documents_required", note);
+      const updated = (await Req.addComment(r.id, {
+        message: `Documents required: ${note}`,
+      })) as AgentRequest;
+      setRequest(updated);
+      toast.success("Customer notified about the required documents.");
+      setDocsMissingText("");
+      setDocsDialogOpen(false);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setDocsBusy(false);
+    }
   };
 
-  const handleOtpCall = () => {
-    const purpose = otpValue.trim() || `OTP for ${service?.name ?? "service"}`;
+  const handleOtpCall = async () => {
+    const purpose = otpValue.trim() || `OTP for ${r.serviceName}`;
+    setOtpBusy(true);
     try {
-      requestOtpCall(r.id, user!.id, purpose);
+      await Req.requestOtpCall(r.id, purpose);
       toast.success("Connecting secure call… the customer's number is never shown.");
-      refresh();
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Could not place the call.");
+      const calls = await Req.getCallLogs(r.id);
+      setCallLogs(calls);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setOtpBusy(false);
     }
   };
 
@@ -138,54 +194,73 @@ export default function TaskDetail() {
     const files = Array.from(e.target.files ?? []);
     e.target.value = "";
     if (!files.length) return;
-    for (const file of files) {
-      if (!ACCEPTED.includes(file.type)) {
-        toast.error(`"${file.name}": unsupported file type. Use image, PDF, DOC or XLSX.`);
-        continue;
+    setUploadBusy(true);
+    try {
+      for (const file of files) {
+        if (!ACCEPTED.includes(file.type)) {
+          toast.error(`"${file.name}": unsupported file type. Use image, PDF, DOC or XLSX.`);
+          continue;
+        }
+        if (file.size > MAX_SIZE) {
+          toast.error(`"${file.name}": file is larger than 5MB.`);
+          continue;
+        }
+        const updated = (await Req.uploadDeliverable(r.id, file)) as AgentRequest;
+        setRequest(updated);
+        toast.success(`Uploaded "${file.name}".`);
       }
-      if (file.size > MAX_SIZE) {
-        toast.error(`"${file.name}": file is larger than 5MB.`);
-        continue;
-      }
-      const url = await fileToDataUrl(file);
-      Req.addDeliverable(r.id, { fileName: file.name, url }, user!.id);
-      toast.success(`Uploaded "${file.name}".`);
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setUploadBusy(false);
     }
-    refresh();
   };
 
-  const handleMarkReady = () => {
+  const handleMarkReady = async () => {
     if (r.deliverables.length === 0) {
       toast.error("Upload the completed file(s) before marking ready for payment.");
       return;
     }
-    Req.markReadyForPayment(r.id, { id: user!.id });
-    toast.success("Marked ready for payment. Admin will verify the payment.");
-    refresh();
+    setReadyBusy(true);
+    try {
+      const updated = (await Req.markReadyForPayment(r.id)) as AgentRequest;
+      setRequest(updated);
+      toast.success("Marked ready for payment. Admin will verify the payment.");
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setReadyBusy(false);
+    }
   };
 
-  const handleAddRemark = () => {
+  const handleAddRemark = async () => {
     const message = remarkText.trim();
     if (!message) {
       toast.error("Please write a remark.");
       return;
     }
-    Req.addComment(r.id, {
-      byUserId: user!.id,
-      byRole: "agent",
-      message,
-      internal: remarkInternal,
-    });
-    toast.success(remarkInternal ? "Internal note added." : "Remark sent to the customer.");
-    setRemarkText("");
-    setRemarkInternal(false);
-    refresh();
+    setRemarkBusy(true);
+    try {
+      const updated = (await Req.addComment(r.id, {
+        message,
+        internal: remarkInternal,
+      })) as AgentRequest;
+      setRequest(updated);
+      toast.success(remarkInternal ? "Internal note added." : "Remark sent to the customer.");
+      setRemarkText("");
+      setRemarkInternal(false);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setRemarkBusy(false);
+    }
   };
 
-  const openLink = (e: React.MouseEvent, url: string) => {
-    if (!url) {
-      e.preventDefault();
-      toast("File is a demo placeholder — no file attached.");
+  const handleDownloadDocument = async (docId: string, fileName: string) => {
+    try {
+      await Req.downloadDocument(r.id, docId, fileName);
+    } catch (e) {
+      toast.error((e as Error).message);
     }
   };
 
@@ -201,7 +276,7 @@ export default function TaskDetail() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">{service?.name ?? "Service"}</h1>
+          <h1 className="text-xl font-bold text-gray-900">{r.serviceName}</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
             <span className="font-mono">{r.requestNumber}</span> · {r.priceLabel}
           </p>
@@ -231,24 +306,13 @@ export default function TaskDetail() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm pb-4">
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Name</p>
-                  <p className="font-medium">{customer?.name ?? "—"}</p>
-                </div>
-                <div>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Phone (masked)</p>
-                  <p className="font-mono font-medium">
-                    {customer ? maskedPhone(customer.phone, "agent") : "—"}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wide">City</p>
-                  <p className="font-medium">{customer?.address?.city ?? "—"}</p>
-                </div>
+              <div>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Name</p>
+                <p className="font-medium">{r.customerName}</p>
               </div>
               <p className="text-xs text-muted-foreground italic pt-1">
-                Full contact details are restricted. Use the secure call button to reach the customer.
+                Contact details are restricted. Use the secure call button below to reach the customer —
+                their phone number is never shown to you.
               </p>
               {r.notes && (
                 <div className="p-2.5 bg-gray-50 rounded-lg text-xs border">
@@ -278,15 +342,13 @@ export default function TaskDetail() {
                           {d.fileName} · {new Date(d.uploadedAt).toLocaleDateString("en-IN")}
                         </p>
                       </div>
-                      <a
-                        href={d.url || "#"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => openLink(e, d.url)}
+                      <button
+                        type="button"
+                        onClick={() => handleDownloadDocument(d.id, d.fileName)}
                         className="text-indigo-600 font-semibold hover:text-indigo-800 flex items-center gap-1 shrink-0"
                       >
                         <ExternalLink size={11} /> Open
-                      </a>
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -325,16 +387,16 @@ export default function TaskDetail() {
             </CardHeader>
             <CardContent className="pb-4">
               <div className="flex flex-wrap gap-2">
-                <Button variant="outline" size="sm" onClick={() => handleStatus("in_review", "Moved to In Review.")}>
+                <Button variant="outline" size="sm" disabled={statusBusy} onClick={() => handleStatus("in_review", "Moved to In Review.")}>
                   <PlayCircle size={14} className="mr-1" /> Start Review
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => setDocsDialogOpen(true)}>
+                <Button variant="outline" size="sm" disabled={statusBusy} onClick={() => setDocsDialogOpen(true)}>
                   <FileWarning size={14} className="mr-1" /> Request Documents
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => handleStatus("in_progress", "Work started.")}>
+                <Button variant="outline" size="sm" disabled={statusBusy} onClick={() => handleStatus("in_progress", "Work started.")}>
                   <PlayCircle size={14} className="mr-1" /> Start Work
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => handleStatus("waiting_otp", "Marked as waiting for OTP.")}>
+                <Button variant="outline" size="sm" disabled={statusBusy} onClick={() => handleStatus("waiting_otp", "Marked as waiting for OTP.")}>
                   <KeyRound size={14} className="mr-1" /> Need OTP
                 </Button>
               </div>
@@ -357,7 +419,7 @@ export default function TaskDetail() {
                     className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-xs font-semibold transition-colors"
                     title={link.note}
                   >
-                    <ExternalLink size={13} /> {link.label}
+                    <ExternalLink size={13} /> Open Official Website — {link.label}
                   </a>
                 ))}
               </CardContent>
@@ -391,6 +453,7 @@ export default function TaskDetail() {
               <Button
                 size="sm"
                 className="bg-purple-600 hover:bg-purple-700"
+                disabled={otpBusy}
                 onClick={handleOtpCall}
               >
                 <Phone size={14} className="mr-1" /> Call Customer for OTP
@@ -431,6 +494,7 @@ export default function TaskDetail() {
                   id="deliverableFile"
                   type="file"
                   multiple
+                  disabled={uploadBusy}
                   accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx"
                   className="hidden"
                   onChange={handleDeliverableUpload}
@@ -441,15 +505,13 @@ export default function TaskDetail() {
                   {r.deliverables.map((d) => (
                     <div key={d.id} className="flex items-center justify-between bg-emerald-50 px-3 py-2 rounded-lg text-xs gap-2">
                       <span className="font-medium text-emerald-800 truncate">{d.fileName}</span>
-                      <a
-                        href={d.url || "#"}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => openLink(e, d.url)}
+                      <button
+                        type="button"
+                        onClick={() => Req.downloadDeliverable(r.id, d.id, d.fileName).catch((e) => toast.error((e as Error).message))}
                         className="text-emerald-600 font-semibold hover:text-emerald-800 flex items-center gap-1 shrink-0"
                       >
                         <ExternalLink size={11} /> Open
-                      </a>
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -463,7 +525,7 @@ export default function TaskDetail() {
               <Button
                 className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold"
                 onClick={handleMarkReady}
-                disabled={r.deliverables.length === 0}
+                disabled={readyBusy || r.deliverables.length === 0}
               >
                 <Wallet size={15} className="mr-1.5" /> Mark Ready for Payment
               </Button>
@@ -523,7 +585,7 @@ export default function TaskDetail() {
                     />
                     Internal note (not shown to customer)
                   </label>
-                  <Button size="sm" className="bg-emerald-500 hover:bg-emerald-600" onClick={handleAddRemark}>
+                  <Button size="sm" className="bg-emerald-500 hover:bg-emerald-600" disabled={remarkBusy} onClick={handleAddRemark}>
                     Add Remark
                   </Button>
                 </div>
@@ -550,7 +612,7 @@ export default function TaskDetail() {
               <p className="font-semibold text-gray-700 flex items-center gap-1.5">
                 <Lock size={13} /> Privacy
               </p>
-              <p>You only see tasks assigned to you. Customer phone numbers are masked and payments are approved by admins.</p>
+              <p>You only see tasks assigned to you. Customer phone numbers are never shown and payments are approved by admins.</p>
             </CardContent>
           </Card>
         </div>
@@ -573,8 +635,8 @@ export default function TaskDetail() {
             rows={4}
           />
           <DialogFooter>
-            <Button variant="outline" onClick={() => setDocsDialogOpen(false)}>Cancel</Button>
-            <Button className="bg-emerald-500 hover:bg-emerald-600" onClick={handleRequestDocuments}>
+            <Button variant="outline" disabled={docsBusy} onClick={() => setDocsDialogOpen(false)}>Cancel</Button>
+            <Button className="bg-emerald-500 hover:bg-emerald-600" disabled={docsBusy} onClick={handleRequestDocuments}>
               <CheckCircle2 size={15} className="mr-1" /> Send Request
             </Button>
           </DialogFooter>

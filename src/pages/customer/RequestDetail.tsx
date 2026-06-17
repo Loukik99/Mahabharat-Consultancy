@@ -1,9 +1,8 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
 import * as Req from "@/api/requests.api";
-import { getPaymentForRequest, recordPayment } from "@/api/payments.api";
-import { serviceById } from "@/data/catalog";
+import { recordPayment } from "@/api/payments.api";
+import { getService } from "@/api/services.api";
 import { site, waLink } from "@/config/site";
 import { StatusTimeline } from "@/components/StatusTimeline";
 import { StatusBadge } from "@/components/StatusBadge";
@@ -19,19 +18,11 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import type { PaymentMethod, RequestStatus } from "@/types";
+import type { PaymentMethod, RequestStatus, ServiceRequest } from "@/types";
 import {
   ChevronLeft, FileText, Upload, Trash2, FileDown, Lock, MessageSquare,
   ShieldAlert, QrCode, Send, Pencil, XCircle, Lightbulb, Wallet,
 } from "lucide-react";
-
-const fileToDataUrl = (file: File) =>
-  new Promise<string>((res, rej) => {
-    const r = new FileReader();
-    r.onload = () => res(r.result as string);
-    r.onerror = rej;
-    r.readAsDataURL(file);
-  });
 
 const ACCEPTED = [
   "image/jpeg", "image/png", "image/webp", "image/gif",
@@ -78,26 +69,70 @@ function QrPlaceholder() {
 
 export default function RequestDetail() {
   const { id } = useParams();
-  const { user } = useAuth();
   const navigate = useNavigate();
-  const [, force] = useState(0);
-  const rerender = () => force((n) => n + 1);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const r = id ? Req.getRequest(id) : null;
+  const [r, setR] = useState<ServiceRequest | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [labelOptions, setLabelOptions] = useState<string[]>([]);
 
   // upload form state
   const [docLabel, setDocLabel] = useState("");
   const [customLabel, setCustomLabel] = useState("");
+  const [uploading, setUploading] = useState(false);
   // edit + comment + payment
   const [editing, setEditing] = useState(false);
-  const [editNotes, setEditNotes] = useState(r?.notes ?? "");
-  const [editDetails, setEditDetails] = useState(r?.applicantDetails ?? {});
+  const [editNotes, setEditNotes] = useState("");
+  const [editDetails, setEditDetails] = useState<NonNullable<ServiceRequest["applicantDetails"]>>({});
+  const [savingEdit, setSavingEdit] = useState(false);
   const [message, setMessage] = useState("");
+  const [sending, setSending] = useState(false);
   const [method, setMethod] = useState<PaymentMethod>("upi");
+  const [paying, setPaying] = useState(false);
   const [confirmCancel, setConfirmCancel] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
 
-  if (!r || r.userId !== user?.id) {
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      setLoading(true);
+      try {
+        const req = id ? await Req.getRequest(id) : null;
+        if (!active) return;
+        if (!req) {
+          toast.error("Request not found");
+          navigate("/dashboard");
+          return;
+        }
+        setR(req);
+        // Fetch the service for required-document label options.
+        try {
+          const svc = await getService(req.serviceId);
+          if (active && svc) setLabelOptions(svc.requiredDocuments ?? []);
+        } catch {
+          /* label options are optional */
+        }
+      } catch (e) {
+        toast.error((e as Error).message);
+        if (active) navigate("/dashboard");
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [id, navigate]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+      </div>
+    );
+  }
+
+  if (!r) {
     return (
       <div className="max-w-md mx-auto px-4 py-20 text-center">
         <ShieldAlert className="mx-auto mb-3 text-muted-foreground/50" size={40} />
@@ -108,13 +143,10 @@ export default function RequestDetail() {
     );
   }
 
-  const svc = serviceById(r.serviceId);
   const editable = Req.isEditable(r);
   const canDownload = Req.canDownload(r);
   const inPaymentStage = PAYMENT_STAGE.includes(r.status);
-  const payment = getPaymentForRequest(r.id);
   const visibleComments = r.comments.filter((c) => !c.internal);
-  const labelOptions = svc?.requiredDocuments ?? [];
 
   const onPickFile = () => {
     const chosen = docLabel === "__custom__" ? customLabel.trim() : docLabel;
@@ -138,60 +170,94 @@ export default function RequestDetail() {
       return;
     }
     const label = docLabel === "__custom__" ? customLabel.trim() : docLabel;
-    const url = await fileToDataUrl(file);
-    Req.addDocument(r.id, { label, fileName: file.name, url }, "customer");
-    toast.success("Document uploaded");
-    setDocLabel("");
-    setCustomLabel("");
-    rerender();
+    setUploading(true);
+    try {
+      const updated = await Req.uploadDocument(r.id, file, label);
+      setR(updated);
+      toast.success("Document uploaded");
+      setDocLabel("");
+      setCustomLabel("");
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setUploading(false);
+    }
   };
 
-  const handleRemoveDoc = (docId: string) => {
-    Req.removeDocument(r.id, docId);
-    toast.success("Document removed");
-    rerender();
+  const handleRemoveDoc = async (docId: string) => {
+    try {
+      const updated = await Req.removeDocument(r.id, docId);
+      setR(updated);
+      toast.success("Document removed");
+    } catch (err) {
+      toast.error((err as Error).message);
+    }
   };
 
-  const handleSaveEdit = () => {
-    Req.updateRequest(r.id, { notes: editNotes, applicantDetails: editDetails });
-    toast.success("Request updated");
-    setEditing(false);
-    rerender();
+  const handleSaveEdit = async () => {
+    setSavingEdit(true);
+    try {
+      const updated = await Req.updateRequest(r.id, { notes: editNotes, applicantDetails: editDetails });
+      setR(updated);
+      toast.success("Request updated");
+      setEditing(false);
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setSavingEdit(false);
+    }
   };
 
-  const handleComment = () => {
+  const handleComment = async () => {
     const msg = message.trim();
     if (!msg) return;
-    Req.addComment(r.id, { byUserId: user!.id, byRole: "customer", message: msg });
-    setMessage("");
-    toast.success("Message sent to the agent");
-    rerender();
-  };
-
-  const handleCancel = () => {
-    Req.setStatus(r.id, "cancelled", { id: user!.id, role: "customer" }, "Cancelled by customer");
-    setConfirmCancel(false);
-    toast.success("Request cancelled");
-    rerender();
-  };
-
-  const handlePaid = () => {
-    recordPayment(r.id, user!.id, method, r.priceLabel);
-    toast.success("Payment recorded. Admin will verify and unlock your files.");
-    rerender();
-  };
-
-  const download = (fileName: string, url: string) => {
-    if (!url) {
-      toast.message("This is a demo placeholder file — no actual file is attached.");
-      return;
+    setSending(true);
+    try {
+      const updated = await Req.addComment(r.id, { message: msg });
+      setR(updated);
+      setMessage("");
+      toast.success("Message sent to the agent");
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setSending(false);
     }
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
+  };
+
+  const handleCancel = async () => {
+    setCancelling(true);
+    try {
+      const updated = await Req.setStatus(r.id, "cancelled", "Cancelled by customer");
+      setR(updated);
+      setConfirmCancel(false);
+      toast.success("Request cancelled");
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setCancelling(false);
+    }
+  };
+
+  const handlePaid = async () => {
+    setPaying(true);
+    try {
+      await recordPayment(r.id, method);
+      const refreshed = await Req.getRequest(r.id);
+      if (refreshed) setR(refreshed);
+      toast.success("Payment recorded. Admin will verify and unlock your files.");
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setPaying(false);
+    }
+  };
+
+  const handleDownload = async (delId: string, fileName: string) => {
+    try {
+      await Req.downloadDeliverable(r.id, delId, fileName);
+    } catch (err) {
+      toast.error((err as Error).message);
+    }
   };
 
   const roleLabel = (role: string) => (role === "customer" ? "You" : role === "agent" ? "Agent" : "Admin");
@@ -206,7 +272,7 @@ export default function RequestDetail() {
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-2xl font-bold tracking-tight">{svc?.name ?? "Service Request"}</h1>
+            <h1 className="text-2xl font-bold tracking-tight">{r.serviceName}</h1>
             <StatusBadge status={r.status} />
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">
@@ -240,11 +306,6 @@ export default function RequestDetail() {
                         </p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        {d.url && (
-                          <button onClick={() => download(d.fileName, d.url)} className="text-blue-600 hover:text-blue-800" title="Download">
-                            <FileDown size={15} />
-                          </button>
-                        )}
                         {editable && (
                           <button onClick={() => handleRemoveDoc(d.id)} className="text-red-500 hover:text-red-700" title="Remove">
                             <Trash2 size={15} />
@@ -286,8 +347,8 @@ export default function RequestDetail() {
                     accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"
                     onChange={handleFile}
                   />
-                  <Button type="button" size="sm" variant="outline" onClick={onPickFile}>
-                    <Upload size={14} className="mr-1.5" /> Choose file & upload
+                  <Button type="button" size="sm" variant="outline" onClick={onPickFile} disabled={uploading}>
+                    <Upload size={14} className="mr-1.5" /> {uploading ? "Uploading..." : "Choose file & upload"}
                   </Button>
                   <p className="text-[11px] text-muted-foreground">Images, PDF, Word or Excel up to 5 MB.</p>
                 </div>
@@ -327,8 +388,8 @@ export default function RequestDetail() {
                   <div><Label className="text-xs">Additional Info</Label><Textarea rows={2} value={editDetails.additionalInfo ?? ""} onChange={(e) => setEditDetails({ ...editDetails, additionalInfo: e.target.value })} /></div>
                   <div><Label className="text-xs">Notes / Instructions</Label><Textarea rows={2} value={editNotes} onChange={(e) => setEditNotes(e.target.value)} /></div>
                   <div className="flex gap-2">
-                    <Button size="sm" onClick={handleSaveEdit} className="bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff]">Save</Button>
-                    <Button size="sm" variant="outline" onClick={() => setEditing(false)}>Cancel</Button>
+                    <Button size="sm" onClick={handleSaveEdit} disabled={savingEdit} className="bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff]">{savingEdit ? "Saving..." : "Save"}</Button>
+                    <Button size="sm" variant="outline" onClick={() => setEditing(false)} disabled={savingEdit}>Cancel</Button>
                   </div>
                 </>
               ) : (
@@ -382,11 +443,11 @@ export default function RequestDetail() {
                   </div>
 
                   <div className="space-y-3">
-                    {payment ? (
+                    {r.isPaid ? (
                       <div className="rounded-lg bg-green-50 border border-green-200 p-3 text-sm">
-                        <StatusBadge status={payment.status} />
+                        <StatusBadge status={r.paymentApprovedByAdmin ? "received" : "pending"} />
                         <p className="text-xs text-muted-foreground mt-1.5">
-                          {payment.status === "received"
+                          {r.paymentApprovedByAdmin
                             ? "Payment verified by the shop. Your files are unlocked below."
                             : "We've noted your payment. The shop will verify it shortly."}
                         </p>
@@ -404,7 +465,7 @@ export default function RequestDetail() {
                             </SelectContent>
                           </Select>
                         </div>
-                        <Button className="w-full bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff]" onClick={handlePaid}>I have paid</Button>
+                        <Button className="w-full bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff]" onClick={handlePaid} disabled={paying}>{paying ? "Recording..." : "I have paid"}</Button>
                         <p className="text-xs text-muted-foreground">
                           After you mark this paid, the shop must verify your payment before your final files unlock.
                         </p>
@@ -436,7 +497,7 @@ export default function RequestDetail() {
                       <p className="font-medium truncate">{f.fileName}</p>
                       <p className="text-xs text-muted-foreground">{new Date(f.uploadedAt).toLocaleDateString("en-IN")}</p>
                     </div>
-                    <Button size="sm" variant="outline" onClick={() => download(f.fileName, f.url)}>
+                    <Button size="sm" variant="outline" onClick={() => handleDownload(f.id, f.fileName)}>
                       <FileDown size={14} className="mr-1.5" /> Download
                     </Button>
                   </div>
@@ -471,7 +532,7 @@ export default function RequestDetail() {
               )}
               <div className="flex gap-2 items-end">
                 <Textarea rows={2} placeholder="Message the agent..." value={message} onChange={(e) => setMessage(e.target.value)} className="flex-1" />
-                <Button size="sm" onClick={handleComment} disabled={!message.trim()}><Send size={14} /></Button>
+                <Button size="sm" onClick={handleComment} disabled={!message.trim() || sending}><Send size={14} /></Button>
               </div>
             </CardContent>
           </Card>
@@ -496,8 +557,8 @@ export default function RequestDetail() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmCancel(false)}>Keep Request</Button>
-            <Button className="bg-red-600 hover:bg-red-700" onClick={handleCancel}>Yes, Cancel</Button>
+            <Button variant="outline" onClick={() => setConfirmCancel(false)} disabled={cancelling}>Keep Request</Button>
+            <Button className="bg-red-600 hover:bg-red-700" onClick={handleCancel} disabled={cancelling}>{cancelling ? "Cancelling..." : "Yes, Cancel"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

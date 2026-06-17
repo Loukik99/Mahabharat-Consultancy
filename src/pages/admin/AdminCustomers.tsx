@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import type { User } from "@/types";
+import type { User, ServiceRequest } from "@/types";
 import { getCustomers, setUserActive, deleteUser } from "@/api/users.api";
 import { listRequests } from "@/api/requests.api";
 import { useAuth } from "@/context/AuthContext";
@@ -39,27 +39,64 @@ function downloadCsv(filename: string, rows: (string | number)[][]) {
 
 export default function AdminCustomers() {
   const { user } = useAuth();
-  const [, rerender] = useState(0);
-  const refresh = () => rerender((n) => n + 1);
+  const [loading, setLoading] = useState(true);
+  const [customers, setCustomers] = useState<User[]>([]);
+  const [requests, setRequests] = useState<ServiceRequest[]>([]);
   const [toDelete, setToDelete] = useState<User | null>(null);
 
-  const customers = getCustomers();
-  const reqCount = (id: string) => listRequests({ userId: id }).length;
+  const load = async () => {
+    try {
+      const [custs, reqs] = await Promise.all([getCustomers(), listRequests({})]);
+      setCustomers(custs);
+      setRequests(reqs);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const [custs, reqs] = await Promise.all([getCustomers(), listRequests({})]);
+        if (!active) return;
+        setCustomers(custs);
+        setRequests(reqs);
+      } catch (e) {
+        if (active) toast.error((e as Error).message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, []);
+
+  const reqCount = (id: string) => requests.filter((r) => r.userId === id).length;
 
   if (!user) return null;
 
-  const handleToggle = (c: User) => {
-    setUserActive(c.id, !c.isActive, { id: user.id });
-    toast.success(c.isActive ? "Customer deactivated" : "Customer activated");
-    refresh();
+  const handleToggle = async (c: User) => {
+    try {
+      await setUserActive(c.id, !c.isActive);
+      toast.success(c.isActive ? "Customer deactivated" : "Customer activated");
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!toDelete) return;
-    deleteUser(toDelete.id, { id: user.id });
-    toast.success("Customer deleted");
-    setToDelete(null);
-    refresh();
+    try {
+      await deleteUser(toDelete.id);
+      toast.success("Customer deleted");
+      setToDelete(null);
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
 
   const exportCsv = () => {
@@ -82,26 +119,32 @@ export default function AdminCustomers() {
       <AdminNav active="/admin/customers" />
 
       <Card><CardContent className="pt-4 overflow-x-auto">
-        <Table>
-          <TableHeader><TableRow>
-            <TableHead>Name</TableHead><TableHead>Email</TableHead><TableHead>Phone</TableHead><TableHead>City</TableHead><TableHead>Joined</TableHead><TableHead>Requests</TableHead><TableHead>Active</TableHead><TableHead></TableHead>
-          </TableRow></TableHeader>
-          <TableBody>
-            {customers.map((c) => (
-              <TableRow key={c.id}>
-                <TableCell className="font-medium">{c.name}</TableCell>
-                <TableCell className="text-muted-foreground">{c.email}</TableCell>
-                <TableCell>{c.phone}</TableCell>
-                <TableCell>{c.address?.city ?? "—"}</TableCell>
-                <TableCell className="text-muted-foreground">{new Date(c.createdAt).toLocaleDateString("en-IN")}</TableCell>
-                <TableCell>{reqCount(c.id)}</TableCell>
-                <TableCell><Switch checked={c.isActive} onCheckedChange={() => handleToggle(c)} /></TableCell>
-                <TableCell><button onClick={() => setToDelete(c)} className="text-red-500 hover:text-red-700"><Trash2 size={15} /></button></TableCell>
-              </TableRow>
-            ))}
-            {customers.length === 0 && <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">No customers yet.</TableCell></TableRow>}
-          </TableBody>
-        </Table>
+        {loading ? (
+          <div className="flex justify-center py-16">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+          </div>
+        ) : (
+          <Table>
+            <TableHeader><TableRow>
+              <TableHead>Name</TableHead><TableHead>Email</TableHead><TableHead>Phone</TableHead><TableHead>City</TableHead><TableHead>Joined</TableHead><TableHead>Requests</TableHead><TableHead>Active</TableHead><TableHead></TableHead>
+            </TableRow></TableHeader>
+            <TableBody>
+              {customers.map((c) => (
+                <TableRow key={c.id}>
+                  <TableCell className="font-medium">{c.name}</TableCell>
+                  <TableCell className="text-muted-foreground">{c.email}</TableCell>
+                  <TableCell>{c.phone}</TableCell>
+                  <TableCell>{c.address?.city ?? "—"}</TableCell>
+                  <TableCell className="text-muted-foreground">{new Date(c.createdAt).toLocaleDateString("en-IN")}</TableCell>
+                  <TableCell>{reqCount(c.id)}</TableCell>
+                  <TableCell><Switch checked={c.isActive} onCheckedChange={() => handleToggle(c)} /></TableCell>
+                  <TableCell><button onClick={() => setToDelete(c)} className="text-red-500 hover:text-red-700"><Trash2 size={15} /></button></TableCell>
+                </TableRow>
+              ))}
+              {customers.length === 0 && <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">No customers yet.</TableCell></TableRow>}
+            </TableBody>
+          </Table>
+        )}
       </CardContent></Card>
 
       <Dialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>

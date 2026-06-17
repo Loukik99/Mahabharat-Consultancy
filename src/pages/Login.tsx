@@ -10,17 +10,21 @@ import { toast } from "sonner";
 export default function LoginPage() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const user = login(emailOrPhone.trim(), password);
-    if (user) {
+    try {
+      setSubmitting(true);
+      const user = await login(emailOrPhone.trim(), password);
       toast.success(`Welcome back, ${user.name}!`);
       navigate(user.role === "admin" ? "/admin" : user.role === "agent" ? "/agent" : "/dashboard");
-    } else {
-      toast.error("Invalid credentials");
+    } catch (err) {
+      toast.error((err as Error).message);
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -63,7 +67,7 @@ export default function LoginPage() {
                   placeholder="Enter password"
                 />
               </div>
-              <Button type="submit" className="w-full bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff]">Sign In</Button>
+              <Button type="submit" disabled={submitting} className="w-full bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff]">{submitting ? "Signing In…" : "Sign In"}</Button>
             </form>
 
             <p className="text-center text-sm text-muted-foreground mt-4">

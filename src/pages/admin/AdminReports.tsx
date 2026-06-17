@@ -1,15 +1,15 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import type { RequestStatus, ServiceCategoryId } from "@/types";
-import { getAdminStats, getAgentPerformance } from "@/api/stats.api";
+import type { RequestStatus, ServiceCategoryId, ServiceRequest, Payment, User, AgentPerformance } from "@/types";
+import { getAdminStats, getAgentPerformance, type AdminStats } from "@/api/stats.api";
 import { listRequests, labelForStatus } from "@/api/requests.api";
 import { getPayments } from "@/api/payments.api";
-import { getService } from "@/api/services.api";
-import { getUser, getAgents } from "@/api/users.api";
-import { getRequest } from "@/api/requests.api";
-import { serviceCategories, categoryById } from "@/data/catalog";
+import { getCustomers, getAgents } from "@/api/users.api";
+import { serviceById, serviceCategories, categoryById } from "@/data/catalog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { toast } from "sonner";
 import { Download, Printer } from "lucide-react";
 
 const ADMIN_LINKS = [
@@ -43,10 +43,44 @@ const STATUSES: RequestStatus[] = [
 ];
 
 export default function AdminReports() {
-  const stats = getAdminStats();
-  const performance = getAgentPerformance();
-  const requests = listRequests();
-  const payments = getPayments();
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<AdminStats | null>(null);
+  const [performance, setPerformance] = useState<AgentPerformance[]>([]);
+  const [requests, setRequests] = useState<ServiceRequest[]>([]);
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [customers, setCustomers] = useState<User[]>([]);
+  const [agents, setAgents] = useState<User[]>([]);
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const [s, perf, reqs, pays, custs, agentList] = await Promise.all([
+          getAdminStats(),
+          getAgentPerformance(),
+          listRequests({}),
+          getPayments(),
+          getCustomers(),
+          getAgents(),
+        ]);
+        if (!active) return;
+        setStats(s);
+        setPerformance(perf);
+        setRequests(reqs);
+        setPayments(pays);
+        setCustomers(custs);
+        setAgents(agentList);
+      } catch (e) {
+        if (active) toast.error((e as Error).message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, []);
+
+  const nameById = (uid: string) =>
+    customers.find((u) => u.id === uid)?.name ?? agents.find((u) => u.id === uid)?.name ?? "";
 
   const countByCategory = serviceCategories.map((c) => ({
     category: c.name,
@@ -60,11 +94,11 @@ export default function AdminReports() {
   const exportRequests = () => {
     const rows: (string | number)[][] = [["Request #", "Service", "Category", "Customer", "Agent", "Status", "Paid", "Created"]];
     requests.forEach((r) => {
-      const agent = r.assignedAgentId ? getUser(r.assignedAgentId)?.name ?? "" : "Unassigned";
+      const agent = r.assignedAgentId ? nameById(r.assignedAgentId) : "Unassigned";
       rows.push([
-        r.requestNumber, getService(r.serviceId)?.name ?? r.serviceId,
+        r.requestNumber, serviceById(r.serviceId)?.name ?? r.serviceId,
         categoryById(r.category)?.name ?? r.category,
-        getUser(r.userId)?.name ?? "", agent,
+        nameById(r.userId), agent,
         labelForStatus(r.status), r.paymentApprovedByAdmin ? "Yes" : "No",
         new Date(r.createdAt).toLocaleDateString("en-IN"),
       ]);
@@ -76,8 +110,8 @@ export default function AdminReports() {
     const rows: (string | number)[][] = [["Request #", "Customer", "Method", "Amount", "Status", "Date"]];
     payments.forEach((p) => {
       rows.push([
-        getRequest(p.requestId)?.requestNumber ?? p.requestId,
-        getUser(p.userId)?.name ?? "", p.method.toUpperCase(), p.amountLabel, p.status,
+        requests.find((r) => r.id === p.requestId)?.requestNumber ?? p.requestId,
+        nameById(p.userId), p.method.toUpperCase(), p.amountLabel, p.status,
         new Date(p.createdAt).toLocaleDateString("en-IN"),
       ]);
     });
@@ -85,7 +119,6 @@ export default function AdminReports() {
   };
 
   const exportAgents = () => {
-    const agents = getAgents();
     const rows: (string | number)[][] = [["Name", "Email", "Phone", "Assigned", "Completed", "Pending", "Delayed", "Active"]];
     agents.forEach((a) => {
       const p = performance.find((x) => x.agentId === a.id);
@@ -93,6 +126,14 @@ export default function AdminReports() {
     });
     downloadCsv("agents-report.csv", rows);
   };
+
+  if (loading || !stats) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex justify-center py-20">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

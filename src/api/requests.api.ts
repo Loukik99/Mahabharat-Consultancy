@@ -1,145 +1,121 @@
-import type {
-  ServiceRequest, RequestStatus, RequestFilter, Role, RequestDocument,
-} from "@/types";
-import { requests, uid, persist, nextRequestNumber, logAudit, notify } from "@/data/store";
-import { PRICE_PLACEHOLDER } from "@/data/catalog";
+import type { ServiceRequest, RequestStatus } from "@/types";
+import { api } from "@/lib/apiClient";
 
-const touch = (r: ServiceRequest) => { r.updatedAt = new Date().toISOString(); };
-
-export function listRequests(filter?: RequestFilter): ServiceRequest[] {
-  let list = [...requests];
-  if (filter?.userId) list = list.filter((r) => r.userId === filter.userId);
-  if (filter?.agentId) list = list.filter((r) => r.assignedAgentId === filter.agentId);
-  if (filter?.status && filter.status !== "all") list = list.filter((r) => r.status === filter.status);
-  if (filter?.category && filter.category !== "all") list = list.filter((r) => r.category === filter.category);
-  return list.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+// ── Queries ───────────────────────────────────────────────────────
+// The backend scopes results by the caller's role/token, so callers no
+// longer pass userId/agentId — only optional admin filters.
+export async function listRequests(filter?: { status?: string; category?: string }): Promise<ServiceRequest[]> {
+  const { data } = await api.get<{ requests: ServiceRequest[] }>("/requests", { params: filter });
+  return data.requests;
 }
 
-export function getRequest(id: string): ServiceRequest | null {
-  return requests.find((r) => r.id === id) || null;
+export async function getRequest(id: string): Promise<ServiceRequest | null> {
+  try {
+    const { data } = await api.get<{ request: ServiceRequest }>(`/requests/${id}`);
+    return data.request;
+  } catch {
+    return null;
+  }
 }
 
-export function createRequest(data: {
-  userId: string;
+// ── Mutations ─────────────────────────────────────────────────────
+export async function createRequest(input: {
   serviceId: string;
-  category: ServiceRequest["category"];
   applicantDetails?: ServiceRequest["applicantDetails"];
   notes?: string;
-}): ServiceRequest {
-  const at = new Date().toISOString();
-  const req: ServiceRequest = {
-    id: uid("r"),
-    requestNumber: nextRequestNumber(),
-    userId: data.userId,
-    serviceId: data.serviceId,
-    category: data.category,
-    status: "submitted",
-    applicantDetails: data.applicantDetails,
-    notes: data.notes || "",
-    adminNotes: "",
-    documents: [],
-    deliverables: [],
-    comments: [],
-    statusHistory: [{ status: "submitted", byUserId: data.userId, byRole: "customer", at }],
-    priceLabel: PRICE_PLACEHOLDER,
-    isPaid: false,
-    paymentApprovedByAdmin: false,
-    createdAt: at,
-    updatedAt: at,
-  };
-  requests.push(req);
-  logAudit(data.userId, "customer", "request_created", "request", req.id, req.requestNumber);
-  persist();
-  return req;
+}): Promise<ServiceRequest> {
+  const { data } = await api.post<{ request: ServiceRequest }>("/requests", input);
+  return data.request;
 }
 
-/** Customer edits allowed only before an agent starts work. */
+export async function updateRequest(id: string, patch: Partial<Pick<ServiceRequest, "notes" | "applicantDetails">>): Promise<ServiceRequest> {
+  const { data } = await api.patch<{ request: ServiceRequest }>(`/requests/${id}`, patch);
+  return data.request;
+}
+
+export async function setStatus(id: string, status: RequestStatus, note?: string): Promise<ServiceRequest> {
+  const { data } = await api.patch<{ request: ServiceRequest }>(`/requests/${id}/status`, { status, note });
+  return data.request;
+}
+
+export async function assignAgent(id: string, agentId: string): Promise<ServiceRequest> {
+  const { data } = await api.patch<{ request: ServiceRequest }>(`/requests/${id}/assign`, { agentId });
+  return data.request;
+}
+
+export async function addComment(id: string, comment: { message: string; internal?: boolean }): Promise<ServiceRequest> {
+  const { data } = await api.post<{ request: ServiceRequest }>(`/requests/${id}/comments`, comment);
+  return data.request;
+}
+
+export async function markReadyForPayment(id: string): Promise<ServiceRequest> {
+  const { data } = await api.patch<{ request: ServiceRequest }>(`/requests/${id}/ready`, {});
+  return data.request;
+}
+
+// ── Documents & deliverables ──────────────────────────────────────
+export async function uploadDocument(id: string, file: File, label: string): Promise<ServiceRequest> {
+  const form = new FormData();
+  form.append("file", file);
+  form.append("label", label);
+  const { data } = await api.post<{ request: ServiceRequest }>(`/requests/${id}/documents`, form);
+  return data.request;
+}
+
+export async function removeDocument(id: string, docId: string): Promise<ServiceRequest> {
+  const { data } = await api.delete<{ request: ServiceRequest }>(`/requests/${id}/documents/${docId}`);
+  return data.request;
+}
+
+export async function uploadDeliverable(id: string, file: File): Promise<ServiceRequest> {
+  const form = new FormData();
+  form.append("file", file);
+  const { data } = await api.post<{ request: ServiceRequest }>(`/requests/${id}/deliverables`, form);
+  return data.request;
+}
+
+// Authenticated downloads — fetch as a blob (the endpoints require the bearer
+// token, so a plain <a href> won't work) and trigger a save.
+async function download(path: string, fallbackName: string) {
+  const res = await api.get(path, { responseType: "blob" });
+  const url = URL.createObjectURL(res.data as Blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = fallbackName;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+export function downloadDocument(requestId: string, docId: string, fileName: string) {
+  return download(`/requests/${requestId}/documents/${docId}/download`, fileName);
+}
+
+export function downloadDeliverable(requestId: string, delId: string, fileName: string) {
+  return download(`/requests/${requestId}/deliverables/${delId}/download`, fileName);
+}
+
+// ── Secure masked OTP call (agent) ────────────────────────────────
+export async function requestOtpCall(requestId: string, purpose: string) {
+  const { data } = await api.post<{ call: unknown }>(`/requests/${requestId}/call`, { purpose });
+  return data.call;
+}
+
+export async function getCallLogs(requestId: string) {
+  const { data } = await api.get<{ calls: { id: string; purpose: string; status: string; at: string }[] }>(`/requests/${requestId}/calls`);
+  return data.calls;
+}
+
+// ── Pure display/logic helpers (no network) ───────────────────────
 export function isEditable(r: ServiceRequest): boolean {
   return ["submitted", "documents_required"].includes(r.status);
 }
 
-export function updateRequest(id: string, patch: Partial<Pick<ServiceRequest, "notes" | "applicantDetails">>): ServiceRequest | null {
-  const r = getRequest(id);
-  if (!r) return null;
-  Object.assign(r, patch);
-  touch(r);
-  persist();
-  return r;
-}
-
-export function setStatus(id: string, status: RequestStatus, actor: { id: string; role: Role }, note?: string): ServiceRequest | null {
-  const r = getRequest(id);
-  if (!r) return null;
-  r.status = status;
-  r.statusHistory.push({ status, byUserId: actor.id, byRole: actor.role, note, at: new Date().toISOString() });
-  touch(r);
-  logAudit(actor.id, actor.role, "status_change", "request", r.id, `${r.requestNumber} → ${status}`);
-  notify(r.userId, `Your request ${r.requestNumber} is now "${labelForStatus(status)}".`, statusTone(status), `#/requests/${r.id}`);
-  persist();
-  return r;
-}
-
-export function assignAgent(id: string, agentId: string, admin: { id: string }): ServiceRequest | null {
-  const r = getRequest(id);
-  if (!r) return null;
-  r.assignedAgentId = agentId;
-  if (r.status === "submitted") r.status = "in_review";
-  touch(r);
-  logAudit(admin.id, "admin", "assign_agent", "request", r.id, `${r.requestNumber} → agent ${agentId}`);
-  persist();
-  return r;
-}
-
-export function addDocument(id: string, doc: { label: string; fileName: string; url: string }, role: Role): RequestDocument | null {
-  const r = getRequest(id);
-  if (!r) return null;
-  const d: RequestDocument = { id: uid("d"), ...doc, uploadedByRole: role, uploadedAt: new Date().toISOString() };
-  r.documents.push(d);
-  touch(r);
-  persist();
-  return d;
-}
-
-export function removeDocument(id: string, docId: string): void {
-  const r = getRequest(id);
-  if (!r) return;
-  r.documents = r.documents.filter((d) => d.id !== docId);
-  touch(r);
-  persist();
-}
-
-export function addDeliverable(id: string, file: { fileName: string; url: string }, agentId: string): void {
-  const r = getRequest(id);
-  if (!r) return;
-  r.deliverables.push({ id: uid("del"), ...file, uploadedByAgentId: agentId, uploadedAt: new Date().toISOString() });
-  touch(r);
-  logAudit(agentId, "agent", "deliverable_uploaded", "request", r.id, file.fileName);
-  persist();
-}
-
-export function addComment(id: string, comment: { byUserId: string; byRole: Role; message: string; internal?: boolean }): void {
-  const r = getRequest(id);
-  if (!r) return;
-  r.comments.push({ id: uid("c"), ...comment, at: new Date().toISOString() });
-  touch(r);
-  if (!comment.internal && comment.byRole !== "customer") {
-    notify(r.userId, `New remark on ${r.requestNumber}: "${comment.message}"`, "info", `#/requests/${r.id}`);
-  }
-  persist();
-}
-
-/** Agent finished work → request enters the payment stage. */
-export function markReadyForPayment(id: string, agent: { id: string }): ServiceRequest | null {
-  setStatus(id, "completed", { id: agent.id, role: "agent" });
-  return setStatus(id, "waiting_payment", { id: agent.id, role: "agent" });
-}
-
-/** Downloads of final files are gated on admin-approved payment. */
 export function canDownload(r: ServiceRequest): boolean {
   return r.paymentApprovedByAdmin === true;
 }
 
-// ── Display helpers ───────────────────────────────────────────────
 export function labelForStatus(s: RequestStatus): string {
   const map: Record<RequestStatus, string> = {
     submitted: "Submitted",
@@ -154,11 +130,4 @@ export function labelForStatus(s: RequestStatus): string {
     cancelled: "Cancelled",
   };
   return map[s] ?? s;
-}
-
-function statusTone(s: RequestStatus): "info" | "action" | "success" | "warning" {
-  if (s === "documents_required" || s === "waiting_otp") return "action";
-  if (s === "waiting_payment") return "warning";
-  if (s === "delivered" || s === "completed") return "success";
-  return "info";
 }

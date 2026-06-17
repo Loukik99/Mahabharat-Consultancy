@@ -1,52 +1,58 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import type { User } from "@/types";
-import { login as authLogin, register as authRegister } from "@/api/auth.api";
-import { getUser } from "@/api/users.api";
+import { login as apiLogin, register as apiRegister, fetchMe, logout as apiLogout } from "@/api/auth.api";
+import { tokenStore } from "@/lib/apiClient";
 
 interface AuthContextType {
   user: User | null;
-  login: (emailOrPhone: string, password: string) => User | null;
-  register: (data: { name: string; email: string; phone: string; password: string }) => User;
+  loading: boolean; // true while restoring the session on first load
+  login: (emailOrPhone: string, password: string) => Promise<User>;
+  register: (data: { name: string; email: string; phone: string; password: string }) => Promise<User>;
   logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
-const SESSION_KEY = "mc2_session";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(() => {
-    // Restore session across reloads.
-    try {
-      const id = localStorage.getItem(SESSION_KEY);
-      return id ? getUser(id) : null;
-    } catch {
-      return null;
-    }
-  });
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
+  // Restore session from a stored token.
   useEffect(() => {
-    try {
-      if (user) localStorage.setItem(SESSION_KEY, user.id);
-      else localStorage.removeItem(SESSION_KEY);
-    } catch { /* ignore */ }
-  }, [user]);
+    let active = true;
+    (async () => {
+      if (!tokenStore.get()) { setLoading(false); return; }
+      try {
+        const me = await fetchMe();
+        if (active) setUser(me);
+      } catch {
+        tokenStore.clear();
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, []);
 
-  const login = (emailOrPhone: string, password: string) => {
-    const u = authLogin(emailOrPhone, password);
-    if (u) setUser(u);
-    return u;
-  };
-
-  const register = (data: { name: string; email: string; phone: string; password: string }) => {
-    const u = authRegister(data);
+  const login = async (emailOrPhone: string, password: string) => {
+    const u = await apiLogin(emailOrPhone, password);
     setUser(u);
     return u;
   };
 
-  const logout = () => setUser(null);
+  const register = async (data: { name: string; email: string; phone: string; password: string }) => {
+    const u = await apiRegister(data);
+    setUser(u);
+    return u;
+  };
+
+  const logout = () => {
+    apiLogout();
+    setUser(null);
+  };
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

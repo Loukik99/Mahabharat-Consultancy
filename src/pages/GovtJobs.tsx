@@ -1,8 +1,9 @@
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { getJobs } from "@/api/jobs.api";
 import { jobSectors } from "@/data/govtJobs";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 import type { GovtJob } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -39,11 +40,24 @@ export default function GovtJobs() {
   const { user } = useAuth();
   const [sector, setSector] = useState<string>("all");
   const [search, setSearch] = useState("");
+  const [jobs, setJobs] = useState<GovtJob[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const jobs = useMemo(
-    () => getJobs(sector, search.trim() || undefined),
-    [sector, search],
-  );
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        setLoading(true);
+        const d = await getJobs(sector, search.trim() || undefined);
+        if (active) setJobs(d);
+      } catch (e) {
+        toast.error((e as Error).message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, [sector, search]);
 
   const helpApplying = () => {
     if (user && user.role === "customer") navigate("/new-request/govt-job-forms");
@@ -107,7 +121,11 @@ export default function GovtJobs() {
         ))}
       </div>
 
-      {jobs.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center py-20">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+        </div>
+      ) : jobs.length === 0 ? (
         <Card className="mt-8">
           <CardContent className="flex flex-col items-center py-16 text-center text-muted-foreground">
             <SearchX size={40} className="mb-3 text-muted-foreground/40" />

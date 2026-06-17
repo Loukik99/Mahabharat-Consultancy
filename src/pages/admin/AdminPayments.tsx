@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import type { Payment, ServiceRequest, User } from "@/types";
 import { getPayments, markPaymentReceived } from "@/api/payments.api";
-import { getRequest } from "@/api/requests.api";
-import { getUser } from "@/api/users.api";
+import { listRequests } from "@/api/requests.api";
+import { getCustomers } from "@/api/users.api";
 import { useAuth } from "@/context/AuthContext";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
@@ -38,28 +39,66 @@ function downloadCsv(filename: string, rows: (string | number)[][]) {
 
 export default function AdminPayments() {
   const { user } = useAuth();
-  const [, rerender] = useState(0);
-  const refresh = () => rerender((n) => n + 1);
+  const [loading, setLoading] = useState(true);
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [requests, setRequests] = useState<ServiceRequest[]>([]);
+  const [customers, setCustomers] = useState<User[]>([]);
 
-  const payments = getPayments();
+  const load = async () => {
+    try {
+      const [pays, reqs, custs] = await Promise.all([getPayments(), listRequests({}), getCustomers()]);
+      setPayments(pays);
+      setRequests(reqs);
+      setCustomers(custs);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const [pays, reqs, custs] = await Promise.all([getPayments(), listRequests({}), getCustomers()]);
+        if (!active) return;
+        setPayments(pays);
+        setRequests(reqs);
+        setCustomers(custs);
+      } catch (e) {
+        if (active) toast.error((e as Error).message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, []);
+
+  const requestFor = (requestId: string) => requests.find((r) => r.id === requestId);
+  const customerName = (userId: string) => customers.find((c) => c.id === userId)?.name ?? "—";
+
   const received = payments.filter((p) => p.status === "received").length;
   const pending = payments.filter((p) => p.status === "pending").length;
 
   if (!user) return null;
 
-  const handleMark = (requestId: string) => {
-    markPaymentReceived(requestId, { id: user.id });
-    toast.success("Payment marked received — downloads unlocked & delivered");
-    refresh();
+  const handleMark = async (requestId: string) => {
+    try {
+      await markPaymentReceived(requestId);
+      toast.success("Payment marked received — downloads unlocked & delivered");
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
 
   const exportCsv = () => {
     const rows: (string | number)[][] = [["Request #", "Customer", "Method", "Amount", "Status", "Date"]];
     payments.forEach((p) => {
-      const req = getRequest(p.requestId);
       rows.push([
-        req?.requestNumber ?? p.requestId,
-        getUser(p.userId)?.name ?? "",
+        requestFor(p.requestId)?.requestNumber ?? p.requestId,
+        customerName(p.userId),
         p.method.toUpperCase(), p.amountLabel, p.status,
         new Date(p.createdAt).toLocaleDateString("en-IN"),
       ]);
@@ -93,34 +132,40 @@ export default function AdminPayments() {
       </div>
 
       <Card><CardContent className="pt-4 overflow-x-auto">
-        <Table>
-          <TableHeader><TableRow>
-            <TableHead>Request #</TableHead><TableHead>Customer</TableHead><TableHead>Method</TableHead><TableHead>Amount</TableHead><TableHead>Status</TableHead><TableHead>Date</TableHead><TableHead></TableHead>
-          </TableRow></TableHeader>
-          <TableBody>
-            {payments.map((p) => {
-              const req = getRequest(p.requestId);
-              return (
-                <TableRow key={p.id}>
-                  <TableCell className="font-medium">
-                    {req ? <Link to={`/admin/requests/${req.id}`} className="text-orange-600 hover:underline">{req.requestNumber}</Link> : p.requestId}
-                  </TableCell>
-                  <TableCell>{getUser(p.userId)?.name ?? "—"}</TableCell>
-                  <TableCell className="uppercase text-xs">{p.method}</TableCell>
-                  <TableCell>{p.amountLabel}</TableCell>
-                  <TableCell><StatusBadge status={p.status} /></TableCell>
-                  <TableCell className="text-muted-foreground">{new Date(p.createdAt).toLocaleDateString("en-IN")}</TableCell>
-                  <TableCell>
-                    {p.status === "pending"
-                      ? <Button size="sm" className="bg-green-600 hover:bg-green-700 h-7 text-xs" onClick={() => handleMark(p.requestId)}>Mark Received</Button>
-                      : <span className="text-green-600 text-xs flex items-center gap-1"><CheckCircle size={13} /> Done</span>}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-            {payments.length === 0 && <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No payments yet.</TableCell></TableRow>}
-          </TableBody>
-        </Table>
+        {loading ? (
+          <div className="flex justify-center py-16">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+          </div>
+        ) : (
+          <Table>
+            <TableHeader><TableRow>
+              <TableHead>Request #</TableHead><TableHead>Customer</TableHead><TableHead>Method</TableHead><TableHead>Amount</TableHead><TableHead>Status</TableHead><TableHead>Date</TableHead><TableHead></TableHead>
+            </TableRow></TableHeader>
+            <TableBody>
+              {payments.map((p) => {
+                const req = requestFor(p.requestId);
+                return (
+                  <TableRow key={p.id}>
+                    <TableCell className="font-medium">
+                      {req ? <Link to={`/admin/requests/${req.id}`} className="text-orange-600 hover:underline">{req.requestNumber}</Link> : p.requestId}
+                    </TableCell>
+                    <TableCell>{customerName(p.userId)}</TableCell>
+                    <TableCell className="uppercase text-xs">{p.method}</TableCell>
+                    <TableCell>{p.amountLabel}</TableCell>
+                    <TableCell><StatusBadge status={p.status} /></TableCell>
+                    <TableCell className="text-muted-foreground">{new Date(p.createdAt).toLocaleDateString("en-IN")}</TableCell>
+                    <TableCell>
+                      {p.status === "pending"
+                        ? <Button size="sm" className="bg-green-600 hover:bg-green-700 h-7 text-xs" onClick={() => handleMark(p.requestId)}>Mark Received</Button>
+                        : <span className="text-green-600 text-xs flex items-center gap-1"><CheckCircle size={13} /> Done</span>}
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+              {payments.length === 0 && <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No payments yet.</TableCell></TableRow>}
+            </TableBody>
+          </Table>
+        )}
       </CardContent></Card>
     </div>
   );

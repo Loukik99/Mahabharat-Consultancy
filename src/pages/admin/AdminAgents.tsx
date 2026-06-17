@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import type { User } from "@/types";
+import type { User, AgentPerformance } from "@/types";
 import { getAgents, createAgent, setUserActive, deleteUser } from "@/api/users.api";
 import { getAgentPerformance } from "@/api/stats.api";
 import { useAuth } from "@/context/AuthContext";
@@ -43,43 +43,79 @@ const emptyForm = { name: "", email: "", phone: "", password: "" };
 
 export default function AdminAgents() {
   const { user } = useAuth();
-  const [, rerender] = useState(0);
-  const refresh = () => rerender((n) => n + 1);
+  const [loading, setLoading] = useState(true);
+  const [agents, setAgents] = useState<User[]>([]);
+  const [performance, setPerformance] = useState<AgentPerformance[]>([]);
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [toDelete, setToDelete] = useState<User | null>(null);
 
-  const agents = getAgents();
-  const performance = getAgentPerformance();
+  const load = async () => {
+    try {
+      const [agentList, perf] = await Promise.all([getAgents(), getAgentPerformance()]);
+      setAgents(agentList);
+      setPerformance(perf);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const [agentList, perf] = await Promise.all([getAgents(), getAgentPerformance()]);
+        if (!active) return;
+        setAgents(agentList);
+        setPerformance(perf);
+      } catch (e) {
+        if (active) toast.error((e as Error).message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, []);
+
   const perfFor = (id: string) => performance.find((p) => p.agentId === id);
 
   if (!user) return null;
 
-  const handleCreate = (e: React.FormEvent) => {
+  const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      createAgent({ name: form.name, email: form.email, phone: form.phone, password: form.password }, { id: user.id });
+      await createAgent({ name: form.name, email: form.email, phone: form.phone, password: form.password });
       toast.success("Agent added");
       setForm(emptyForm);
       setOpen(false);
-      refresh();
+      await load();
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Could not add agent");
     }
   };
 
-  const handleToggle = (a: User) => {
-    setUserActive(a.id, !a.isActive, { id: user.id });
-    toast.success(a.isActive ? "Agent deactivated" : "Agent activated");
-    refresh();
+  const handleToggle = async (a: User) => {
+    try {
+      await setUserActive(a.id, !a.isActive);
+      toast.success(a.isActive ? "Agent deactivated" : "Agent activated");
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!toDelete) return;
-    deleteUser(toDelete.id, { id: user.id });
-    toast.success("Agent deleted");
-    setToDelete(null);
-    refresh();
+    try {
+      await deleteUser(toDelete.id);
+      toast.success("Agent deleted");
+      setToDelete(null);
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
 
   const exportCsv = () => {
@@ -105,30 +141,36 @@ export default function AdminAgents() {
       <AdminNav active="/admin/agents" />
 
       <Card><CardContent className="pt-4 overflow-x-auto">
-        <Table>
-          <TableHeader><TableRow>
-            <TableHead>Name</TableHead><TableHead>Email</TableHead><TableHead>Phone</TableHead><TableHead>Assigned</TableHead><TableHead>Completed</TableHead><TableHead>Pending</TableHead><TableHead>Delayed</TableHead><TableHead>Active</TableHead><TableHead></TableHead>
-          </TableRow></TableHeader>
-          <TableBody>
-            {agents.map((a) => {
-              const p = perfFor(a.id);
-              return (
-                <TableRow key={a.id}>
-                  <TableCell className="font-medium">{a.name}</TableCell>
-                  <TableCell className="text-muted-foreground">{a.email}</TableCell>
-                  <TableCell>{a.phone}</TableCell>
-                  <TableCell>{p?.totalAssigned ?? 0}</TableCell>
-                  <TableCell className="text-green-600 font-medium">{p?.completed ?? 0}</TableCell>
-                  <TableCell>{p?.pending ?? 0}</TableCell>
-                  <TableCell className={(p?.delayed ?? 0) > 0 ? "text-red-600 font-bold" : ""}>{p?.delayed ?? 0}</TableCell>
-                  <TableCell><Switch checked={a.isActive} onCheckedChange={() => handleToggle(a)} /></TableCell>
-                  <TableCell><button onClick={() => setToDelete(a)} className="text-red-500 hover:text-red-700"><Trash2 size={15} /></button></TableCell>
-                </TableRow>
-              );
-            })}
-            {agents.length === 0 && <TableRow><TableCell colSpan={9} className="text-center py-8 text-muted-foreground">No agents yet.</TableCell></TableRow>}
-          </TableBody>
-        </Table>
+        {loading ? (
+          <div className="flex justify-center py-16">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+          </div>
+        ) : (
+          <Table>
+            <TableHeader><TableRow>
+              <TableHead>Name</TableHead><TableHead>Email</TableHead><TableHead>Phone</TableHead><TableHead>Assigned</TableHead><TableHead>Completed</TableHead><TableHead>Pending</TableHead><TableHead>Delayed</TableHead><TableHead>Active</TableHead><TableHead></TableHead>
+            </TableRow></TableHeader>
+            <TableBody>
+              {agents.map((a) => {
+                const p = perfFor(a.id);
+                return (
+                  <TableRow key={a.id}>
+                    <TableCell className="font-medium">{a.name}</TableCell>
+                    <TableCell className="text-muted-foreground">{a.email}</TableCell>
+                    <TableCell>{a.phone}</TableCell>
+                    <TableCell>{p?.totalAssigned ?? 0}</TableCell>
+                    <TableCell className="text-green-600 font-medium">{p?.completed ?? 0}</TableCell>
+                    <TableCell>{p?.pending ?? 0}</TableCell>
+                    <TableCell className={(p?.delayed ?? 0) > 0 ? "text-red-600 font-bold" : ""}>{p?.delayed ?? 0}</TableCell>
+                    <TableCell><Switch checked={a.isActive} onCheckedChange={() => handleToggle(a)} /></TableCell>
+                    <TableCell><button onClick={() => setToDelete(a)} className="text-red-500 hover:text-red-700"><Trash2 size={15} /></button></TableCell>
+                  </TableRow>
+                );
+              })}
+              {agents.length === 0 && <TableRow><TableCell colSpan={9} className="text-center py-8 text-muted-foreground">No agents yet.</TableCell></TableRow>}
+            </TableBody>
+          </Table>
+        )}
       </CardContent></Card>
 
       <Dialog open={open} onOpenChange={setOpen}>

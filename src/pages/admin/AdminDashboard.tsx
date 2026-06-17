@@ -1,12 +1,15 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { getAdminStats, getAgentPerformance } from "@/api/stats.api";
+import type { ServiceRequest, AuditLog, AgentPerformance } from "@/types";
+import { getAdminStats, getAgentPerformance, type AdminStats } from "@/api/stats.api";
 import { listRequests } from "@/api/requests.api";
-import { getService } from "@/api/services.api";
-import { getUser } from "@/api/users.api";
 import { getAuditLogs } from "@/api/audit.api";
+import { getCustomers, getAgents } from "@/api/users.api";
+import { serviceById } from "@/data/catalog";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { toast } from "sonner";
 import {
   ClipboardList, Clock, CheckCircle, Wallet, Users, UserCog, FileText,
   BarChart3, ScrollText, Eye, IndianRupee,
@@ -45,12 +48,43 @@ export function AdminNav({ active }: { active?: string }) {
 }
 
 export default function AdminDashboard() {
-  const stats = getAdminStats();
-  const performance = getAgentPerformance();
-  const recent = listRequests().slice(0, 8);
-  const audit = getAuditLogs({ limit: 6 });
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<AdminStats | null>(null);
+  const [performance, setPerformance] = useState<AgentPerformance[]>([]);
+  const [recent, setRecent] = useState<ServiceRequest[]>([]);
+  const [audit, setAudit] = useState<AuditLog[]>([]);
+  const [nameById, setNameById] = useState<Record<string, string>>({});
 
-  const cards = [
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const [s, perf, reqs, logs, customers, agents] = await Promise.all([
+          getAdminStats(),
+          getAgentPerformance(),
+          listRequests({}),
+          getAuditLogs({ limit: 6 }),
+          getCustomers(),
+          getAgents(),
+        ]);
+        if (!active) return;
+        setStats(s);
+        setPerformance(perf);
+        setRecent(reqs.slice(0, 8));
+        setAudit(logs);
+        const map: Record<string, string> = {};
+        [...customers, ...agents].forEach((u) => { map[u.id] = u.name; });
+        setNameById(map);
+      } catch (e) {
+        toast.error((e as Error).message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, []);
+
+  const cards = stats ? [
     { label: "Total Requests", value: stats.totalRequests, icon: ClipboardList, color: "bg-blue-100 text-blue-600" },
     { label: "Pending", value: stats.pendingRequests, icon: Clock, color: "bg-yellow-100 text-yellow-600" },
     { label: "Completed", value: stats.completedRequests, icon: CheckCircle, color: "bg-green-100 text-green-600" },
@@ -59,7 +93,7 @@ export default function AdminDashboard() {
     { label: "Customers", value: stats.totalCustomers, icon: Users, color: "bg-purple-100 text-purple-600" },
     { label: "Agents", value: stats.totalAgents, icon: UserCog, color: "bg-pink-100 text-pink-600" },
     { label: "Active Agents", value: stats.activeAgents, icon: UserCog, color: "bg-teal-100 text-teal-600" },
-  ];
+  ] : [];
 
   const quickLinks = [
     { to: "/admin/requests", icon: ClipboardList, label: "Requests" },
@@ -70,6 +104,14 @@ export default function AdminDashboard() {
     { to: "/admin/reports", icon: BarChart3, label: "Reports" },
     { to: "/admin/audit", icon: ScrollText, label: "Audit Log" },
   ];
+
+  if (loading) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex justify-center py-20">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -115,8 +157,8 @@ export default function AdminDashboard() {
                   {recent.map((r) => (
                     <TableRow key={r.id}>
                       <TableCell className="font-medium">{r.requestNumber}</TableCell>
-                      <TableCell>{getService(r.serviceId)?.name ?? r.serviceId}</TableCell>
-                      <TableCell>{getUser(r.userId)?.name ?? "—"}</TableCell>
+                      <TableCell>{serviceById(r.serviceId)?.name ?? r.serviceId}</TableCell>
+                      <TableCell>{nameById[r.userId] ?? "—"}</TableCell>
                       <TableCell><StatusBadge status={r.status} /></TableCell>
                       <TableCell><Link to={`/admin/requests/${r.id}`} className="text-orange-600"><Eye size={15} /></Link></TableCell>
                     </TableRow>
@@ -132,18 +174,15 @@ export default function AdminDashboard() {
           <CardContent className="pt-5">
             <h2 className="font-semibold mb-3">Recent Activity</h2>
             <ul className="space-y-2.5">
-              {audit.map((a) => {
-                const actor = getUser(a.actorId);
-                return (
-                  <li key={a.id} className="text-xs border-l-2 border-orange-200 pl-2.5">
-                    <p className="font-medium">{a.action.replace(/_/g, " ")}</p>
-                    <p className="text-muted-foreground">
-                      {(actor?.name ?? a.actorId)} ({a.actorRole}) · {new Date(a.at).toLocaleString("en-IN")}
-                    </p>
-                    {a.meta && <p className="text-muted-foreground">{a.meta}</p>}
-                  </li>
-                );
-              })}
+              {audit.map((a) => (
+                <li key={a.id} className="text-xs border-l-2 border-orange-200 pl-2.5">
+                  <p className="font-medium">{a.action.replace(/_/g, " ")}</p>
+                  <p className="text-muted-foreground">
+                    {(nameById[a.actorId] ?? a.actorId)} ({a.actorRole}) · {new Date(a.at).toLocaleString("en-IN")}
+                  </p>
+                  {a.meta && <p className="text-muted-foreground">{a.meta}</p>}
+                </li>
+              ))}
               {audit.length === 0 && <li className="text-xs text-muted-foreground">No activity recorded.</li>}
             </ul>
             <Link to="/admin/audit" className="text-orange-600 text-xs font-medium hover:underline mt-3 inline-block">View Audit Log</Link>

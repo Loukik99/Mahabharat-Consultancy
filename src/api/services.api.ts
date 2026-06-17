@@ -1,37 +1,38 @@
-import type { Service } from "@/types";
-import { services, uid, persist } from "@/data/store";
+import type { Service, ServiceCategory } from "@/types";
+import { api } from "@/lib/apiClient";
 
-export function getServices(category?: string, search?: string): Service[] {
-  let list = services.filter((s) => s.isActive);
-  if (category && category !== "all") list = list.filter((s) => s.category === category);
-  if (search) {
-    const q = search.toLowerCase();
-    list = list.filter((s) => s.name.toLowerCase().includes(q) || s.description.toLowerCase().includes(q));
+export async function getCategories(): Promise<ServiceCategory[]> {
+  const { data } = await api.get<{ categories: ServiceCategory[] }>("/services/categories");
+  return data.categories;
+}
+
+export async function getServices(category?: string, search?: string, all?: boolean): Promise<Service[]> {
+  const { data } = await api.get<{ services: Service[] }>("/services", {
+    params: { category, search, all: all ? 1 : undefined },
+  });
+  return data.services;
+}
+
+export async function getService(id: string): Promise<Service | null> {
+  try {
+    const { data } = await api.get<{ service: Service }>(`/services/${id}`);
+    return data.service;
+  } catch {
+    return null;
   }
-  return list;
 }
 
-export function getService(id: string): Service | null {
-  return services.find((s) => s.id === id) || null;
+export async function createService(input: Partial<Service>): Promise<Service> {
+  const { data } = await api.post<{ service: Service }>("/services", input);
+  return data.service;
 }
 
-export function createService(data: Omit<Service, "id" | "slug" | "isActive">): Service {
-  const id = uid("svc");
-  const svc: Service = { id, slug: id, ...data, isActive: true };
-  services.push(svc);
-  persist();
-  return svc;
+export async function updateService(id: string, patch: Partial<Service>): Promise<Service> {
+  const { data } = await api.patch<{ service: Service }>(`/services/${id}`, patch);
+  return data.service;
 }
 
-export function updateService(id: string, data: Partial<Service>): Service | null {
-  const idx = services.findIndex((s) => s.id === id);
-  if (idx === -1) return null;
-  services[idx] = { ...services[idx], ...data };
-  persist();
-  return services[idx];
-}
-
-export function toggleService(id: string, isActive: boolean): void {
-  const svc = services.find((s) => s.id === id);
-  if (svc) { svc.isActive = isActive; persist(); }
+export async function toggleService(id: string, isActive: boolean): Promise<Service> {
+  const { data } = await api.patch<{ service: Service }>(`/services/${id}/toggle`, { isActive });
+  return data.service;
 }

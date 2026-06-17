@@ -1,12 +1,12 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import * as Req from "@/api/requests.api";
-import { serviceById } from "@/data/catalog";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import type { RequestStatus } from "@/types";
+import { toast } from "sonner";
+import type { RequestStatus, ServiceRequest } from "@/types";
 import { ClipboardList, Clock, IndianRupee, CheckCircle2, Eye, Plus, Wallet } from "lucide-react";
 
 const FILTERS: { value: "all" | RequestStatus; label: string }[] = [
@@ -21,8 +21,26 @@ const FILTERS: { value: "all" | RequestStatus; label: string }[] = [
 export default function CustomerDashboard() {
   const { user } = useAuth();
   const [filter, setFilter] = useState<"all" | RequestStatus>("all");
+  const [all, setAll] = useState<ServiceRequest[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const all = useMemo(() => Req.listRequests({ userId: user!.id }), [user]);
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      setLoading(true);
+      try {
+        const requests = await Req.listRequests();
+        if (active) setAll(requests);
+      } catch (e) {
+        toast.error((e as Error).message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const visible = useMemo(
     () => (filter === "all" ? all : all.filter((r) => r.status === filter)),
@@ -76,7 +94,11 @@ export default function CustomerDashboard() {
         ))}
       </div>
 
-      {visible.length === 0 ? (
+      {loading ? (
+        <div className="flex justify-center py-16">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+        </div>
+      ) : visible.length === 0 ? (
         <Card>
           <CardContent className="py-12 text-center text-muted-foreground">
             <ClipboardList className="mx-auto mb-3 text-muted-foreground/40" size={40} />
@@ -87,14 +109,13 @@ export default function CustomerDashboard() {
       ) : (
         <div className="space-y-3">
           {visible.map((r) => {
-            const svc = serviceById(r.serviceId);
             const awaiting = r.status === "waiting_payment";
             return (
               <Card key={r.id} className={awaiting ? "border-yellow-300" : ""}>
                 <CardContent className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                      <h3 className="font-semibold truncate">{svc?.name ?? "Service"}</h3>
+                      <h3 className="font-semibold truncate">{r.serviceName}</h3>
                       <StatusBadge status={r.status} />
                     </div>
                     <p className="text-xs text-muted-foreground">

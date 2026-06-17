@@ -13,7 +13,18 @@ const app = express();
 
 app.use(helmet());
 app.use(compression());
-app.use(cors({ origin: env.clientUrl, credentials: true }));
+app.use(
+  cors({
+    origin: (origin, cb) => {
+      // Allow non-browser tools (no origin) and any configured/localhost origin in dev.
+      if (!origin) return cb(null, true);
+      if (env.clientUrls.includes(origin)) return cb(null, true);
+      if (!env.isProd && /^http:\/\/localhost:\d+$/.test(origin)) return cb(null, true);
+      return cb(new Error(`Origin ${origin} not allowed by CORS`));
+    },
+    credentials: true,
+  })
+);
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
 if (!env.isProd) app.use(morgan("dev"));

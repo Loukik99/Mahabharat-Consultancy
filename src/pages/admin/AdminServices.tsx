@@ -1,8 +1,8 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import type { Service, ServiceCategoryId, OfficialServiceLink } from "@/types";
-import { getServices, createService, updateService, toggleService } from "@/api/services.api";
-import { serviceCategories, categoryById, PRICE_PLACEHOLDER } from "@/data/catalog";
+import type { Service, ServiceCategory, ServiceCategoryId, OfficialServiceLink } from "@/types";
+import { getServices, createService, updateService, toggleService, getCategories } from "@/api/services.api";
+import { PRICE_PLACEHOLDER } from "@/data/catalog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -55,17 +55,54 @@ const emptyForm: FormState = {
 };
 
 export default function AdminServices() {
-  const [, rerender] = useState(0);
-  const refresh = () => rerender((n) => n + 1);
+  const [loading, setLoading] = useState(true);
+  const [allServices, setAllServices] = useState<Service[]>([]);
+  const [categories, setCategories] = useState<ServiceCategory[]>([]);
   const [filter, setFilter] = useState<ServiceCategoryId | "all">("all");
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState<string | null>(null);
   const [form, setForm] = useState<FormState>(emptyForm);
 
-  const all = getServices("all");
+  const load = async () => {
+    try {
+      const [services, cats] = await Promise.all([
+        getServices(undefined, undefined, true),
+        getCategories(),
+      ]);
+      setAllServices(services);
+      setCategories(cats);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      try {
+        const [services, cats] = await Promise.all([
+          getServices(undefined, undefined, true),
+          getCategories(),
+        ]);
+        if (!active) return;
+        setAllServices(services);
+        setCategories(cats);
+      } catch (e) {
+        if (active) toast.error((e as Error).message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, []);
+
+  const categoryName = (id: string) => categories.find((c) => c.id === id)?.name ?? id;
+
   const services = useMemo(
-    () => (filter === "all" ? all : all.filter((s) => s.category === filter)),
-    [all, filter],
+    () => (filter === "all" ? allServices : allServices.filter((s) => s.category === filter)),
+    [allServices, filter],
   );
 
   const openCreate = () => { setForm(emptyForm); setEditId(null); setOpen(true); };
@@ -84,13 +121,13 @@ export default function AdminServices() {
     setOpen(true);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const officialLinks: OfficialServiceLink[] =
       form.linkLabel.trim() && form.linkUrl.trim()
         ? [{ label: form.linkLabel.trim(), url: form.linkUrl.trim() }]
         : [];
-    const data = {
+    const data: Partial<Service> = {
       name: form.name.trim(),
       category: form.category,
       description: form.description.trim(),
@@ -101,21 +138,29 @@ export default function AdminServices() {
       officialLinks,
       processingTime: form.processingTime.trim() || undefined,
     };
-    if (editId) {
-      updateService(editId, data);
-      toast.success("Service updated");
-    } else {
-      createService(data);
-      toast.success("Service created");
+    try {
+      if (editId) {
+        await updateService(editId, data);
+        toast.success("Service updated");
+      } else {
+        await createService(data);
+        toast.success("Service created");
+      }
+      setOpen(false);
+      await load();
+    } catch (err) {
+      toast.error((err as Error).message);
     }
-    setOpen(false);
-    refresh();
   };
 
-  const handleToggle = (s: Service) => {
-    toggleService(s.id, !s.isActive);
-    toast.success(s.isActive ? "Service hidden" : "Service activated");
-    refresh();
+  const handleToggle = async (s: Service) => {
+    try {
+      await toggleService(s.id, !s.isActive);
+      toast.success(s.isActive ? "Service hidden" : "Service activated");
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
 
   return (
@@ -134,30 +179,36 @@ export default function AdminServices() {
           <SelectTrigger className="w-[220px]"><SelectValue /></SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            {serviceCategories.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
+            {categories.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}
           </SelectContent>
         </Select>
       </CardContent></Card>
 
       <Card><CardContent className="pt-4 overflow-x-auto">
-        <Table>
-          <TableHeader><TableRow>
-            <TableHead>Name</TableHead><TableHead>Category</TableHead><TableHead>Price</TableHead><TableHead>Docs</TableHead><TableHead>Active</TableHead><TableHead></TableHead>
-          </TableRow></TableHeader>
-          <TableBody>
-            {services.map((s) => (
-              <TableRow key={s.id}>
-                <TableCell className="font-medium">{s.name}</TableCell>
-                <TableCell>{categoryById(s.category)?.name ?? s.category}</TableCell>
-                <TableCell className="text-muted-foreground">{s.priceLabel}</TableCell>
-                <TableCell>{s.requiredDocuments.length}</TableCell>
-                <TableCell><Switch checked={s.isActive} onCheckedChange={() => handleToggle(s)} /></TableCell>
-                <TableCell><button onClick={() => openEdit(s)} className="text-orange-600 hover:text-orange-800"><Pencil size={15} /></button></TableCell>
-              </TableRow>
-            ))}
-            {services.length === 0 && <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">No services in this category.</TableCell></TableRow>}
-          </TableBody>
-        </Table>
+        {loading ? (
+          <div className="flex justify-center py-16">
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+          </div>
+        ) : (
+          <Table>
+            <TableHeader><TableRow>
+              <TableHead>Name</TableHead><TableHead>Category</TableHead><TableHead>Price</TableHead><TableHead>Docs</TableHead><TableHead>Active</TableHead><TableHead></TableHead>
+            </TableRow></TableHeader>
+            <TableBody>
+              {services.map((s) => (
+                <TableRow key={s.id}>
+                  <TableCell className="font-medium">{s.name}</TableCell>
+                  <TableCell>{categoryName(s.category)}</TableCell>
+                  <TableCell className="text-muted-foreground">{s.priceLabel}</TableCell>
+                  <TableCell>{s.requiredDocuments.length}</TableCell>
+                  <TableCell><Switch checked={s.isActive} onCheckedChange={() => handleToggle(s)} /></TableCell>
+                  <TableCell><button onClick={() => openEdit(s)} className="text-orange-600 hover:text-orange-800"><Pencil size={15} /></button></TableCell>
+                </TableRow>
+              ))}
+              {services.length === 0 && <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">No services in this category.</TableCell></TableRow>}
+            </TableBody>
+          </Table>
+        )}
       </CardContent></Card>
 
       <Dialog open={open} onOpenChange={setOpen}>
@@ -169,7 +220,7 @@ export default function AdminServices() {
               <Label>Category *</Label>
               <Select value={form.category} onValueChange={(v) => setForm({ ...form, category: v as ServiceCategoryId })}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
-                <SelectContent>{serviceCategories.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
+                <SelectContent>{categories.map((c) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
               </Select>
             </div>
             <div><Label>Description *</Label><Textarea required rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></div>

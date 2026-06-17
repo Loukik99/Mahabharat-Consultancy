@@ -9,13 +9,14 @@ import { toast } from "sonner";
 
 export default function SignupPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", confirm: "" });
+  const [submitting, setSubmitting] = useState(false);
   const { register } = useAuth();
   const navigate = useNavigate();
 
   const update = (key: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setForm({ ...form, [key]: e.target.value });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const phone = form.phone.trim();
     if (!/^[6-9][0-9]{9}$/.test(phone)) return toast.error("Enter a valid 10-digit mobile number");
@@ -23,11 +24,14 @@ export default function SignupPage() {
     if (form.password !== form.confirm) return toast.error("Passwords do not match");
 
     try {
-      register({ name: form.name.trim(), email: form.email.trim(), phone, password: form.password });
+      setSubmitting(true);
+      await register({ name: form.name.trim(), email: form.email.trim(), phone, password: form.password });
       toast.success("Account created!");
       navigate("/dashboard");
-    } catch (err: any) {
-      toast.error(err?.message || "Could not create account");
+    } catch (err) {
+      toast.error((err as Error).message || "Could not create account");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -64,7 +68,7 @@ export default function SignupPage() {
                 <Label htmlFor="confirm">Confirm Password</Label>
                 <Input id="confirm" type="password" required value={form.confirm} onChange={update("confirm")} placeholder="Re-enter password" />
               </div>
-              <Button type="submit" className="w-full bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff]">Create Account</Button>
+              <Button type="submit" disabled={submitting} className="w-full bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff]">{submitting ? "Creating Account…" : "Create Account"}</Button>
             </form>
             <p className="text-center text-sm text-muted-foreground mt-4">
               Already have an account? <Link to="/login" className="text-blue-600 font-medium hover:underline">Sign In</Link>

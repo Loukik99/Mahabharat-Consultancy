@@ -1,11 +1,12 @@
-import { useState } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import type { ServiceRequest, User, Payment } from "@/types";
 import {
-  getRequest, assignAgent, setStatus, addComment, labelForStatus,
+  getRequest, assignAgent, setStatus, addComment,
 } from "@/api/requests.api";
-import { getService } from "@/api/services.api";
-import { getUser, getAgents } from "@/api/users.api";
-import { getPaymentForRequest, markPaymentReceived } from "@/api/payments.api";
+import { getAgents } from "@/api/users.api";
+import { getPayments, markPaymentReceived } from "@/api/payments.api";
+import { serviceById } from "@/data/catalog";
 import { useAuth } from "@/context/AuthContext";
 import { StatusBadge } from "@/components/StatusBadge";
 import { StatusTimeline } from "@/components/StatusTimeline";
@@ -19,66 +20,132 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import {
-  FileDown, User, Mail, Phone, MapPin, Lock, CheckCircle, XCircle,
-  Wallet, MessageSquare, ShieldAlert,
+  FileDown, User as UserIcon, CheckCircle, XCircle,
+  Wallet, MessageSquare, ShieldAlert, Lock,
 } from "lucide-react";
 
 export default function AdminRequestDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const [, rerender] = useState(0);
-  const refresh = () => rerender((n) => n + 1);
 
-  const r = getRequest(id!);
-  const service = r ? getService(r.serviceId) : null;
-  const customer = r ? getUser(r.userId) : null;
-  const agents = getAgents();
-  const payment = r ? getPaymentForRequest(r.id) : null;
+  const [loading, setLoading] = useState(true);
+  const [r, setR] = useState<ServiceRequest | null>(null);
+  const [agents, setAgents] = useState<User[]>([]);
+  const [payment, setPayment] = useState<Payment | null>(null);
 
-  const [agentId, setAgentId] = useState(r?.assignedAgentId ?? "");
+  const [agentId, setAgentId] = useState("");
   const [note, setNote] = useState("");
   const [rejectOpen, setRejectOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState("");
 
-  if (!r || !service) return <p className="text-center py-20 text-muted-foreground">Request not found</p>;
+  const load = async () => {
+    if (!id) return;
+    try {
+      const [req, agentList, payments] = await Promise.all([
+        getRequest(id),
+        getAgents(),
+        getPayments(),
+      ]);
+      setR(req);
+      setAgents(agentList);
+      setAgentId(req?.assignedAgentId ?? "");
+      setPayment(req ? payments.find((p) => p.requestId === req.id) ?? null : null);
+    } catch (e) {
+      toast.error((e as Error).message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let active = true;
+    setLoading(true);
+    (async () => {
+      if (!id) { setLoading(false); return; }
+      try {
+        const [req, agentList, payments] = await Promise.all([
+          getRequest(id),
+          getAgents(),
+          getPayments(),
+        ]);
+        if (!active) return;
+        setR(req);
+        setAgents(agentList);
+        setAgentId(req?.assignedAgentId ?? "");
+        setPayment(req ? payments.find((p) => p.requestId === req.id) ?? null : null);
+      } catch (e) {
+        if (active) toast.error((e as Error).message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    })();
+    return () => { active = false; };
+  }, [id]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center py-20">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+      </div>
+    );
+  }
+
+  const service = r ? serviceById(r.serviceId) : null;
+
+  if (!r) return <p className="text-center py-20 text-muted-foreground">Request not found</p>;
   if (!user) return <p className="text-center py-20 text-muted-foreground">Not authorized</p>;
 
-  const handleAssign = () => {
+  const nameById = (uid: string) => agents.find((a) => a.id === uid)?.name ?? uid;
+
+  const handleAssign = async () => {
     if (!agentId) return toast.error("Select an agent");
-    assignAgent(r.id, agentId, { id: user.id });
-    toast.success("Agent assigned");
-    refresh();
+    try {
+      await assignAgent(r.id, agentId);
+      toast.success("Agent assigned");
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
 
-  const handleReject = () => {
+  const handleReject = async () => {
     if (!rejectReason.trim()) return toast.error("Please provide a reason");
-    setStatus(r.id, "rejected", { id: user.id, role: "admin" }, rejectReason.trim());
-    addComment(r.id, { byUserId: user.id, byRole: "admin", message: `Request rejected: ${rejectReason.trim()}` });
-    toast.success("Request rejected");
-    setRejectOpen(false);
-    setRejectReason("");
-    refresh();
+    try {
+      await setStatus(r.id, "rejected", rejectReason.trim());
+      await addComment(r.id, { message: `Request rejected: ${rejectReason.trim()}` });
+      toast.success("Request rejected");
+      setRejectOpen(false);
+      setRejectReason("");
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
 
-  const handleAddNote = () => {
+  const handleAddNote = async () => {
     if (!note.trim()) return toast.error("Note is empty");
-    addComment(r.id, { byUserId: user.id, byRole: "admin", message: note.trim(), internal: true });
-    toast.success("Internal note added");
-    setNote("");
-    refresh();
+    try {
+      await addComment(r.id, { message: note.trim(), internal: true });
+      toast.success("Internal note added");
+      setNote("");
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
 
-  const handleMarkPaid = () => {
-    markPaymentReceived(r.id, { id: user.id });
-    toast.success("Payment marked received — files unlocked & request delivered");
-    refresh();
+  const handleMarkPaid = async () => {
+    try {
+      await markPaymentReceived(r.id);
+      toast.success("Payment marked received — files unlocked & request delivered");
+      await load();
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
   };
 
-  const address = customer?.address
-    ? [customer.address.street, customer.address.city, customer.address.state, customer.address.pincode].filter(Boolean).join(", ")
-    : null;
-
+  const serviceName = service?.name ?? r.serviceId;
   const showPaymentAction = !r.paymentApprovedByAdmin && (r.status === "waiting_payment" || !!payment);
 
   return (
@@ -91,17 +158,14 @@ export default function AdminRequestDetail() {
           <Card><CardContent className="pt-5">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h1 className="text-lg font-bold">{service.name}</h1>
+                <h1 className="text-lg font-bold">{serviceName}</h1>
                 <p className="text-xs text-muted-foreground">{r.requestNumber} · {r.priceLabel}</p>
               </div>
               <StatusBadge status={r.status} />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm p-3 bg-muted rounded-lg">
-              <p className="flex items-center gap-1.5"><User size={14} className="text-muted-foreground" /> <span className="font-medium">{customer?.name ?? "—"}</span></p>
-              <p className="flex items-center gap-1.5"><Mail size={14} className="text-muted-foreground" /> {customer?.email ?? "—"}</p>
-              <p className="flex items-center gap-1.5"><Phone size={14} className="text-muted-foreground" /> {customer?.phone ?? "—"}</p>
+              <p className="flex items-center gap-1.5"><UserIcon size={14} className="text-muted-foreground" /> <span className="font-medium">{r.applicantDetails?.fullName ?? "—"}</span></p>
               <p className="flex items-center gap-1.5"><span className="text-muted-foreground">Created:</span> {new Date(r.createdAt).toLocaleString("en-IN")}</p>
-              {address && <p className="flex items-center gap-1.5 sm:col-span-2"><MapPin size={14} className="text-muted-foreground" /> {address}</p>}
             </div>
 
             {r.applicantDetails && Object.values(r.applicantDetails).some(Boolean) && (
@@ -128,9 +192,7 @@ export default function AdminRequestDetail() {
             {r.documents.map((d) => (
               <div key={d.id} className="flex items-center justify-between bg-muted p-2 rounded mb-1 text-xs">
                 <span>{d.label} — {d.fileName} <span className="text-muted-foreground">({d.uploadedByRole})</span></span>
-                {d.url
-                  ? <a href={d.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-orange-600 hover:text-orange-800 font-semibold"><FileDown size={12} /> Open</a>
-                  : <span className="text-gray-400">No file</span>}
+                <span className="flex items-center gap-1 text-muted-foreground"><FileDown size={12} /> Staff download</span>
               </div>
             ))}
           </CardContent></Card>
@@ -142,9 +204,7 @@ export default function AdminRequestDetail() {
             {r.deliverables.map((d) => (
               <div key={d.id} className="flex items-center justify-between bg-emerald-50 p-2 rounded mb-1 text-xs">
                 <span>{d.fileName} <span className="text-muted-foreground">· {new Date(d.uploadedAt).toLocaleDateString("en-IN")}</span></span>
-                {d.url
-                  ? <a href={d.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1 text-orange-600 hover:text-orange-800 font-semibold"><FileDown size={12} /> Open</a>
-                  : <span className="text-gray-400">No file</span>}
+                <span className="flex items-center gap-1 text-muted-foreground"><FileDown size={12} /> Staff download</span>
               </div>
             ))}
           </CardContent></Card>
@@ -153,19 +213,16 @@ export default function AdminRequestDetail() {
           <Card><CardContent className="pt-5">
             <h3 className="font-semibold text-sm mb-3 flex items-center gap-1.5"><MessageSquare size={15} /> Comments ({r.comments.length})</h3>
             <ul className="space-y-2 mb-4">
-              {r.comments.map((c) => {
-                const author = getUser(c.byUserId);
-                return (
-                  <li key={c.id} className={`p-2.5 rounded text-xs ${c.internal ? "bg-amber-50 border border-amber-200" : "bg-muted"}`}>
-                    <div className="flex items-center justify-between mb-0.5">
-                      <span className="font-medium">{author?.name ?? c.byUserId} <span className="text-muted-foreground">({c.byRole})</span></span>
-                      {c.internal && <span className="text-[10px] bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded font-semibold">Internal</span>}
-                    </div>
-                    <p>{c.message}</p>
-                    <p className="text-[10px] text-muted-foreground mt-0.5">{new Date(c.at).toLocaleString("en-IN")}</p>
-                  </li>
-                );
-              })}
+              {r.comments.map((c) => (
+                <li key={c.id} className={`p-2.5 rounded text-xs ${c.internal ? "bg-amber-50 border border-amber-200" : "bg-muted"}`}>
+                  <div className="flex items-center justify-between mb-0.5">
+                    <span className="font-medium">{nameById(c.byUserId)} <span className="text-muted-foreground">({c.byRole})</span></span>
+                    {c.internal && <span className="text-[10px] bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded font-semibold">Internal</span>}
+                  </div>
+                  <p>{c.message}</p>
+                  <p className="text-[10px] text-muted-foreground mt-0.5">{new Date(c.at).toLocaleString("en-IN")}</p>
+                </li>
+              ))}
               {r.comments.length === 0 && <li className="text-xs text-muted-foreground">No comments.</li>}
             </ul>
             <Label className="text-xs">Add internal note</Label>
@@ -182,7 +239,7 @@ export default function AdminRequestDetail() {
           </CardContent></Card>
 
           <Card><CardContent className="pt-5">
-            <h3 className="font-semibold text-sm mb-3 flex items-center gap-1.5"><User size={15} /> Assign / Reassign Agent</h3>
+            <h3 className="font-semibold text-sm mb-3 flex items-center gap-1.5"><UserIcon size={15} /> Assign / Reassign Agent</h3>
             <Select value={agentId} onValueChange={setAgentId}>
               <SelectTrigger><SelectValue placeholder="Select agent" /></SelectTrigger>
               <SelectContent>{agents.map((a) => <SelectItem key={a.id} value={a.id}>{a.name} ({a.phone})</SelectItem>)}</SelectContent>

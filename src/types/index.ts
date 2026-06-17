@@ -118,7 +118,7 @@ export interface FinalDeliverable {
 
 export interface StatusHistoryEntry {
   status: RequestStatus;
-  byUserId: string;
+  byUserId?: string;
   byRole: Role;
   note?: string;
   at: string;
@@ -126,7 +126,7 @@ export interface StatusHistoryEntry {
 
 export interface RequestComment {
   id: string;
-  byUserId: string;
+  byUserId?: string;
   byRole: Role;
   message: string;
   /** internal admin/agent note not shown to the customer */
@@ -149,8 +149,12 @@ export interface ServiceRequest {
     additionalInfo?: string;
   };
   notes: string;             // customer instructions
-  adminNotes: string;        // internal
+  adminNotes?: string;       // internal (omitted from customer responses)
   assignedAgentId?: string;
+  // Display fields enriched by the API (populated names), not stored as such.
+  serviceName?: string;
+  customerName?: string;
+  assignedAgentName?: string;
   documents: RequestDocument[];
   deliverables: FinalDeliverable[];
   statusHistory: StatusHistoryEntry[];
@@ -167,7 +171,9 @@ export interface ServiceRequest {
 export interface Payment {
   id: string;
   requestId: string;
+  requestNumber?: string; // enriched by the API
   userId: string;
+  customerName?: string;  // enriched by the API
   amountLabel: string;
   method: PaymentMethod;
   status: PaymentStatus;
@@ -178,6 +184,7 @@ export interface Payment {
 export interface AuditLog {
   id: string;
   actorId: string;
+  actorName?: string; // enriched by the API
   actorRole: Role;
   action: string;       // e.g. "status_change", "file_download", "payment_received"
   targetType: string;   // "request" | "user" | "payment" | "file"

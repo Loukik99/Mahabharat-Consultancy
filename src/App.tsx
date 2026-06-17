@@ -34,18 +34,19 @@ const AdminServices = lazy(() => import("@/pages/admin/AdminServices"));
 const AdminReports = lazy(() => import("@/pages/admin/AdminReports"));
 const AdminAudit = lazy(() => import("@/pages/admin/AdminAudit"));
 
-function Protected({ children, roles }: { children: React.ReactNode; roles: string[] }) {
-  const { user } = useAuth();
-  if (!user) return <Navigate to="/login" replace />;
-  if (!roles.includes(user.role)) return <Navigate to="/" replace />;
-  return <>{children}</>;
-}
-
 const Loader = () => (
   <div className="flex items-center justify-center py-20">
     <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
   </div>
 );
+
+function Protected({ children, roles }: { children: React.ReactNode; roles: string[] }) {
+  const { user, loading } = useAuth();
+  if (loading) return <Loader />; // wait for session restore before deciding
+  if (!user) return <Navigate to="/login" replace />;
+  if (!roles.includes(user.role)) return <Navigate to="/" replace />;
+  return <>{children}</>;
+}
 
 export default function App() {
   return (
