@@ -14,8 +14,16 @@ const env = {
   maxUploadBytes: parseInt(process.env.MAX_UPLOAD_MB || "5", 10) * 1024 * 1024,
   uploadDir: process.env.UPLOAD_DIR || "uploads",
   callProvider: process.env.CALL_PROVIDER || "stub",
+  cloudinary: {
+    cloudName: process.env.CLOUDINARY_CLOUD_NAME || "",
+    apiKey: process.env.CLOUDINARY_API_KEY || "",
+    apiSecret: process.env.CLOUDINARY_API_SECRET || "",
+  },
 };
 
 env.isProd = env.nodeEnv === "production";
+// Use Cloudinary when fully configured, else fall back to local disk storage.
+env.storageMode =
+  env.cloudinary.cloudName && env.cloudinary.apiKey && env.cloudinary.apiSecret ? "cloudinary" : "local";
 
 module.exports = env;

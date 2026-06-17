@@ -1,10 +1,8 @@
-const path = require("path");
-const fs = require("fs");
-const { ServiceRequest, Service, Payment } = require("../models");
+const { ServiceRequest, Service } = require("../models");
 const { ApiError, asyncHandler } = require("../utils/apiError");
 const { serializeRequest } = require("../utils/serializers");
 const { audit, notify, nextRequestNumber } = require("../utils/helpers");
-const { uploadRoot } = require("../middleware/upload");
+const { persistFile, sendStoredFile, removeStoredFile } = require("../utils/storage");
 
 const POPULATE = [
   { path: "customer", select: "name email phone address" },
@@ -88,12 +86,10 @@ exports.uploadDocument = asyncHandler(async (req, res) => {
   authorize(req.user, r);
   if (!req.file) throw new ApiError(400, "No file uploaded");
 
+  const meta = await persistFile(req.file);
   r.documents.push({
     label: req.body.label || req.file.originalname,
-    fileName: req.file.originalname,
-    storedName: req.file.filename,
-    mimeType: req.file.mimetype,
-    size: req.file.size,
+    ...meta,
     uploadedByRole: req.user.role,
     uploadedBy: req.user.id,
   });
@@ -111,7 +107,7 @@ exports.removeDocument = asyncHandler(async (req, res) => {
   }
   const doc = r.documents.id(req.params.docId);
   if (doc) {
-    safeUnlink(doc.storedName);
+    await removeStoredFile(doc);
     doc.deleteOne();
     await r.save();
   }
@@ -125,7 +121,7 @@ exports.downloadDocument = asyncHandler(async (req, res) => {
   const doc = r.documents.id(req.params.docId);
   if (!doc) throw new ApiError(404, "File not found");
   await audit(req.user, "file_download", "file", doc._id, `doc ${doc.fileName}`);
-  sendFile(res, doc);
+  await sendStoredFile(res, doc);
 });
 
 // POST /api/requests/:id/deliverables  (multipart: file)  agent assigned / admin
@@ -135,13 +131,8 @@ exports.uploadDeliverable = asyncHandler(async (req, res) => {
   if (req.user.role === "customer") throw new ApiError(403, "Only agents upload completed files");
   if (!req.file) throw new ApiError(400, "No file uploaded");
 
-  r.deliverables.push({
-    fileName: req.file.originalname,
-    storedName: req.file.filename,
-    mimeType: req.file.mimetype,
-    size: req.file.size,
-    uploadedByAgent: req.user.id,
-  });
+  const meta = await persistFile(req.file);
+  r.deliverables.push({ ...meta, uploadedByAgent: req.user.id });
   await r.save();
   await audit(req.user, "deliverable_uploaded", "request", r._id, req.file.originalname);
   res.status(201).json({ success: true, request: serializeRequest(r, req.user.role) });
@@ -158,7 +149,7 @@ exports.downloadDeliverable = asyncHandler(async (req, res) => {
   const del = r.deliverables.id(req.params.delId);
   if (!del) throw new ApiError(404, "File not found");
   await audit(req.user, "file_download", "file", del._id, `deliverable ${del.fileName}`);
-  sendFile(res, del);
+  await sendStoredFile(res, del);
 });
 
 // PATCH /api/requests/:id/status  (agent assigned / admin)
@@ -216,14 +207,3 @@ exports.markReadyForPayment = asyncHandler(async (req, res) => {
   await audit(req.user, "ready_for_payment", "request", r._id, r.requestNumber);
   res.json({ success: true, request: serializeRequest(r, req.user.role) });
 });
-
-// ── file helpers ──────────────────────────────────────────────────
-function sendFile(res, doc) {
-  const full = path.join(uploadRoot, doc.storedName || "");
-  if (!doc.storedName || !fs.existsSync(full)) throw new ApiError(404, "File is no longer available");
-  res.download(full, doc.fileName);
-}
-function safeUnlink(storedName) {
-  if (!storedName) return;
-  fs.promises.unlink(path.join(uploadRoot, storedName)).catch(() => {});
-}

@@ -15,13 +15,23 @@ const REQUEST_STATUSES = [
 
 // ── Embedded sub-documents (RequestDocument, FinalDeliverable,
 //    RequestStatusHistory, RequestComment from the model list) ──────
+// Storage fields are provider-agnostic: local disk uses `storedName`,
+// Cloudinary uses `publicId`/`resourceType`/`format`.
+const storageFields = {
+  fileName: String,
+  mimeType: String,
+  size: Number,
+  provider: { type: String, enum: ["local", "cloudinary"], default: "local" },
+  storedName: String,  // local disk
+  publicId: String,    // cloudinary
+  resourceType: String,
+  format: String,
+};
+
 const requestDocumentSchema = new mongoose.Schema(
   {
     label: String,                 // checklist item, e.g. "Aadhaar Card"
-    fileName: String,
-    storedName: String,            // name on disk (server/uploads)
-    mimeType: String,
-    size: Number,
+    ...storageFields,
     uploadedByRole: { type: String, enum: ["customer", "agent", "admin"] },
     uploadedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
@@ -30,10 +40,7 @@ const requestDocumentSchema = new mongoose.Schema(
 
 const deliverableSchema = new mongoose.Schema(
   {
-    fileName: String,
-    storedName: String,
-    mimeType: String,
-    size: Number,
+    ...storageFields,
     uploadedByAgent: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
   },
   { timestamps: { createdAt: "uploadedAt", updatedAt: false } }
