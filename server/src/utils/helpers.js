@@ -1,4 +1,4 @@
-const { AuditLog, Notification, ServiceRequest } = require("../models");
+const { AuditLog, Notification, ServiceRequest, User } = require("../models");
 
 // Writes an audit log entry for security-sensitive actions.
 async function audit(actor, action, targetType, targetId, meta) {
@@ -25,6 +25,16 @@ async function notify(userId, message, type = "info", link) {
   }
 }
 
+// Notifies every active admin (used for approval requests).
+async function notifyAdmins(message, type = "action", link) {
+  try {
+    const admins = await User.find({ role: "admin", isActive: true }).select("_id");
+    await Promise.all(admins.map((a) => Notification.create({ user: a._id, message, type, link })));
+  } catch (e) {
+    console.error("notifyAdmins failed:", e.message);
+  }
+}
+
 // MC-#### request number, sequential-ish based on count.
 async function nextRequestNumber() {
   const count = await ServiceRequest.estimatedDocumentCount();
@@ -39,4 +49,4 @@ function maskPhone(phone, viewerRole) {
   return `${phone.slice(0, 2)}••••••${phone.slice(-2)}`;
 }
 
-module.exports = { audit, notify, nextRequestNumber, maskPhone };
+module.exports = { audit, notify, notifyAdmins, nextRequestNumber, maskPhone };

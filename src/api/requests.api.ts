@@ -96,17 +96,6 @@ export function downloadDeliverable(requestId: string, delId: string, fileName: 
   return download(`/requests/${requestId}/deliverables/${delId}/download`, fileName);
 }
 
-// ── Secure masked OTP call (agent) ────────────────────────────────
-export async function requestOtpCall(requestId: string, purpose: string) {
-  const { data } = await api.post<{ call: unknown }>(`/requests/${requestId}/call`, { purpose });
-  return data.call;
-}
-
-export async function getCallLogs(requestId: string) {
-  const { data } = await api.get<{ calls: { id: string; purpose: string; status: string; at: string }[] }>(`/requests/${requestId}/calls`);
-  return data.calls;
-}
-
 // ── Pure display/logic helpers (no network) ───────────────────────
 export function isEditable(r: ServiceRequest): boolean {
   return ["submitted", "documents_required"].includes(r.status);

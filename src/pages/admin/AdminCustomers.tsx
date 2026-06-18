@@ -14,7 +14,8 @@ const ADMIN_LINKS = [
   { to: "/admin", label: "Dashboard" }, { to: "/admin/requests", label: "Requests" },
   { to: "/admin/customers", label: "Customers" }, { to: "/admin/agents", label: "Agents" },
   { to: "/admin/payments", label: "Payments" }, { to: "/admin/services", label: "Services" },
-  { to: "/admin/reports", label: "Reports" }, { to: "/admin/audit", label: "Audit" },
+  { to: "/admin/reports", label: "Reports" }, { to: "/admin/calls", label: "Calls" },
+  { to: "/admin/audit", label: "Audit" },
 ];
 
 function AdminNav({ active }: { active?: string }) {

@@ -64,9 +64,10 @@ router.get("/requests/:id/deliverables/:delId/download", requests.downloadDelive
 router.post("/requests/:id/pay", requireRole("customer"), payments.record);
 router.patch("/requests/:id/payment/received", requireRole("admin"), payments.markReceived);
 
-// secure masked OTP call (agent)
-router.post("/requests/:id/call", requireRole("agent", "admin"), misc.requestOtpCall);
+// call-permission workflow (agent requests → admin approves → agent calls)
+router.post("/requests/:id/call-requests", requireRole("agent", "admin"), misc.requestCall);
 router.get("/requests/:id/calls", misc.listCalls);
+router.patch("/requests/:id/calls/:callId/complete", requireRole("agent", "admin"), misc.completeCall);
 
 // ── Payments (admin list) ─────────────────────────────────────────
 router.get("/payments", requireAuth, requireRole("admin"), payments.list);
@@ -84,6 +85,10 @@ router.delete("/users/:id", users.remove);
 router.get("/stats/admin", requireAuth, requireRole("admin"), misc.adminStats);
 router.get("/stats/agents", requireAuth, requireRole("admin"), misc.agentPerformance);
 router.get("/audit", requireAuth, requireRole("admin"), misc.listAudit);
+
+// Call-permission approvals (admin)
+router.get("/call-requests", requireAuth, requireRole("admin"), misc.listCallRequests);
+router.patch("/call-requests/:callId", requireAuth, requireRole("admin"), misc.decideCallRequest);
 
 // ── Notifications (own) ───────────────────────────────────────────
 router.get("/notifications", requireAuth, misc.listNotifications);

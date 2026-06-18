@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import * as Req from "@/api/requests.api";
+import * as Calls from "@/api/calls.api";
+import type { CallRecord } from "@/api/calls.api";
 import { getService } from "@/api/services.api";
 import type { Service, ServiceRequest } from "@/types";
 import { StatusTimeline } from "@/components/StatusTimeline";
@@ -30,8 +32,6 @@ type AgentRequest = ServiceRequest & {
   assignedAgentName?: string;
 };
 
-type CallLogEntry = { id: string; purpose: string; status: string; at: string };
-
 const ACCEPTED = [
   "image/jpeg", "image/png", "image/jpg", "image/webp", "application/pdf",
   "application/msword",
@@ -48,7 +48,7 @@ export default function TaskDetail() {
 
   const [request, setRequest] = useState<AgentRequest | null>(null);
   const [service, setService] = useState<Service | null>(null);
-  const [callLogs, setCallLogs] = useState<CallLogEntry[]>([]);
+  const [callLogs, setCallLogs] = useState<CallRecord[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Local UI state
@@ -78,7 +78,7 @@ export default function TaskDetail() {
         if (r && r.assignedAgentId === user!.id) {
           const [svc, calls] = await Promise.all([
             getService(r.serviceId),
-            Req.getCallLogs(r.id),
+            Calls.getCallLogs(r.id),
           ]);
           if (!active) return;
           setService(svc);
@@ -175,18 +175,27 @@ export default function TaskDetail() {
     }
   };
 
-  const handleOtpCall = async () => {
-    const purpose = otpValue.trim() || `OTP for ${r.serviceName}`;
+  const handleRequestCall = async () => {
+    const purpose = otpValue.trim() || `Call regarding ${r.serviceName}`;
     setOtpBusy(true);
     try {
-      await Req.requestOtpCall(r.id, purpose);
-      toast.success("Connecting secure call… the customer's number is never shown.");
-      const calls = await Req.getCallLogs(r.id);
-      setCallLogs(calls);
+      await Calls.requestCall(r.id, purpose);
+      toast.success("Permission requested. An admin will approve before you can call.");
+      setCallLogs(await Calls.getCallLogs(r.id));
     } catch (e) {
       toast.error((e as Error).message);
     } finally {
       setOtpBusy(false);
+    }
+  };
+
+  const handleCompleteCall = async (callId: string) => {
+    try {
+      await Calls.completeCall(r.id, callId);
+      toast.success("Call marked as completed.");
+      setCallLogs(await Calls.getCallLogs(r.id));
+    } catch (e) {
+      toast.error((e as Error).message);
     }
   };
 
@@ -426,27 +435,28 @@ export default function TaskDetail() {
             </Card>
           )}
 
-          {/* Secure OTP call */}
+          {/* Call customer — requires admin permission */}
           <Card className="rounded border border-gold/40 border-l-2 border-l-gold bg-gold/5">
             <CardHeader className="pb-2 pt-4">
               <CardTitle className="font-display text-sm text-navy flex items-center gap-2">
-                <Phone size={15} className="text-gold" /> Call Customer for OTP
+                <Phone size={15} className="text-gold" /> Call Customer
               </CardTitle>
             </CardHeader>
             <CardContent className="pb-4 space-y-3">
               <Alert className="rounded border-l-2 border-l-destructive border-y border-r border-destructive/30 bg-destructive/5 py-2.5">
                 <ShieldAlert className="h-4 w-4 text-destructive" />
                 <AlertDescription className="text-muted-foreground text-xs">
-                  Never ask for banking OTPs, UPI PINs, or passwords. Request only the OTP for this service.
-                  The customer's number is never shown to you.
+                  Calling needs admin approval. Request permission with a clear purpose. When approved, the
+                  customer is notified and you may call. <strong className="text-navy">Never ask for banking
+                  OTPs, UPI PINs, or passwords.</strong>
                 </AlertDescription>
               </Alert>
               <div>
-                <label className="text-[10px] text-muted-foreground uppercase tracking-wide">Purpose</label>
+                <label className="text-[10px] text-muted-foreground uppercase tracking-wide">Purpose of call</label>
                 <Input
                   value={otpValue}
                   onChange={(e) => setOtpPurpose(e.target.value)}
-                  placeholder="Purpose of the call"
+                  placeholder="e.g. OTP for PAN application"
                   className="mt-1"
                 />
               </div>
@@ -454,21 +464,31 @@ export default function TaskDetail() {
                 size="sm"
                 className="bg-navy text-white hover:bg-navy/90"
                 disabled={otpBusy}
-                onClick={handleOtpCall}
+                onClick={handleRequestCall}
               >
-                <Phone size={14} className="mr-1" /> Call Customer for OTP
+                <KeyRound size={14} className="mr-1" /> Request permission to call
               </Button>
 
               {callLogs.length > 0 && (
-                <div className="border-t border-border pt-2.5 space-y-1.5">
-                  <p className="text-xs font-semibold text-navy">Call history</p>
+                <div className="space-y-2 border-t border-border pt-2.5">
+                  <p className="text-xs font-semibold text-navy">Call requests</p>
                   {callLogs.map((c) => (
-                    <div key={c.id} className="flex items-center justify-between text-xs bg-secondary/60 px-3 py-1.5 rounded gap-2">
-                      <div className="min-w-0">
+                    <div key={c.id} className="rounded bg-card border border-border px-3 py-2 text-xs">
+                      <div className="flex items-center justify-between gap-2">
                         <p className="truncate text-navy">{c.purpose}</p>
-                        <p className="text-[10px] text-muted-foreground">{new Date(c.at).toLocaleString("en-IN")}</p>
+                        <CallStatusPill status={c.status} />
                       </div>
-                      <span className="text-[10px] font-semibold capitalize text-muted-foreground shrink-0">{c.status}</span>
+                      <p className="mt-0.5 text-[10px] text-muted-foreground">{new Date(c.at).toLocaleString("en-IN")}</p>
+                      {c.status === "approved" && c.phone && (
+                        <div className="mt-2 flex flex-wrap items-center gap-2 border-t border-border pt-2">
+                          <Button asChild size="sm" className="h-8 bg-[#1FA855] text-white hover:bg-[#178a46]">
+                            <a href={`tel:${c.phone.replace(/\s+/g, "")}`}><Phone size={13} className="mr-1" /> Call {c.phone}</a>
+                          </Button>
+                          <Button size="sm" variant="outline" className="h-8 border-navy/20 text-navy hover:text-navy" onClick={() => handleCompleteCall(c.id)}>
+                            <CheckCircle size={13} className="mr-1" /> Mark as called
+                          </Button>
+                        </div>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -643,5 +663,19 @@ export default function TaskDetail() {
         </DialogContent>
       </Dialog>
     </div>
+  );
+}
+
+function CallStatusPill({ status }: { status: string }) {
+  const map: Record<string, string> = {
+    pending: "bg-amber-100 text-amber-800",
+    approved: "bg-emerald-100 text-emerald-800",
+    denied: "bg-destructive/10 text-destructive",
+    completed: "bg-navy/10 text-navy",
+  };
+  return (
+    <span className={`shrink-0 rounded px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${map[status] ?? "bg-secondary text-muted-foreground"}`}>
+      {status}
+    </span>
   );
 }

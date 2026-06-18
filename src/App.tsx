@@ -33,6 +33,7 @@ const AdminPayments = lazy(() => import("@/pages/admin/AdminPayments"));
 const AdminServices = lazy(() => import("@/pages/admin/AdminServices"));
 const AdminReports = lazy(() => import("@/pages/admin/AdminReports"));
 const AdminAudit = lazy(() => import("@/pages/admin/AdminAudit"));
+const AdminCalls = lazy(() => import("@/pages/admin/AdminCalls"));
 
 const Loader = () => (
   <div className="flex items-center justify-center py-20">
@@ -84,6 +85,7 @@ export default function App() {
             <Route path="/admin/services" element={<Protected roles={["admin"]}><AdminServices /></Protected>} />
             <Route path="/admin/reports" element={<Protected roles={["admin"]}><AdminReports /></Protected>} />
             <Route path="/admin/audit" element={<Protected roles={["admin"]}><AdminAudit /></Protected>} />
+            <Route path="/admin/calls" element={<Protected roles={["admin"]}><AdminCalls /></Protected>} />
 
             <Route path="*" element={
               <div className="min-h-[60vh] flex flex-col items-center justify-center">

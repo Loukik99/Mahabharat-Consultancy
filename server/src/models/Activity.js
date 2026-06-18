@@ -23,16 +23,18 @@ const notificationSchema = new mongoose.Schema(
   { timestamps: { createdAt: "at", updatedAt: false } }
 );
 
-// Secure masked-call / OTP request log. The customer's real number is never stored here.
+// Call-permission / call log. An agent requests permission to call a customer;
+// an admin approves or denies; once approved the agent may call and mark it done.
 const callLogSchema = new mongoose.Schema(
   {
     agent: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     request: { type: mongoose.Schema.Types.ObjectId, ref: "ServiceRequest", required: true, index: true },
     purpose: String,
-    status: { type: String, enum: ["requested", "connected", "failed"], default: "requested" },
-    provider: { type: String, default: "stub" },
+    status: { type: String, enum: ["pending", "approved", "denied", "completed"], default: "pending", index: true },
+    approvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    decidedAt: Date,
   },
-  { timestamps: { createdAt: "at", updatedAt: false } }
+  { timestamps: { createdAt: "at", updatedAt: "updatedAt" } }
 );
 
 module.exports = {

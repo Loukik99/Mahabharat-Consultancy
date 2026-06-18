@@ -20,6 +20,7 @@ const ADMIN_LINKS = [
   { to: "/admin/payments", label: "Payments" },
   { to: "/admin/services", label: "Services" },
   { to: "/admin/reports", label: "Reports" },
+  { to: "/admin/calls", label: "Calls" },
   { to: "/admin/audit", label: "Audit" },
 ];
 
