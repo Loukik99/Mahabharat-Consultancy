@@ -18,16 +18,16 @@ const ICONS: Record<string, LucideIcon> = {
   FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
 };
 
-// Per-category icon tone for the service tiles (CSC-style colourful icons).
+// Per-category icon colour + stamp-frame colour for the service tiles.
 // Full class strings so Tailwind keeps them in the build.
-const CATEGORY_TONE: Record<string, string> = {
-  govt_docs: "bg-blue-50 text-blue-600",
-  tax_gst: "bg-emerald-50 text-emerald-600",
-  exams_jobs: "bg-amber-50 text-amber-600",
-  documents: "bg-violet-50 text-violet-600",
-  bills_recharge: "bg-rose-50 text-rose-600",
-  business: "bg-cyan-50 text-cyan-600",
-  other: "bg-slate-100 text-slate-600",
+const CATEGORY_TONE: Record<string, { icon: string; frame: string }> = {
+  govt_docs: { icon: "text-blue-600", frame: "bg-blue-200" },
+  tax_gst: { icon: "text-emerald-600", frame: "bg-emerald-200" },
+  exams_jobs: { icon: "text-amber-600", frame: "bg-amber-300" },
+  documents: { icon: "text-violet-600", frame: "bg-violet-200" },
+  bills_recharge: { icon: "text-rose-600", frame: "bg-rose-200" },
+  business: { icon: "text-cyan-600", frame: "bg-cyan-200" },
+  other: { icon: "text-slate-600", frame: "bg-slate-300" },
 };
 
 const STEPS = [
@@ -113,14 +113,15 @@ export default function Home() {
       </section>
 
       {/* ── Services by category (icon tiles) ────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <section className="bg-[#FCEBD6]/70">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <SectionHead eyebrow="What we do" title="Our services" sub="Tap any service to begin — or use the search above." />
         <div className="mt-10 space-y-12">
           {categories.map((cat) => {
             const list = services.filter((s) => s.category === cat.id);
             if (!list.length) return null;
             const Icon = ICONS[cat.icon] ?? Sparkles;
-            const tone = CATEGORY_TONE[cat.id] ?? "bg-secondary text-navy";
+            const tone = CATEGORY_TONE[cat.id] ?? { icon: "text-navy", frame: "bg-secondary" };
             return (
               <div key={cat.id}>
                 <div className="mb-5 flex items-center gap-3">
@@ -144,11 +145,13 @@ export default function Home() {
                     const SvcIcon = serviceIcon(s.slug);
                     return (
                       <Link key={s.id} to={`/services/${s.id}`}
-                        className="group flex flex-col items-center gap-3 rounded-lg bg-card p-5 text-center shadow-sm ring-1 ring-black/5 transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
-                        <span className={`flex h-14 w-14 items-center justify-center rounded-xl ${tone} transition-transform group-hover:scale-110`}>
-                          <SvcIcon size={26} />
+                        className="group flex flex-col items-center gap-4 rounded-2xl bg-white p-5 pt-6 text-center shadow-[0_2px_12px_rgba(20,40,80,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(20,40,80,0.14)]">
+                        <span className="relative flex h-16 w-16 items-center justify-center transition-transform group-hover:scale-105">
+                          <span className={`stamp absolute inset-0 ${tone.frame}`} />
+                          <span className="stamp absolute inset-[2px] bg-white" />
+                          <SvcIcon size={28} className={`relative ${tone.icon}`} />
                         </span>
-                        <span className="text-[13px] font-medium leading-snug text-navy">{s.name}</span>
+                        <span className="text-sm font-semibold leading-snug text-navy">{s.name}</span>
                       </Link>
                     );
                   })}
@@ -156,6 +159,7 @@ export default function Home() {
               </div>
             );
           })}
+        </div>
         </div>
       </section>
 
