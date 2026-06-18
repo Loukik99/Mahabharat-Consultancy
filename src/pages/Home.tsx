@@ -9,9 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
-  Search, Briefcase, ArrowRight, ArrowUpRight, FileUp, Cog, Download,
+  Search, Briefcase, ArrowRight, FileUp, Cog, Download,
   ShieldCheck, Clock, BadgeIndianRupee, Headset, MapPin, Phone, Clock3,
-  MessageCircle, type LucideIcon,
+  MessageCircle, Lock, type LucideIcon,
 } from "lucide-react";
 
 const ICONS: Record<string, LucideIcon> = {
@@ -26,16 +26,19 @@ const STEPS = [
 ];
 
 const WHY = [
-  { icon: ShieldCheck, title: "Verified & Trusted", desc: "We use only official government websites." },
-  { icon: Clock, title: "Fast Turnaround", desc: "Quick, accurate processing of every request." },
-  { icon: BadgeIndianRupee, title: "Transparent", desc: "Clear assistance with no hidden surprises." },
-  { icon: Headset, title: "Real Assistance", desc: "Friendly help at every step of the way." },
+  { icon: ShieldCheck, title: "Verified & Trusted", desc: "We work only on official government websites — never fake portals." },
+  { icon: Clock, title: "Fast Turnaround", desc: "Quick, accurate processing and same-day help on many services." },
+  { icon: BadgeIndianRupee, title: "Transparent", desc: "Clear assistance with no hidden surprises — price confirmed upfront." },
+  { icon: Lock, title: "Document Privacy", desc: "Your files are stored securely with strict access control." },
+  { icon: Headset, title: "Real Human Help", desc: "Friendly, in-person assistance at every step of the way." },
+  { icon: Building2, title: "One Roof", desc: "40+ services across government, tax, exams, printing & bills." },
 ];
 
 const STATS = [
   { value: "40+", label: "Services" },
   { value: "7", label: "Categories" },
-  { value: "100%", label: "Official portals" },
+  { value: "100%", label: "Official Portals" },
+  { value: "Same-Day", label: "Assistance" },
 ];
 
 export default function Home() {
@@ -57,8 +60,6 @@ export default function Home() {
     })();
     return () => { active = false; };
   }, []);
-
-  const popular = services.filter((s) => s.popular).slice(0, 8);
 
   const onSearch = (e: FormEvent) => {
     e.preventDefault();
@@ -104,95 +105,103 @@ export default function Home() {
                 <Link to="/jobs"><Briefcase size={16} /> Government Jobs</Link>
               </Button>
             </div>
-
-            <div className="mt-12 flex flex-wrap gap-x-10 gap-y-4 border-t border-white/10 pt-7">
-              {STATS.map((s) => (
-                <div key={s.label}>
-                  <div className="font-display text-2xl font-semibold text-gold sm:text-3xl">{s.value}</div>
-                  <div className="mt-0.5 text-xs uppercase tracking-wider text-white/55">{s.label}</div>
-                </div>
-              ))}
-            </div>
           </div>
         </div>
       </section>
 
-      {/* ── Categories ───────────────────────────────────────── */}
+      {/* ── Services by category (icon tiles) ────────────────── */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <SectionHead eyebrow="What we do" title="Explore our services" sub="Choose a category to get started." />
-        <div className="mt-10 grid grid-cols-1 gap-px overflow-hidden rounded border border-border bg-border sm:grid-cols-2 lg:grid-cols-3">
+        <SectionHead eyebrow="What we do" title="Our services" sub="Tap any service to begin — or use the search above." />
+        <div className="mt-10 space-y-12">
           {categories.map((cat) => {
+            const list = services.filter((s) => s.category === cat.id);
+            if (!list.length) return null;
             const Icon = ICONS[cat.icon] ?? Sparkles;
             return (
-              <Link key={cat.id} to={`/services?cat=${cat.id}`} className="group relative bg-card p-6 transition-colors hover:bg-secondary/50">
-                <span className="absolute inset-x-0 top-0 h-0.5 scale-x-0 bg-gold transition-transform duration-300 group-hover:scale-x-100" />
-                <div className="flex items-start justify-between">
-                  <div className="flex h-12 w-12 items-center justify-center rounded bg-navy text-gold">
-                    <Icon size={22} />
+              <div key={cat.id}>
+                <div className="mb-5 flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded bg-navy text-gold">
+                    <Icon size={20} />
                   </div>
-                  <ArrowUpRight size={18} className="text-muted-foreground transition-all group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-gold" />
+                  <div>
+                    <h3 className="font-display text-xl font-semibold text-navy">{cat.name}</h3>
+                    <p className="text-xs text-muted-foreground">
+                      {cat.nameHi && <span className="font-hi">{cat.nameHi} · </span>}
+                      {list.length} services
+                    </p>
+                  </div>
+                  <Link to={`/services?cat=${cat.id}`}
+                    className="ml-auto hidden items-center gap-1 text-sm font-medium text-gold transition-all hover:gap-2 sm:inline-flex">
+                    View all <ArrowRight size={14} />
+                  </Link>
                 </div>
-                <h3 className="mt-5 font-display text-lg font-semibold text-navy">{cat.name}</h3>
-                {cat.nameHi && <p className="font-hi text-sm text-muted-foreground">{cat.nameHi}</p>}
-                <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cat.description}</p>
-              </Link>
+                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                  {list.map((s) => (
+                    <Link key={s.id} to={`/services/${s.id}`}
+                      className="group flex flex-col items-center gap-2.5 rounded border border-border bg-card p-4 text-center transition-all hover:-translate-y-0.5 hover:border-gold hover:shadow-md">
+                      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-secondary text-navy transition-colors group-hover:bg-gold/15 group-hover:text-gold">
+                        <Icon size={20} />
+                      </span>
+                      <span className="text-xs font-medium leading-snug text-navy">{s.name}</span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
             );
           })}
         </div>
       </section>
 
-      {/* ── Popular ──────────────────────────────────────────── */}
-      {popular.length > 0 && (
-        <section className="border-y border-border bg-secondary/40">
-          <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <p className="eyebrow text-gold">Most requested</p>
-            <div className="mt-5 flex flex-wrap gap-2.5">
-              {popular.map((s) => (
-                <Link key={s.id} to={`/services/${s.id}`}
-                  className="inline-flex items-center gap-2 rounded border border-border bg-card px-4 py-2 text-sm font-medium text-navy transition-colors hover:border-gold hover:text-gold">
-                  {s.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* ── How it works ─────────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <SectionHead eyebrow="The process" title="How it works" sub="Four simple steps from request to delivery." center />
-        <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {STEPS.map((step, i) => (
-            <div key={step.title} className="relative">
-              <div className="flex items-center gap-3">
-                <span className="font-display text-3xl font-semibold text-gold/40">{String(i + 1).padStart(2, "0")}</span>
-                <div className="gold-rule flex-1" />
+      <section className="border-y border-border bg-secondary/40">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+          <SectionHead eyebrow="The process" title="How it works" sub="Four simple steps from request to delivery." center />
+          <div className="relative mt-14 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="pointer-events-none absolute inset-x-0 top-8 hidden h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent lg:block" />
+            {STEPS.map((step, i) => (
+              <div key={step.title} className="relative flex flex-col items-center text-center">
+                <div className="relative">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-gold/30 bg-navy text-gold shadow-sm">
+                    <step.icon size={24} />
+                  </div>
+                  <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-gold font-display text-xs font-bold text-gold-foreground">
+                    {i + 1}
+                  </span>
+                </div>
+                <h3 className="mt-5 font-display text-lg font-semibold text-navy">{step.title}</h3>
+                <p className="mt-1.5 max-w-[15rem] text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
               </div>
-              <div className="mt-4 flex h-11 w-11 items-center justify-center rounded bg-navy text-gold">
-                <step.icon size={20} />
-              </div>
-              <h3 className="mt-4 font-display text-lg font-semibold text-navy">{step.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Stats band ───────────────────────────────────────── */}
+      <section className="surface-navy">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
+          {STATS.map((s) => (
+            <div key={s.label} className="text-center">
+              <div className="font-display text-3xl font-semibold text-gold sm:text-4xl">{s.value}</div>
+              <div className="mt-1 text-xs uppercase tracking-wider text-white/55">{s.label}</div>
             </div>
           ))}
         </div>
       </section>
 
       {/* ── Why choose ───────────────────────────────────────── */}
-      <section className="border-t border-border bg-secondary/40">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <SectionHead eyebrow="Why us" title="Why choose Mahabharat" center />
-          <div className="mt-10 grid grid-cols-1 gap-px overflow-hidden rounded border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">
-            {WHY.map((w) => (
-              <div key={w.title} className="bg-card p-6 text-center">
-                <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full border border-gold/40 bg-gold/10 text-gold">
-                  <w.icon size={22} />
-                </div>
-                <h3 className="mt-4 font-display text-base font-semibold text-navy">{w.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{w.desc}</p>
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <SectionHead eyebrow="Why us" title="Why choose Mahabharat" center />
+        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {WHY.map((w) => (
+            <div key={w.title}
+              className="group rounded border border-border bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-gold hover:shadow-md">
+              <div className="flex h-12 w-12 items-center justify-center rounded border border-gold/30 bg-gold/10 text-gold">
+                <w.icon size={22} />
               </div>
-            ))}
-          </div>
+              <h3 className="mt-4 font-display text-lg font-semibold text-navy">{w.title}</h3>
+              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{w.desc}</p>
+            </div>
+          ))}
         </div>
       </section>
 
