@@ -2,33 +2,15 @@ import { useState, useEffect, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { serviceCategories } from "@/data/catalog";
 import { getServices, getCategories } from "@/api/services.api";
-import { serviceIcon } from "@/data/serviceIcons";
 import type { Service, ServiceCategory } from "@/types";
 import { toast } from "sonner";
 import { site, waLink } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
-  FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
-  Search, Briefcase, ArrowRight, FileUp, Cog, Download,
+  FileText, Search, Briefcase, ArrowRight, FileUp, Cog, Download,
   MapPin, Phone, Clock3, MessageCircle, type LucideIcon,
 } from "lucide-react";
-
-const ICONS: Record<string, LucideIcon> = {
-  FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
-};
-
-// Soft per-category tint + icon colour behind each service icon.
-// Full class strings so Tailwind keeps them in the build.
-const CATEGORY_TONE: Record<string, { bg: string; icon: string }> = {
-  govt_docs: { bg: "bg-blue-50", icon: "text-blue-600" },
-  tax_gst: { bg: "bg-emerald-50", icon: "text-emerald-600" },
-  exams_jobs: { bg: "bg-amber-50", icon: "text-amber-600" },
-  documents: { bg: "bg-violet-50", icon: "text-violet-600" },
-  bills_recharge: { bg: "bg-rose-50", icon: "text-rose-600" },
-  business: { bg: "bg-cyan-50", icon: "text-cyan-600" },
-  other: { bg: "bg-slate-100", icon: "text-slate-600" },
-};
 
 const STEPS = [
   { icon: FileText, title: "Submit Request", desc: "Pick a service and tell us what you need." },
@@ -112,52 +94,34 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Services by category (icon tiles) ────────────────── */}
+      {/* ── Services (highlight cards) ───────────────────────── */}
       <section className="bg-[#FCEBD6]/70">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <SectionHead eyebrow="What we do" title="Our services" sub="Tap any service to begin — or use the search above." />
-        <div className="mt-10 space-y-12">
-          {categories.map((cat) => {
-            const list = services.filter((s) => s.category === cat.id);
-            if (!list.length) return null;
-            const Icon = ICONS[cat.icon] ?? Sparkles;
-            const tone = CATEGORY_TONE[cat.id] ?? { bg: "bg-secondary", icon: "text-navy" };
-            return (
-              <div key={cat.id}>
-                <div className="mb-5 flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded bg-navy text-gold">
-                    <Icon size={20} />
-                  </div>
-                  <div>
-                    <h3 className="font-display text-xl font-semibold text-navy">{cat.name}</h3>
-                    <p className="text-xs text-muted-foreground">
-                      {cat.nameHi && <span className="font-hi">{cat.nameHi} · </span>}
-                      {list.length} services
-                    </p>
-                  </div>
-                  <Link to={`/services?cat=${cat.id}`}
-                    className="ml-auto hidden items-center gap-1 text-sm font-medium text-gold transition-all hover:gap-2 sm:inline-flex">
-                    View all <ArrowRight size={14} />
-                  </Link>
-                </div>
-                <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-                  {list.map((s) => {
-                    const SvcIcon = serviceIcon(s.slug);
-                    return (
-                      <Link key={s.id} to={`/services/${s.id}`}
-                        className="group flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center shadow-[0_1px_6px_rgba(20,40,80,0.06)] ring-1 ring-black/5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(20,40,80,0.12)]">
-                        <span className={`flex h-12 w-12 items-center justify-center rounded-xl ${tone.bg} transition-transform group-hover:scale-105`}>
-                          <SvcIcon size={22} className={tone.icon} />
-                        </span>
-                        <span className="text-[11px] font-medium leading-tight text-navy line-clamp-2">{s.name}</span>
-                      </Link>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-        </div>
+          <SectionHead eyebrow="What we do" title="Our services" sub="The main things we help you with — see the full list for all 40+ services." />
+          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {categories.slice(0, 5).map((cat) => {
+              const count = services.filter((s) => s.category === cat.id).length;
+              return (
+                <Link key={cat.id} to={`/services?cat=${cat.id}`}
+                  className="group relative overflow-hidden rounded-xl border border-border bg-card p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-gold hover:shadow-lg">
+                  <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gold transition-transform duration-300 group-hover:scale-x-100" />
+                  <h3 className="font-display text-xl font-semibold text-navy">{cat.name}</h3>
+                  {cat.nameHi && <p className="font-hi text-sm text-gold">{cat.nameHi}</p>}
+                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cat.description}</p>
+                  {count > 0 && (
+                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-gold transition-all group-hover:gap-2">
+                      Explore {count} services <ArrowRight size={14} />
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+          <div className="mt-9 text-center">
+            <Button asChild size="lg" className="bg-gold font-semibold text-gold-foreground hover:bg-gold/90">
+              <Link to="/services">Browse all services <ArrowRight size={16} /></Link>
+            </Button>
+          </div>
         </div>
       </section>
 
