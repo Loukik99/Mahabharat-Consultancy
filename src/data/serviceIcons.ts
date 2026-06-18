@@ -123,3 +123,22 @@ const SERVICE_EMOJI: Record<string, string> = {
 export function serviceEmoji(slug?: string): string {
   return (slug && SERVICE_EMOJI[slug]) || "📋";
 }
+
+// Per-service image icon — DROP-IN: add an image named "<slug>.png" (or .svg/
+// .jpg/.webp) into src/assets/services/ and it is auto-detected at build time
+// (Vite import.meta.glob) and shown on the card; otherwise the emoji is used.
+// e.g. src/assets/services/pan-card.png  →  shows on the PAN Card card.
+const SERVICE_IMAGE_MODULES = import.meta.glob(
+  "../assets/services/*.{png,svg,jpg,jpeg,webp}",
+  { eager: true, import: "default" }
+) as Record<string, string>;
+
+const SERVICE_IMAGE: Record<string, string> = {};
+for (const path in SERVICE_IMAGE_MODULES) {
+  const slug = path.split("/").pop()!.replace(/\.(png|svg|jpe?g|webp)$/i, "");
+  SERVICE_IMAGE[slug] = SERVICE_IMAGE_MODULES[path];
+}
+
+export function serviceImage(slug?: string): string | undefined {
+  return slug ? SERVICE_IMAGE[slug] : undefined;
+}

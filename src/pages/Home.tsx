@@ -2,7 +2,7 @@ import { useState, useEffect, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { serviceCategories } from "@/data/catalog";
 import { getServices, getCategories } from "@/api/services.api";
-import { serviceEmoji } from "@/data/serviceIcons";
+import { serviceEmoji, serviceImage } from "@/data/serviceIcons";
 import type { Service, ServiceCategory } from "@/types";
 import { toast } from "sonner";
 import { site, waLink } from "@/config/site";
@@ -18,16 +18,16 @@ const ICONS: Record<string, LucideIcon> = {
   FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
 };
 
-// Per-category icon colour + stamp-frame colour for the service tiles.
+// Soft per-category background tint behind each service icon.
 // Full class strings so Tailwind keeps them in the build.
-const CATEGORY_TONE: Record<string, { icon: string; frame: string }> = {
-  govt_docs: { icon: "text-blue-600", frame: "bg-blue-200" },
-  tax_gst: { icon: "text-emerald-600", frame: "bg-emerald-200" },
-  exams_jobs: { icon: "text-amber-600", frame: "bg-amber-300" },
-  documents: { icon: "text-violet-600", frame: "bg-violet-200" },
-  bills_recharge: { icon: "text-rose-600", frame: "bg-rose-200" },
-  business: { icon: "text-cyan-600", frame: "bg-cyan-200" },
-  other: { icon: "text-slate-600", frame: "bg-slate-300" },
+const CATEGORY_TONE: Record<string, string> = {
+  govt_docs: "bg-blue-50",
+  tax_gst: "bg-emerald-50",
+  exams_jobs: "bg-amber-50",
+  documents: "bg-violet-50",
+  bills_recharge: "bg-rose-50",
+  business: "bg-cyan-50",
+  other: "bg-slate-100",
 };
 
 const STEPS = [
@@ -121,7 +121,7 @@ export default function Home() {
             const list = services.filter((s) => s.category === cat.id);
             if (!list.length) return null;
             const Icon = ICONS[cat.icon] ?? Sparkles;
-            const tone = CATEGORY_TONE[cat.id] ?? { icon: "text-navy", frame: "bg-secondary" };
+            const tone = CATEGORY_TONE[cat.id] ?? "bg-secondary";
             return (
               <div key={cat.id}>
                 <div className="mb-5 flex items-center gap-3">
@@ -140,16 +140,14 @@ export default function Home() {
                     View all <ArrowRight size={14} />
                   </Link>
                 </div>
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
                   {list.map((s) => (
                     <Link key={s.id} to={`/services/${s.id}`}
-                      className="group flex flex-col items-center gap-4 rounded-2xl bg-white p-5 pt-6 text-center shadow-[0_2px_12px_rgba(20,40,80,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(20,40,80,0.14)]">
-                      <span className="relative flex h-16 w-16 items-center justify-center transition-transform group-hover:scale-105">
-                        <span className={`stamp absolute inset-0 ${tone.frame}`} />
-                        <span className="stamp absolute inset-[2px] bg-white" />
-                        <span className="relative text-3xl leading-none">{serviceEmoji(s.slug)}</span>
+                      className="group flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center shadow-[0_1px_6px_rgba(20,40,80,0.06)] ring-1 ring-black/5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(20,40,80,0.12)]">
+                      <span className={`flex h-12 w-12 items-center justify-center rounded-xl ${tone} transition-transform group-hover:scale-105`}>
+                        <ServiceTileIcon slug={s.slug} />
                       </span>
-                      <span className="text-sm font-semibold leading-snug text-navy">{s.name}</span>
+                      <span className="text-[11px] font-medium leading-tight text-navy line-clamp-2">{s.name}</span>
                     </Link>
                   ))}
                 </div>
@@ -262,4 +260,12 @@ function ContactRow({ icon: Icon, children }: { icon: LucideIcon; children: Reac
       <p className="pt-1.5 text-sm text-foreground">{children}</p>
     </div>
   );
+}
+
+// Service icon: shows the supplied image (src/assets/services/<slug>.*) if
+// present, otherwise the emoji.
+function ServiceTileIcon({ slug }: { slug?: string }) {
+  const img = serviceImage(slug);
+  if (img) return <img src={img} alt="" className="h-9 w-9 object-contain" loading="lazy" />;
+  return <span className="text-2xl leading-none">{serviceEmoji(slug)}</span>;
 }
