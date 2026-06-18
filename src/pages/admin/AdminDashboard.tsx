@@ -7,8 +7,6 @@ import { getAuditLogs } from "@/api/audit.api";
 import { getCustomers, getAgents } from "@/api/users.api";
 import { serviceById } from "@/data/catalog";
 import { StatusBadge } from "@/components/StatusBadge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import {
   ClipboardList, Clock, CheckCircle, Wallet, Users, UserCog, FileText,
@@ -34,10 +32,10 @@ export function AdminNav({ active }: { active?: string }) {
         <Link
           key={l.to}
           to={l.to}
-          className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${
+          className={`text-xs font-semibold px-3 py-1.5 rounded transition-colors ${
             active === l.to
-              ? "bg-orange-500 text-white"
-              : "bg-orange-50 text-orange-700 hover:bg-orange-100"
+              ? "bg-navy text-white"
+              : "bg-secondary text-muted-foreground hover:text-navy"
           }`}
         >
           {l.label}
@@ -85,14 +83,14 @@ export default function AdminDashboard() {
   }, []);
 
   const cards = stats ? [
-    { label: "Total Requests", value: stats.totalRequests, icon: ClipboardList, color: "bg-blue-100 text-blue-600" },
-    { label: "Pending", value: stats.pendingRequests, icon: Clock, color: "bg-yellow-100 text-yellow-600" },
-    { label: "Completed", value: stats.completedRequests, icon: CheckCircle, color: "bg-green-100 text-green-600" },
-    { label: "Waiting Payment", value: stats.waitingPayment, icon: Wallet, color: "bg-orange-100 text-orange-600" },
-    { label: "Payments Received", value: stats.paymentsReceived, icon: IndianRupee, color: "bg-emerald-100 text-emerald-600" },
-    { label: "Customers", value: stats.totalCustomers, icon: Users, color: "bg-purple-100 text-purple-600" },
-    { label: "Agents", value: stats.totalAgents, icon: UserCog, color: "bg-pink-100 text-pink-600" },
-    { label: "Active Agents", value: stats.activeAgents, icon: UserCog, color: "bg-teal-100 text-teal-600" },
+    { label: "Total Requests", value: stats.totalRequests, icon: ClipboardList },
+    { label: "Pending", value: stats.pendingRequests, icon: Clock },
+    { label: "Completed", value: stats.completedRequests, icon: CheckCircle },
+    { label: "Waiting Payment", value: stats.waitingPayment, icon: Wallet },
+    { label: "Payments Received", value: stats.paymentsReceived, icon: IndianRupee },
+    { label: "Customers", value: stats.totalCustomers, icon: Users },
+    { label: "Agents", value: stats.totalAgents, icon: UserCog },
+    { label: "Active Agents", value: stats.activeAgents, icon: UserCog },
   ] : [];
 
   const quickLinks = [
@@ -108,112 +106,105 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
       </div>
     );
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold tracking-tight mb-1">Admin Dashboard</h1>
+      <p className="eyebrow text-gold">Admin</p>
+      <h1 className="font-display text-3xl font-semibold tracking-tight text-navy mb-1">Admin Dashboard</h1>
       <p className="text-sm text-muted-foreground mb-5">Full overview of requests, agents, payments and activity</p>
 
       <AdminNav active="/admin" />
 
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-8 gap-3 mb-7">
         {cards.map((s, i) => (
-          <Card key={i}><CardContent className="pt-4 pb-3 text-center">
-            <div className={`w-9 h-9 ${s.color} rounded-lg flex items-center justify-center mx-auto mb-1.5`}><s.icon size={18} /></div>
-            <p className="text-lg font-bold">{s.value}</p>
-            <p className="text-[10px] text-muted-foreground">{s.label}</p>
-          </CardContent></Card>
+          <div key={i} className="bg-card border border-border rounded p-4 text-center">
+            <div className="w-9 h-9 bg-navy text-gold rounded flex items-center justify-center mx-auto mb-2"><s.icon size={18} /></div>
+            <p className="font-display text-2xl font-semibold text-navy tnum">{s.value}</p>
+            <p className="text-[10px] text-muted-foreground mt-0.5">{s.label}</p>
+          </div>
         ))}
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3 mb-7">
         {quickLinks.map((l) => (
-          <Link key={l.to} to={l.to}>
-            <Card className="hover:shadow-md transition-shadow h-full"><CardContent className="pt-4 pb-3 text-center">
-              <l.icon className="mx-auto text-orange-500 mb-1.5" size={22} />
-              <p className="font-semibold text-xs">{l.label}</p>
-            </CardContent></Card>
+          <Link key={l.to} to={l.to} className="group bg-card border border-border rounded p-4 text-center transition-colors hover:bg-secondary/40 hover:border-gold">
+            <l.icon className="mx-auto text-gold mb-1.5" size={22} />
+            <p className="font-semibold text-xs text-navy">{l.label}</p>
           </Link>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <Card className="lg:col-span-2">
-          <CardContent className="pt-5">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="font-semibold">Recent Requests</h2>
-              <Link to="/admin/requests" className="text-orange-600 text-xs font-medium hover:underline">View All</Link>
-            </div>
-            <div className="overflow-x-auto">
-              <Table>
-                <TableHeader><TableRow>
-                  <TableHead>Request #</TableHead><TableHead>Service</TableHead><TableHead>Customer</TableHead><TableHead>Status</TableHead><TableHead></TableHead>
-                </TableRow></TableHeader>
-                <TableBody>
-                  {recent.map((r) => (
-                    <TableRow key={r.id}>
-                      <TableCell className="font-medium">{r.requestNumber}</TableCell>
-                      <TableCell>{serviceById(r.serviceId)?.name ?? r.serviceId}</TableCell>
-                      <TableCell>{nameById[r.userId] ?? "—"}</TableCell>
-                      <TableCell><StatusBadge status={r.status} /></TableCell>
-                      <TableCell><Link to={`/admin/requests/${r.id}`} className="text-orange-600"><Eye size={15} /></Link></TableCell>
-                    </TableRow>
-                  ))}
-                  {recent.length === 0 && <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">No requests yet.</TableCell></TableRow>}
-                </TableBody>
-              </Table>
-            </div>
-          </CardContent>
-        </Card>
+        <div className="lg:col-span-2 bg-card border border-border rounded p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-display text-lg font-semibold text-navy">Recent Requests</h2>
+            <Link to="/admin/requests" className="text-gold text-xs font-medium hover:underline">View All</Link>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead><tr className="text-xs uppercase tracking-wider text-muted-foreground border-b border-border">
+                <th className="text-left font-medium py-2 pr-3">Request #</th><th className="text-left font-medium py-2 pr-3">Service</th><th className="text-left font-medium py-2 pr-3">Customer</th><th className="text-left font-medium py-2 pr-3">Status</th><th className="py-2"></th>
+              </tr></thead>
+              <tbody>
+                {recent.map((r) => (
+                  <tr key={r.id} className="border-b border-border/60 hover:bg-secondary/40">
+                    <td className="py-2.5 pr-3 font-medium text-navy">{r.requestNumber}</td>
+                    <td className="py-2.5 pr-3">{serviceById(r.serviceId)?.name ?? r.serviceId}</td>
+                    <td className="py-2.5 pr-3">{nameById[r.userId] ?? "—"}</td>
+                    <td className="py-2.5 pr-3"><StatusBadge status={r.status} /></td>
+                    <td className="py-2.5"><Link to={`/admin/requests/${r.id}`} className="text-navy hover:text-gold"><Eye size={15} /></Link></td>
+                  </tr>
+                ))}
+                {recent.length === 0 && <tr><td colSpan={5} className="text-center py-8 text-muted-foreground">No requests yet.</td></tr>}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
-        <Card>
-          <CardContent className="pt-5">
-            <h2 className="font-semibold mb-3">Recent Activity</h2>
-            <ul className="space-y-2.5">
-              {audit.map((a) => (
-                <li key={a.id} className="text-xs border-l-2 border-orange-200 pl-2.5">
-                  <p className="font-medium">{a.action.replace(/_/g, " ")}</p>
-                  <p className="text-muted-foreground">
-                    {(nameById[a.actorId] ?? a.actorId)} ({a.actorRole}) · {new Date(a.at).toLocaleString("en-IN")}
-                  </p>
-                  {a.meta && <p className="text-muted-foreground">{a.meta}</p>}
-                </li>
-              ))}
-              {audit.length === 0 && <li className="text-xs text-muted-foreground">No activity recorded.</li>}
-            </ul>
-            <Link to="/admin/audit" className="text-orange-600 text-xs font-medium hover:underline mt-3 inline-block">View Audit Log</Link>
-          </CardContent>
-        </Card>
+        <div className="bg-card border border-border rounded p-5">
+          <h2 className="font-display text-lg font-semibold text-navy mb-3">Recent Activity</h2>
+          <ul className="space-y-2.5">
+            {audit.map((a) => (
+              <li key={a.id} className="text-xs border-l-2 border-gold/40 pl-2.5">
+                <p className="font-medium text-navy">{a.action.replace(/_/g, " ")}</p>
+                <p className="text-muted-foreground">
+                  {(nameById[a.actorId] ?? a.actorId)} ({a.actorRole}) · {new Date(a.at).toLocaleString("en-IN")}
+                </p>
+                {a.meta && <p className="text-muted-foreground">{a.meta}</p>}
+              </li>
+            ))}
+            {audit.length === 0 && <li className="text-xs text-muted-foreground">No activity recorded.</li>}
+          </ul>
+          <Link to="/admin/audit" className="text-gold text-xs font-medium hover:underline mt-3 inline-block">View Audit Log</Link>
+        </div>
       </div>
 
-      <Card className="mt-5">
-        <CardContent className="pt-5">
-          <h2 className="font-semibold mb-3">Agent Performance</h2>
-          <div className="overflow-x-auto">
-            <Table>
-              <TableHeader><TableRow>
-                <TableHead>Agent</TableHead><TableHead>Assigned</TableHead><TableHead>Completed</TableHead><TableHead>Pending</TableHead><TableHead>Delayed</TableHead>
-              </TableRow></TableHeader>
-              <TableBody>
-                {performance.map((p) => (
-                  <TableRow key={p.agentId}>
-                    <TableCell className="font-medium">{p.agentName}</TableCell>
-                    <TableCell>{p.totalAssigned}</TableCell>
-                    <TableCell className="text-green-600 font-medium">{p.completed}</TableCell>
-                    <TableCell>{p.pending}</TableCell>
-                    <TableCell className={p.delayed > 0 ? "text-red-600 font-bold" : ""}>{p.delayed}</TableCell>
-                  </TableRow>
-                ))}
-                {performance.length === 0 && <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">No agents yet.</TableCell></TableRow>}
-              </TableBody>
-            </Table>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="mt-5 bg-card border border-border rounded p-5">
+        <h2 className="font-display text-lg font-semibold text-navy mb-3">Agent Performance</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead><tr className="text-xs uppercase tracking-wider text-muted-foreground border-b border-border">
+              <th className="text-left font-medium py-2 pr-3">Agent</th><th className="text-right font-medium py-2 pr-3">Assigned</th><th className="text-right font-medium py-2 pr-3">Completed</th><th className="text-right font-medium py-2 pr-3">Pending</th><th className="text-right font-medium py-2">Delayed</th>
+            </tr></thead>
+            <tbody>
+              {performance.map((p) => (
+                <tr key={p.agentId} className="border-b border-border/60 hover:bg-secondary/40">
+                  <td className="py-2.5 pr-3 font-medium text-navy">{p.agentName}</td>
+                  <td className="py-2.5 pr-3 text-right tnum">{p.totalAssigned}</td>
+                  <td className="py-2.5 pr-3 text-right tnum text-emerald-600 font-medium">{p.completed}</td>
+                  <td className="py-2.5 pr-3 text-right tnum">{p.pending}</td>
+                  <td className={`py-2.5 text-right tnum ${p.delayed > 0 ? "text-destructive font-bold" : ""}`}>{p.delayed}</td>
+                </tr>
+              ))}
+              {performance.length === 0 && <tr><td colSpan={5} className="text-center py-8 text-muted-foreground">No agents yet.</td></tr>}
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   );
 }

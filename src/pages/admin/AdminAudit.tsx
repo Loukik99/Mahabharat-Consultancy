@@ -5,7 +5,6 @@ import { getAuditLogs } from "@/api/audit.api";
 import { getCustomers, getAgents } from "@/api/users.api";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Download, Filter } from "lucide-react";
@@ -21,7 +20,7 @@ function AdminNav({ active }: { active?: string }) {
   return (
     <div className="flex flex-wrap gap-1.5 mb-6">
       {ADMIN_LINKS.map((l) => (
-        <Link key={l.to} to={l.to} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${active === l.to ? "bg-orange-500 text-white" : "bg-orange-50 text-orange-700 hover:bg-orange-100"}`}>{l.label}</Link>
+        <Link key={l.to} to={l.to} className={`text-xs font-semibold px-3 py-1.5 rounded transition-colors ${active === l.to ? "bg-navy text-white" : "bg-secondary text-muted-foreground hover:text-navy"}`}>{l.label}</Link>
       ))}
     </div>
   );
@@ -87,8 +86,11 @@ export default function AdminAudit() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-1">
-        <h1 className="text-2xl font-bold tracking-tight">Audit Log ({logs.length})</h1>
-        <Button size="sm" variant="outline" onClick={exportCsv}><Download size={14} className="mr-1" /> Export CSV</Button>
+        <div>
+          <p className="eyebrow text-gold">System</p>
+          <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-navy">Audit Log ({logs.length})</h1>
+        </div>
+        <Button size="sm" variant="outline" className="border-border text-navy hover:border-gold hover:text-gold" onClick={exportCsv}><Download size={14} className="mr-1" /> Export CSV</Button>
       </div>
       <p className="text-sm text-muted-foreground mb-5">All recorded admin, agent and customer activity</p>
 
@@ -105,31 +107,37 @@ export default function AdminAudit() {
         </Select>
       </CardContent></Card>
 
-      <Card><CardContent className="pt-4 overflow-x-auto">
+      <div className="bg-card border border-border rounded overflow-x-auto">
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
           </div>
         ) : (
-          <Table>
-            <TableHeader><TableRow>
-              <TableHead>Time</TableHead><TableHead>Actor</TableHead><TableHead>Action</TableHead><TableHead>Target</TableHead><TableHead>Meta</TableHead>
-            </TableRow></TableHeader>
-            <TableBody>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-xs uppercase tracking-wider text-muted-foreground border-b border-border">
+                <th className="text-left font-medium px-4 py-3">Time</th>
+                <th className="text-left font-medium px-4 py-3">Actor</th>
+                <th className="text-left font-medium px-4 py-3">Action</th>
+                <th className="text-left font-medium px-4 py-3">Target</th>
+                <th className="text-left font-medium px-4 py-3">Meta</th>
+              </tr>
+            </thead>
+            <tbody>
               {logs.map((l) => (
-                <TableRow key={l.id}>
-                  <TableCell className="text-muted-foreground whitespace-nowrap">{new Date(l.at).toLocaleString("en-IN")}</TableCell>
-                  <TableCell className="font-medium">{actorName(l.actorId)} <span className="text-muted-foreground font-normal">({l.actorRole})</span></TableCell>
-                  <TableCell>{l.action.replace(/_/g, " ")}</TableCell>
-                  <TableCell className="text-muted-foreground">{l.targetType} · {l.targetId}</TableCell>
-                  <TableCell className="text-muted-foreground">{l.meta ?? "—"}</TableCell>
-                </TableRow>
+                <tr key={l.id} className="border-b border-border/60 hover:bg-secondary/40">
+                  <td className="px-4 py-3 text-muted-foreground whitespace-nowrap tnum">{new Date(l.at).toLocaleString("en-IN")}</td>
+                  <td className="px-4 py-3 font-medium">{actorName(l.actorId)} <span className="text-muted-foreground font-normal">({l.actorRole})</span></td>
+                  <td className="px-4 py-3">{l.action.replace(/_/g, " ")}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{l.targetType} · {l.targetId}</td>
+                  <td className="px-4 py-3 text-muted-foreground">{l.meta ?? "—"}</td>
+                </tr>
               ))}
-              {logs.length === 0 && <TableRow><TableCell colSpan={5} className="text-center py-8 text-muted-foreground">No audit entries.</TableCell></TableRow>}
-            </TableBody>
-          </Table>
+              {logs.length === 0 && <tr><td colSpan={5} className="text-center py-8 text-muted-foreground">No audit entries.</td></tr>}
+            </tbody>
+          </table>
         )}
-      </CardContent></Card>
+      </div>
     </div>
   );
 }

@@ -128,12 +128,13 @@ export default function NewRequest() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <button onClick={back} className="text-blue-600 text-sm font-medium hover:underline mb-4 inline-flex items-center gap-1">
+      <button onClick={back} className="text-sm font-medium text-navy hover:text-gold mb-4 inline-flex items-center gap-1 transition-colors">
         <ChevronLeft size={15} /> Back
       </button>
 
       <div className="mb-6">
-        <h1 className="text-2xl font-bold tracking-tight">New Service Request</h1>
+        <p className="eyebrow text-gold">Get started</p>
+        <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-navy">New Service Request</h1>
         <p className="text-sm text-muted-foreground">
           Step {step} of 2 — {step === 1 ? "choose a service" : "fill in details"}
         </p>
@@ -141,7 +142,7 @@ export default function NewRequest() {
 
       {loading ? (
         <div className="flex justify-center py-16">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
         </div>
       ) : (
         <>
@@ -149,17 +150,17 @@ export default function NewRequest() {
           {step === 1 && (
             <div className="space-y-6">
               <div>
-                <h2 className="font-semibold mb-3 text-sm">1. Pick a category</h2>
+                <h2 className="font-display text-base font-semibold text-navy mb-3">1. Pick a category</h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {categories.map((c) => (
                     <button
                       key={c.id}
                       type="button"
                       onClick={() => setCategory(c.id)}
-                      className={`text-left rounded-lg border p-3 transition-all ${category === c.id ? "border-blue-500 ring-2 ring-blue-100 bg-blue-50/50" : "hover:border-blue-300"}`}
+                      className={`text-left rounded border p-3 transition-colors ${category === c.id ? "border-gold bg-secondary/50" : "border-border hover:border-gold"}`}
                     >
-                      <p className="font-semibold text-sm">{c.name}</p>
-                      {c.nameHi && <p className="text-xs text-muted-foreground">{c.nameHi}</p>}
+                      <p className="font-semibold text-sm text-navy">{c.name}</p>
+                      {c.nameHi && <p className="font-hi text-xs text-muted-foreground">{c.nameHi}</p>}
                       <p className="text-xs text-muted-foreground mt-1">{c.description}</p>
                     </button>
                   ))}
@@ -168,10 +169,10 @@ export default function NewRequest() {
 
               {category && (
                 <div>
-                  <h2 className="font-semibold mb-3 text-sm">2. Pick a service</h2>
+                  <h2 className="font-display text-base font-semibold text-navy mb-3">2. Pick a service</h2>
                   {servicesLoading ? (
                     <div className="flex justify-center py-8">
-                      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+                      <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
                     </div>
                   ) : (
                     <div className="space-y-2">
@@ -180,12 +181,12 @@ export default function NewRequest() {
                           key={s.id}
                           type="button"
                           onClick={() => setService(s)}
-                          className="w-full text-left rounded-lg border p-3 hover:border-blue-400 hover:bg-blue-50/40 transition-all flex items-center justify-between gap-3"
+                          className="w-full text-left rounded border border-border p-3 hover:border-gold transition-colors flex items-center justify-between gap-3"
                         >
                           <span className="min-w-0">
-                            <span className="block font-semibold text-sm">{s.name}</span>
+                            <span className="block font-semibold text-sm text-navy">{s.name}</span>
                             <span className="block text-xs text-muted-foreground truncate">{s.description}</span>
-                            <span className="text-[11px] text-blue-600 font-medium">{s.priceLabel}</span>
+                            <span className="text-[11px] text-gold font-medium">{s.priceLabel}</span>
                           </span>
                           <ArrowRight size={16} className="text-muted-foreground shrink-0" />
                         </button>
@@ -203,9 +204,9 @@ export default function NewRequest() {
           {/* Step 2 — details */}
           {step === 2 && service && (
             <form onSubmit={handleSubmit} className="space-y-5">
-              <Card>
+              <Card className="rounded border border-border border-l-2 border-l-gold">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">{service.name}</CardTitle>
+                  <CardTitle className="font-display text-lg text-navy">{service.name}</CardTitle>
                   <p className="text-sm text-muted-foreground">
                     {categoryName} • {service.priceLabel}
                   </p>
@@ -219,12 +220,12 @@ export default function NewRequest() {
               </Card>
 
               {service.requiredDocuments.length > 0 && (
-                <div className="p-3 bg-yellow-50 rounded-lg border border-yellow-200 text-sm">
-                  <p className="font-semibold text-xs mb-1.5 flex items-center gap-1.5"><FileText size={13} /> Documents you'll need to upload:</p>
+                <div className="p-3 rounded border border-amber-200 bg-amber-50 text-sm">
+                  <p className="font-semibold text-xs text-amber-800 mb-1.5 flex items-center gap-1.5"><FileText size={13} /> Documents you'll need to upload:</p>
                   <ul className="space-y-1">
                     {service.requiredDocuments.map((d, i) => (
                       <li key={i} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <CheckCircle2 size={13} className="text-yellow-500 shrink-0" /> {d}
+                        <CheckCircle2 size={13} className="text-amber-500 shrink-0" /> {d}
                       </li>
                     ))}
                   </ul>
@@ -232,8 +233,8 @@ export default function NewRequest() {
                 </div>
               )}
 
-              <Card>
-                <CardHeader className="pb-2"><CardTitle className="text-base">Applicant Details (optional)</CardTitle></CardHeader>
+              <Card className="rounded border border-border">
+                <CardHeader className="pb-2"><CardTitle className="font-display text-base text-navy">Applicant Details (optional)</CardTitle></CardHeader>
                 <CardContent className="space-y-3">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div><Label htmlFor="fullName">Full Name</Label><Input id="fullName" value={applicant.fullName} onChange={(e) => setApplicant({ ...applicant, fullName: e.target.value })} /></div>
@@ -253,8 +254,8 @@ export default function NewRequest() {
                 <Textarea id="notes" rows={3} placeholder="Anything we should know..." value={notes} onChange={(e) => setNotes(e.target.value)} />
               </div>
 
-              <div className="p-3 bg-blue-50 rounded-lg border border-blue-100 flex items-start gap-2 text-sm text-blue-800">
-                <Info size={15} className="mt-0.5 shrink-0 text-blue-500" />
+              <div className="p-3 rounded border-l-2 border-gold bg-secondary/60 flex items-start gap-2 text-sm text-muted-foreground">
+                <Info size={15} className="mt-0.5 shrink-0 text-gold" />
                 <span>
                   Mahabharat Consultancy is an assistance / service center. We help you apply on the
                   official government and service portals — we are not a government body and do not
@@ -263,10 +264,10 @@ export default function NewRequest() {
               </div>
 
               <div className="flex gap-3 pt-1">
-                <Button type="submit" disabled={submitting} className="flex-1 bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff]">
+                <Button type="submit" disabled={submitting} className="flex-1 bg-gold font-semibold text-gold-foreground hover:bg-gold/90">
                   {submitting ? "Creating..." : "Create Request"}
                 </Button>
-                <Button type="button" variant="outline" onClick={back} disabled={submitting}>Back</Button>
+                <Button type="button" variant="outline" onClick={back} disabled={submitting} className="border-navy/20 text-navy hover:text-navy">Back</Button>
               </div>
             </form>
           )}
@@ -274,7 +275,7 @@ export default function NewRequest() {
       )}
 
       <p className="text-center text-xs text-muted-foreground mt-8">
-        Need help choosing? <Link to="/services" className="text-blue-600 hover:underline">Browse all services</Link>
+        Need help choosing? <Link to="/services" className="text-gold hover:underline">Browse all services</Link>
       </p>
     </div>
   );

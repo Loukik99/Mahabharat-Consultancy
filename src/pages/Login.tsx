@@ -33,12 +33,12 @@ export default function LoginPage() {
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-sm">
-        <Card>
+        <Card className="rounded border-border">
           <CardHeader className="text-center pb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff] rounded-xl flex items-center justify-center mx-auto mb-2">
-              <span className="text-white font-bold text-xl">M</span>
+            <div className="w-12 h-12 bg-navy rounded flex items-center justify-center mx-auto mb-2">
+              <span className="font-display text-gold font-bold text-xl">M</span>
             </div>
-            <CardTitle className="text-xl">Welcome Back</CardTitle>
+            <CardTitle className="font-display text-xl text-navy">Welcome Back</CardTitle>
             <CardDescription>Sign in to track your service requests</CardDescription>
           </CardHeader>
           <CardContent>
@@ -67,18 +67,18 @@ export default function LoginPage() {
                   placeholder="Enter password"
                 />
               </div>
-              <Button type="submit" disabled={submitting} className="w-full bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff]">{submitting ? "Signing In…" : "Sign In"}</Button>
+              <Button type="submit" disabled={submitting} className="w-full bg-gold font-semibold text-gold-foreground hover:bg-gold/90">{submitting ? "Signing In…" : "Sign In"}</Button>
             </form>
 
             <p className="text-center text-sm text-muted-foreground mt-4">
-              Don't have an account? <Link to="/signup" className="text-blue-600 font-medium hover:underline">Sign Up</Link>
+              Don't have an account? <Link to="/signup" className="text-gold font-medium hover:underline">Sign Up</Link>
             </p>
 
-            <div className="mt-5 p-3 bg-muted rounded-lg text-xs space-y-1.5">
-              <p className="font-semibold text-foreground">Demo Accounts (click to fill):</p>
-              <button type="button" onClick={() => quickLogin("admin@mahabharat.com", "admin123")} className="block text-left w-full hover:text-blue-600">Admin: admin@mahabharat.com / admin123</button>
-              <button type="button" onClick={() => quickLogin("rajesh@mahabharat.com", "agent123")} className="block text-left w-full hover:text-blue-600">Agent: rajesh@mahabharat.com / agent123</button>
-              <button type="button" onClick={() => quickLogin("amit@example.com", "customer123")} className="block text-left w-full hover:text-blue-600">Customer: amit@example.com / customer123</button>
+            <div className="mt-5 p-3 bg-secondary rounded text-xs space-y-1.5">
+              <p className="font-semibold text-navy">Demo Accounts (click to fill):</p>
+              <button type="button" onClick={() => quickLogin("admin@mahabharat.com", "admin123")} className="block text-left w-full text-muted-foreground hover:text-gold">Admin: admin@mahabharat.com / admin123</button>
+              <button type="button" onClick={() => quickLogin("rajesh@mahabharat.com", "agent123")} className="block text-left w-full text-muted-foreground hover:text-gold">Agent: rajesh@mahabharat.com / agent123</button>
+              <button type="button" onClick={() => quickLogin("amit@example.com", "customer123")} className="block text-left w-full text-muted-foreground hover:text-gold">Customer: amit@example.com / customer123</button>
             </div>
           </CardContent>
         </Card>

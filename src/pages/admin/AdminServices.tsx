@@ -9,7 +9,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
@@ -26,7 +25,7 @@ function AdminNav({ active }: { active?: string }) {
   return (
     <div className="flex flex-wrap gap-1.5 mb-6">
       {ADMIN_LINKS.map((l) => (
-        <Link key={l.to} to={l.to} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${active === l.to ? "bg-orange-500 text-white" : "bg-orange-50 text-orange-700 hover:bg-orange-100"}`}>{l.label}</Link>
+        <Link key={l.to} to={l.to} className={`text-xs font-semibold px-3 py-1.5 rounded transition-colors ${active === l.to ? "bg-navy text-white" : "bg-secondary text-muted-foreground hover:text-navy"}`}>{l.label}</Link>
       ))}
     </div>
   );
@@ -166,7 +165,10 @@ export default function AdminServices() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-1">
-        <h1 className="text-2xl font-bold tracking-tight">Services ({services.length})</h1>
+        <div>
+          <p className="eyebrow text-gold">Catalog</p>
+          <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-navy">Services ({services.length})</h1>
+        </div>
         <Button size="sm" onClick={openCreate}><Plus size={14} className="mr-1" /> Add Service</Button>
       </div>
       <p className="text-sm text-muted-foreground mb-5">Manage the service catalog. Prices are placeholder labels only.</p>
@@ -184,32 +186,39 @@ export default function AdminServices() {
         </Select>
       </CardContent></Card>
 
-      <Card><CardContent className="pt-4 overflow-x-auto">
+      <div className="bg-card border border-border rounded overflow-x-auto">
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
           </div>
         ) : (
-          <Table>
-            <TableHeader><TableRow>
-              <TableHead>Name</TableHead><TableHead>Category</TableHead><TableHead>Price</TableHead><TableHead>Docs</TableHead><TableHead>Active</TableHead><TableHead></TableHead>
-            </TableRow></TableHeader>
-            <TableBody>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-xs uppercase tracking-wider text-muted-foreground border-b border-border">
+                <th className="text-left font-medium px-4 py-3">Name</th>
+                <th className="text-left font-medium px-4 py-3">Category</th>
+                <th className="text-left font-medium px-4 py-3">Price</th>
+                <th className="text-right font-medium px-4 py-3">Docs</th>
+                <th className="text-left font-medium px-4 py-3">Active</th>
+                <th className="px-4 py-3"></th>
+              </tr>
+            </thead>
+            <tbody>
               {services.map((s) => (
-                <TableRow key={s.id}>
-                  <TableCell className="font-medium">{s.name}</TableCell>
-                  <TableCell>{categoryName(s.category)}</TableCell>
-                  <TableCell className="text-muted-foreground">{s.priceLabel}</TableCell>
-                  <TableCell>{s.requiredDocuments.length}</TableCell>
-                  <TableCell><Switch checked={s.isActive} onCheckedChange={() => handleToggle(s)} /></TableCell>
-                  <TableCell><button onClick={() => openEdit(s)} className="text-orange-600 hover:text-orange-800"><Pencil size={15} /></button></TableCell>
-                </TableRow>
+                <tr key={s.id} className="border-b border-border/60 hover:bg-secondary/40">
+                  <td className="px-4 py-3 font-medium">{s.name}</td>
+                  <td className="px-4 py-3"><span className="inline-flex items-center rounded bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">{categoryName(s.category)}</span></td>
+                  <td className="px-4 py-3 text-muted-foreground">{s.priceLabel}</td>
+                  <td className="px-4 py-3 text-right tnum">{s.requiredDocuments.length}</td>
+                  <td className="px-4 py-3"><Switch checked={s.isActive} onCheckedChange={() => handleToggle(s)} /></td>
+                  <td className="px-4 py-3"><button onClick={() => openEdit(s)} className="text-navy hover:text-gold"><Pencil size={15} /></button></td>
+                </tr>
               ))}
-              {services.length === 0 && <TableRow><TableCell colSpan={6} className="text-center py-8 text-muted-foreground">No services in this category.</TableCell></TableRow>}
-            </TableBody>
-          </Table>
+              {services.length === 0 && <tr><td colSpan={6} className="text-center py-8 text-muted-foreground">No services in this category.</td></tr>}
+            </tbody>
+          </table>
         )}
-      </CardContent></Card>
+      </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto">

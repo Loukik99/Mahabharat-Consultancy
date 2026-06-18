@@ -97,7 +97,7 @@ export default function TaskDetail() {
     return (
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex justify-center py-24">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
         </div>
       </div>
     );
@@ -109,13 +109,13 @@ export default function TaskDetail() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <button
           onClick={() => navigate("/agent")}
-          className="text-emerald-600 text-sm font-medium hover:underline mb-5 inline-flex items-center gap-1"
+          className="text-navy text-sm font-medium hover:text-gold mb-5 inline-flex items-center gap-1 transition-colors"
         >
           ← Back to Dashboard
         </button>
         <div className="flex flex-col items-center justify-center py-24 text-muted-foreground text-center">
-          <Lock size={40} className="mb-3 text-red-400" />
-          <p className="font-semibold text-gray-700">Not assigned to you</p>
+          <Lock size={40} className="mb-3 text-destructive/60" />
+          <p className="font-display font-semibold text-navy">Not assigned to you</p>
           <p className="text-sm mt-1 max-w-sm">
             This task is either not found or is not assigned to your account. You can only view tasks
             assigned to you.
@@ -268,7 +268,7 @@ export default function TaskDetail() {
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <button
         onClick={() => navigate("/agent")}
-        className="text-emerald-600 text-sm font-medium hover:underline mb-5 inline-flex items-center gap-1"
+        className="text-navy text-sm font-medium hover:text-gold mb-5 inline-flex items-center gap-1 transition-colors"
       >
         ← Back to Dashboard
       </button>
@@ -276,19 +276,19 @@ export default function TaskDetail() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">{r.serviceName}</h1>
+          <h1 className="font-display text-2xl font-semibold text-navy">{r.serviceName}</h1>
           <p className="text-sm text-muted-foreground mt-0.5">
-            <span className="font-mono">{r.requestNumber}</span> · {r.priceLabel}
+            <span className="font-mono tnum">{r.requestNumber}</span> · {r.priceLabel}
           </p>
         </div>
         <StatusBadge status={r.status} />
       </div>
 
       {/* OTP safety warning — always visible */}
-      <Alert className="mb-6 border-amber-200 bg-amber-50">
-        <ShieldAlert className="h-4 w-4 text-amber-600" />
-        <AlertTitle className="text-amber-800">Security reminder</AlertTitle>
-        <AlertDescription className="text-amber-700">
+      <Alert className="mb-6 rounded border-l-2 border-l-destructive border-y border-r border-destructive/30 bg-destructive/5">
+        <ShieldAlert className="h-4 w-4 text-destructive" />
+        <AlertTitle className="text-navy">Security reminder</AlertTitle>
+        <AlertDescription className="text-muted-foreground">
           Never ask customers for banking OTPs, UPI PINs, or passwords. Only request the OTP needed for the
           specific government service.
         </AlertDescription>
@@ -299,34 +299,34 @@ export default function TaskDetail() {
         <div className="lg:col-span-2 space-y-5">
 
           {/* Customer info (limited) */}
-          <Card className="border-emerald-100">
+          <Card className="rounded border border-border">
             <CardHeader className="pb-2 pt-4">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <User size={15} className="text-emerald-500" /> Customer
+              <CardTitle className="font-display text-sm text-navy flex items-center gap-2">
+                <User size={15} className="text-gold" /> Customer
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm pb-4">
               <div>
                 <p className="text-[10px] text-muted-foreground uppercase tracking-wide">Name</p>
-                <p className="font-medium">{r.customerName}</p>
+                <p className="font-medium text-navy">{r.customerName}</p>
               </div>
               <p className="text-xs text-muted-foreground italic pt-1">
                 Contact details are restricted. Use the secure call button below to reach the customer —
                 their phone number is never shown to you.
               </p>
               {r.notes && (
-                <div className="p-2.5 bg-gray-50 rounded-lg text-xs border">
-                  <span className="font-semibold text-gray-700">Customer note:</span> {r.notes}
+                <div className="p-2.5 bg-secondary/60 rounded text-xs border border-border">
+                  <span className="font-semibold text-navy">Customer note:</span> {r.notes}
                 </div>
               )}
             </CardContent>
           </Card>
 
           {/* Documents uploaded by customer */}
-          <Card className="border-indigo-100">
+          <Card className="rounded border border-border">
             <CardHeader className="pb-2 pt-4">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <FileText size={15} className="text-indigo-500" /> Customer Documents
+              <CardTitle className="font-display text-sm text-navy flex items-center gap-2">
+                <FileText size={15} className="text-gold" /> Customer Documents
               </CardTitle>
             </CardHeader>
             <CardContent className="pb-4 space-y-3">
@@ -335,17 +335,17 @@ export default function TaskDetail() {
               ) : (
                 <div className="space-y-1.5">
                   {r.documents.map((d) => (
-                    <div key={d.id} className="flex items-center justify-between bg-indigo-50 px-3 py-2 rounded-lg text-xs gap-2">
+                    <div key={d.id} className="flex items-center justify-between bg-secondary/60 px-3 py-2 rounded text-xs gap-2">
                       <div className="min-w-0">
-                        <p className="font-medium text-indigo-800 truncate">{d.label}</p>
-                        <p className="text-[10px] text-indigo-500 truncate">
+                        <p className="font-medium text-navy truncate">{d.label}</p>
+                        <p className="text-[10px] text-muted-foreground truncate">
                           {d.fileName} · {new Date(d.uploadedAt).toLocaleDateString("en-IN")}
                         </p>
                       </div>
                       <button
                         type="button"
                         onClick={() => handleDownloadDocument(d.id, d.fileName)}
-                        className="text-indigo-600 font-semibold hover:text-indigo-800 flex items-center gap-1 shrink-0"
+                        className="text-navy font-semibold hover:text-gold flex items-center gap-1 shrink-0 transition-colors"
                       >
                         <ExternalLink size={11} /> Open
                       </button>
@@ -355,8 +355,8 @@ export default function TaskDetail() {
               )}
 
               {requiredDocs.length > 0 && (
-                <div className="text-xs border-t pt-2.5">
-                  <p className="font-semibold text-gray-700 mb-1.5">Checklist</p>
+                <div className="text-xs border-t border-border pt-2.5">
+                  <p className="font-semibold text-navy mb-1.5">Checklist</p>
                   <ul className="space-y-1">
                     {requiredDocs.map((doc) => {
                       const have = uploadedLabels.has(doc.toLowerCase());
@@ -365,7 +365,7 @@ export default function TaskDetail() {
                           {have
                             ? <CheckCircle size={12} className="text-emerald-500 shrink-0" />
                             : <XCircle size={12} className="text-amber-500 shrink-0" />}
-                          <span className={have ? "text-gray-700" : "text-amber-700"}>{doc}</span>
+                          <span className={have ? "text-foreground" : "text-amber-700"}>{doc}</span>
                         </li>
                       );
                     })}
@@ -381,22 +381,22 @@ export default function TaskDetail() {
           </Card>
 
           {/* Status controls */}
-          <Card>
+          <Card className="rounded border border-border">
             <CardHeader className="pb-2 pt-4">
-              <CardTitle className="text-sm">Update Status</CardTitle>
+              <CardTitle className="font-display text-sm text-navy">Update Status</CardTitle>
             </CardHeader>
             <CardContent className="pb-4">
               <div className="flex flex-wrap gap-2">
-                <Button variant="outline" size="sm" disabled={statusBusy} onClick={() => handleStatus("in_review", "Moved to In Review.")}>
+                <Button variant="outline" size="sm" className="border-navy/20 text-navy hover:text-navy" disabled={statusBusy} onClick={() => handleStatus("in_review", "Moved to In Review.")}>
                   <PlayCircle size={14} className="mr-1" /> Start Review
                 </Button>
-                <Button variant="outline" size="sm" disabled={statusBusy} onClick={() => setDocsDialogOpen(true)}>
+                <Button variant="outline" size="sm" className="border-navy/20 text-navy hover:text-navy" disabled={statusBusy} onClick={() => setDocsDialogOpen(true)}>
                   <FileWarning size={14} className="mr-1" /> Request Documents
                 </Button>
-                <Button variant="outline" size="sm" disabled={statusBusy} onClick={() => handleStatus("in_progress", "Work started.")}>
+                <Button variant="outline" size="sm" className="border-navy/20 text-navy hover:text-navy" disabled={statusBusy} onClick={() => handleStatus("in_progress", "Work started.")}>
                   <PlayCircle size={14} className="mr-1" /> Start Work
                 </Button>
-                <Button variant="outline" size="sm" disabled={statusBusy} onClick={() => handleStatus("waiting_otp", "Marked as waiting for OTP.")}>
+                <Button variant="outline" size="sm" className="border-navy/20 text-navy hover:text-navy" disabled={statusBusy} onClick={() => handleStatus("waiting_otp", "Marked as waiting for OTP.")}>
                   <KeyRound size={14} className="mr-1" /> Need OTP
                 </Button>
               </div>
@@ -405,9 +405,9 @@ export default function TaskDetail() {
 
           {/* Official websites */}
           {officialLinks.length > 0 && (
-            <Card className="border-blue-100">
+            <Card className="rounded border border-border">
               <CardHeader className="pb-2 pt-4">
-                <CardTitle className="text-sm">Official Websites</CardTitle>
+                <CardTitle className="font-display text-sm text-navy">Official Websites</CardTitle>
               </CardHeader>
               <CardContent className="pb-4 flex flex-wrap gap-2">
                 {officialLinks.map((link) => (
@@ -416,7 +416,7 @@ export default function TaskDetail() {
                     href={link.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-xs font-semibold transition-colors"
+                    className="inline-flex items-center gap-1.5 bg-navy hover:bg-navy/90 text-white px-3 py-2 rounded text-xs font-semibold transition-colors"
                     title={link.note}
                   >
                     <ExternalLink size={13} /> Open Official Website — {link.label}
@@ -427,16 +427,16 @@ export default function TaskDetail() {
           )}
 
           {/* Secure OTP call */}
-          <Card className="border-purple-200">
+          <Card className="rounded border border-gold/40 border-l-2 border-l-gold bg-gold/5">
             <CardHeader className="pb-2 pt-4">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Phone size={15} className="text-purple-500" /> Call Customer for OTP
+              <CardTitle className="font-display text-sm text-navy flex items-center gap-2">
+                <Phone size={15} className="text-gold" /> Call Customer for OTP
               </CardTitle>
             </CardHeader>
             <CardContent className="pb-4 space-y-3">
-              <Alert className="border-red-200 bg-red-50 py-2.5">
-                <ShieldAlert className="h-4 w-4 text-red-500" />
-                <AlertDescription className="text-red-700 text-xs">
+              <Alert className="rounded border-l-2 border-l-destructive border-y border-r border-destructive/30 bg-destructive/5 py-2.5">
+                <ShieldAlert className="h-4 w-4 text-destructive" />
+                <AlertDescription className="text-muted-foreground text-xs">
                   Never ask for banking OTPs, UPI PINs, or passwords. Request only the OTP for this service.
                   The customer's number is never shown to you.
                 </AlertDescription>
@@ -452,7 +452,7 @@ export default function TaskDetail() {
               </div>
               <Button
                 size="sm"
-                className="bg-purple-600 hover:bg-purple-700"
+                className="bg-navy text-white hover:bg-navy/90"
                 disabled={otpBusy}
                 onClick={handleOtpCall}
               >
@@ -460,15 +460,15 @@ export default function TaskDetail() {
               </Button>
 
               {callLogs.length > 0 && (
-                <div className="border-t pt-2.5 space-y-1.5">
-                  <p className="text-xs font-semibold text-gray-700">Call history</p>
+                <div className="border-t border-border pt-2.5 space-y-1.5">
+                  <p className="text-xs font-semibold text-navy">Call history</p>
                   {callLogs.map((c) => (
-                    <div key={c.id} className="flex items-center justify-between text-xs bg-purple-50 px-3 py-1.5 rounded-lg gap-2">
+                    <div key={c.id} className="flex items-center justify-between text-xs bg-secondary/60 px-3 py-1.5 rounded gap-2">
                       <div className="min-w-0">
-                        <p className="truncate text-purple-800">{c.purpose}</p>
-                        <p className="text-[10px] text-purple-500">{new Date(c.at).toLocaleString("en-IN")}</p>
+                        <p className="truncate text-navy">{c.purpose}</p>
+                        <p className="text-[10px] text-muted-foreground">{new Date(c.at).toLocaleString("en-IN")}</p>
                       </div>
-                      <span className="text-[10px] font-semibold capitalize text-purple-700 shrink-0">{c.status}</span>
+                      <span className="text-[10px] font-semibold capitalize text-muted-foreground shrink-0">{c.status}</span>
                     </div>
                   ))}
                 </div>
@@ -477,19 +477,19 @@ export default function TaskDetail() {
           </Card>
 
           {/* Deliverables upload */}
-          <Card className="border-emerald-100">
+          <Card className="rounded border border-border">
             <CardHeader className="pb-2 pt-4">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <Upload size={15} className="text-emerald-500" /> Completed Files
+              <CardTitle className="font-display text-sm text-navy flex items-center gap-2">
+                <Upload size={15} className="text-gold" /> Completed Files
               </CardTitle>
             </CardHeader>
             <CardContent className="pb-4 space-y-3">
               <label
                 htmlFor="deliverableFile"
-                className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-xl p-4 cursor-pointer hover:border-emerald-300 hover:bg-emerald-50 transition-all text-center"
+                className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-border rounded p-4 cursor-pointer hover:border-gold hover:bg-secondary/40 transition-all text-center"
               >
-                <Upload size={20} className="text-gray-400" />
-                <span className="text-xs text-gray-500">Click to upload completed file(s) — image, PDF, DOC or XLSX, max 5MB</span>
+                <Upload size={20} className="text-muted-foreground" />
+                <span className="text-xs text-muted-foreground">Click to upload completed file(s) — image, PDF, DOC or XLSX, max 5MB</span>
                 <input
                   id="deliverableFile"
                   type="file"
@@ -503,12 +503,12 @@ export default function TaskDetail() {
               {r.deliverables.length > 0 && (
                 <div className="space-y-1.5">
                   {r.deliverables.map((d) => (
-                    <div key={d.id} className="flex items-center justify-between bg-emerald-50 px-3 py-2 rounded-lg text-xs gap-2">
-                      <span className="font-medium text-emerald-800 truncate">{d.fileName}</span>
+                    <div key={d.id} className="flex items-center justify-between bg-secondary/60 px-3 py-2 rounded text-xs gap-2">
+                      <span className="font-medium text-navy truncate">{d.fileName}</span>
                       <button
                         type="button"
                         onClick={() => Req.downloadDeliverable(r.id, d.id, d.fileName).catch((e) => toast.error((e as Error).message))}
-                        className="text-emerald-600 font-semibold hover:text-emerald-800 flex items-center gap-1 shrink-0"
+                        className="text-navy font-semibold hover:text-gold flex items-center gap-1 shrink-0 transition-colors"
                       >
                         <ExternalLink size={11} /> Open
                       </button>
@@ -520,10 +520,10 @@ export default function TaskDetail() {
           </Card>
 
           {/* Mark ready for payment */}
-          <Card className="border-yellow-200">
+          <Card className="rounded border border-gold/40 border-l-2 border-l-gold bg-gold/5">
             <CardContent className="pt-4 pb-4 space-y-2">
               <Button
-                className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold"
+                className="w-full bg-gold font-semibold text-gold-foreground hover:bg-gold/90"
                 onClick={handleMarkReady}
                 disabled={readyBusy || r.deliverables.length === 0}
               >
@@ -537,10 +537,10 @@ export default function TaskDetail() {
           </Card>
 
           {/* Remarks */}
-          <Card>
+          <Card className="rounded border border-border">
             <CardHeader className="pb-2 pt-4">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <MessageSquare size={15} className="text-gray-500" /> Remarks
+              <CardTitle className="font-display text-sm text-navy flex items-center gap-2">
+                <MessageSquare size={15} className="text-gold" /> Remarks
               </CardTitle>
             </CardHeader>
             <CardContent className="pb-4 space-y-3">
@@ -551,24 +551,24 @@ export default function TaskDetail() {
                   {r.comments.map((c) => (
                     <div
                       key={c.id}
-                      className={`p-2.5 rounded-lg text-xs border ${
-                        c.internal ? "bg-amber-50 border-amber-100" : "bg-gray-50 border-gray-100"
+                      className={`p-2.5 rounded text-xs border ${
+                        c.internal ? "bg-amber-50 border-amber-200" : "bg-secondary/60 border-border"
                       }`}
                     >
                       <div className="flex items-center gap-2 mb-0.5">
-                        <span className="font-semibold capitalize text-gray-700">{c.byRole}</span>
+                        <span className="font-semibold capitalize text-navy">{c.byRole}</span>
                         {c.internal && (
                           <span className="text-[9px] font-semibold bg-amber-200 text-amber-800 px-1.5 py-0.5 rounded">Internal</span>
                         )}
                         <span className="text-[10px] text-muted-foreground">{new Date(c.at).toLocaleString("en-IN")}</span>
                       </div>
-                      <p className="text-gray-700">{c.message}</p>
+                      <p className="text-foreground">{c.message}</p>
                     </div>
                   ))}
                 </div>
               )}
 
-              <div className="border-t pt-3 space-y-2">
+              <div className="border-t border-border pt-3 space-y-2">
                 <Textarea
                   value={remarkText}
                   onChange={(e) => setRemarkText(e.target.value)}
@@ -581,11 +581,11 @@ export default function TaskDetail() {
                       type="checkbox"
                       checked={remarkInternal}
                       onChange={(e) => setRemarkInternal(e.target.checked)}
-                      className="rounded border-gray-300"
+                      className="rounded border-border"
                     />
                     Internal note (not shown to customer)
                   </label>
-                  <Button size="sm" className="bg-emerald-500 hover:bg-emerald-600" disabled={remarkBusy} onClick={handleAddRemark}>
+                  <Button size="sm" className="bg-navy text-white hover:bg-navy/90" disabled={remarkBusy} onClick={handleAddRemark}>
                     Add Remark
                   </Button>
                 </div>
@@ -596,10 +596,10 @@ export default function TaskDetail() {
 
         {/* RIGHT — timeline */}
         <div className="space-y-5">
-          <Card>
+          <Card className="rounded border border-border">
             <CardHeader className="pb-2 pt-4">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <AlertCircle size={15} className="text-emerald-500" /> Progress
+              <CardTitle className="font-display text-sm text-navy flex items-center gap-2">
+                <AlertCircle size={15} className="text-gold" /> Progress
               </CardTitle>
             </CardHeader>
             <CardContent className="pb-4">
@@ -607,10 +607,10 @@ export default function TaskDetail() {
             </CardContent>
           </Card>
 
-          <Card className="bg-gray-50">
+          <Card className="rounded border border-border bg-secondary/40">
             <CardContent className="pt-4 pb-4 text-xs text-muted-foreground space-y-1">
-              <p className="font-semibold text-gray-700 flex items-center gap-1.5">
-                <Lock size={13} /> Privacy
+              <p className="font-semibold text-navy flex items-center gap-1.5">
+                <Lock size={13} className="text-gold" /> Privacy
               </p>
               <p>You only see tasks assigned to you. Customer phone numbers are never shown and payments are approved by admins.</p>
             </CardContent>
@@ -622,7 +622,7 @@ export default function TaskDetail() {
       <Dialog open={docsDialogOpen} onOpenChange={setDocsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Request Documents</DialogTitle>
+            <DialogTitle className="font-display text-navy">Request Documents</DialogTitle>
             <DialogDescription>
               Describe what is missing. This will be shared with the customer and set the status to
               "Documents Required".
@@ -635,8 +635,8 @@ export default function TaskDetail() {
             rows={4}
           />
           <DialogFooter>
-            <Button variant="outline" disabled={docsBusy} onClick={() => setDocsDialogOpen(false)}>Cancel</Button>
-            <Button className="bg-emerald-500 hover:bg-emerald-600" disabled={docsBusy} onClick={handleRequestDocuments}>
+            <Button variant="outline" disabled={docsBusy} onClick={() => setDocsDialogOpen(false)} className="border-navy/20 text-navy hover:text-navy">Cancel</Button>
+            <Button className="bg-navy text-white hover:bg-navy/90" disabled={docsBusy} onClick={handleRequestDocuments}>
               <CheckCircle2 size={15} className="mr-1" /> Send Request
             </Button>
           </DialogFooter>

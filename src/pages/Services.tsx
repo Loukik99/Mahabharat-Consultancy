@@ -55,8 +55,9 @@ export default function Services() {
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <h1 className="text-2xl font-bold tracking-tight">Our Services</h1>
-      <p className="mt-1 text-sm text-muted-foreground">
+      <p className="eyebrow text-gold">What we do</p>
+      <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-navy sm:text-4xl">Our Services</h1>
+      <p className="mt-2 text-sm text-muted-foreground">
         Browse our government and online services. Pricing is shared on request.
       </p>
 
@@ -75,8 +76,8 @@ export default function Services() {
       <div className="mt-4 flex flex-wrap gap-1.5">
         <button
           onClick={() => setCat("all")}
-          className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-            cat === "all" ? "bg-blue-600 text-white" : "bg-muted text-muted-foreground hover:bg-muted/80"
+          className={`rounded px-3 py-1.5 text-xs font-medium transition-colors ${
+            cat === "all" ? "bg-navy text-white" : "bg-secondary text-muted-foreground hover:text-navy"
           }`}
         >
           All
@@ -85,8 +86,8 @@ export default function Services() {
           <button
             key={c.id}
             onClick={() => setCat(c.id)}
-            className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors ${
-              cat === c.id ? "bg-blue-600 text-white" : "bg-muted text-muted-foreground hover:bg-muted/80"
+            className={`rounded px-3 py-1.5 text-xs font-medium transition-colors ${
+              cat === c.id ? "bg-navy text-white" : "bg-secondary text-muted-foreground hover:text-navy"
             }`}
           >
             {c.name}
@@ -97,7 +98,7 @@ export default function Services() {
       {/* Grid */}
       {loading ? (
         <div className="flex justify-center py-20">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
         </div>
       ) : services.length === 0 ? (
         <Card className="mt-8">
@@ -113,7 +114,7 @@ export default function Services() {
             const category = categoryById(s.category);
             return (
               <Link key={s.id} to={`/services/${s.id}`} className="group">
-                <Card className="h-full transition-shadow hover:shadow-md">
+                <Card className="h-full rounded border-border transition-colors hover:border-gold hover:shadow-sm">
                   <CardContent className="flex h-full flex-col pt-5">
                     <div className="mb-2 flex flex-wrap items-center gap-2">
                       {category && (
@@ -122,15 +123,15 @@ export default function Services() {
                         </Badge>
                       )}
                       {s.popular && (
-                        <Badge className="border-transparent bg-amber-100 text-amber-700 hover:bg-amber-100">
+                        <Badge className="border border-gold/30 bg-gold/10 text-gold hover:bg-gold/10">
                           Popular
                         </Badge>
                       )}
                     </div>
-                    <h3 className="font-semibold transition-colors group-hover:text-blue-600">{s.name}</h3>
+                    <h3 className="font-display font-semibold text-navy transition-colors group-hover:text-gold">{s.name}</h3>
                     <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{s.description}</p>
 
-                    <div className="mt-auto flex items-center justify-between gap-2 border-t pt-3">
+                    <div className="mt-auto flex items-center justify-between gap-2 border-t border-border pt-3">
                       <Badge variant="outline" className="font-medium">
                         {s.priceLabel}
                       </Badge>
@@ -140,7 +141,7 @@ export default function Services() {
                         </span>
                       )}
                     </div>
-                    <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-blue-600 transition-all group-hover:gap-2">
+                    <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-gold transition-all group-hover:gap-2">
                       View details <ArrowRight size={14} />
                     </span>
                   </CardContent>

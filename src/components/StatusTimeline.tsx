@@ -27,22 +27,22 @@ export function StatusTimeline({ request }: { request: ServiceRequest }) {
               <span
                 className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full border-2 ${
                   isTerminalBad
-                    ? "border-red-500 bg-red-500 text-white"
+                    ? "border-destructive bg-destructive text-white"
                     : current
-                    ? "border-blue-600 bg-blue-600 text-white"
+                    ? "border-navy bg-navy text-gold"
                     : done
-                    ? "border-emerald-500 bg-emerald-500 text-white"
-                    : "border-gray-300 bg-white text-gray-300"
+                    ? "border-gold bg-gold text-gold-foreground"
+                    : "border-border bg-card text-muted-foreground/40"
                 }`}
               >
                 {isTerminalBad ? <X size={14} /> : done ? <Check size={14} /> : <Circle size={9} className="fill-current" />}
               </span>
               {i < flow.length - 1 && (
-                <span className={`w-0.5 flex-1 ${done ? "bg-emerald-400" : "bg-gray-200"}`} />
+                <span className={`w-0.5 flex-1 ${done ? "bg-gold/60" : "bg-border"}`} />
               )}
             </div>
             <div className="-mt-0.5 pb-1">
-              <p className={`text-sm font-medium ${current ? "text-blue-700" : done ? "text-gray-900" : "text-gray-400"}`}>
+              <p className={`text-sm font-medium ${current ? "text-navy" : done ? "text-foreground" : "text-muted-foreground/60"}`}>
                 {labelForStatus(step)}
               </p>
               {at && <p className="text-[11px] text-gray-400">{new Date(at).toLocaleString("en-IN")}</p>}

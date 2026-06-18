@@ -70,26 +70,26 @@ export default function AgentDashboard() {
   const visible = filter === "all" ? tasks : tasks.filter((r) => r.status === filter);
 
   const statCards = [
-    { label: "Assigned", value: stats.assigned, icon: ClipboardList, color: "bg-emerald-100 text-emerald-600" },
-    { label: "In Progress", value: stats.inProgress, icon: Clock, color: "bg-orange-100 text-orange-600" },
-    { label: "Documents Required", value: stats.docsRequired, icon: FileWarning, color: "bg-amber-100 text-amber-600" },
-    { label: "Waiting for Payment", value: stats.payment, icon: Wallet, color: "bg-yellow-100 text-yellow-700" },
-    { label: "Completed / Delivered", value: stats.completed, icon: CheckCircle2, color: "bg-green-100 text-green-600" },
+    { label: "Assigned", value: stats.assigned, icon: ClipboardList },
+    { label: "In Progress", value: stats.inProgress, icon: Clock },
+    { label: "Documents Required", value: stats.docsRequired, icon: FileWarning },
+    { label: "Waiting for Payment", value: stats.payment, icon: Wallet },
+    { label: "Completed / Delivered", value: stats.completed, icon: CheckCircle2 },
   ];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center gap-2 mb-0.5">
-        <h1 className="text-2xl font-bold tracking-tight">Agent Dashboard</h1>
-        <span className="text-[11px] font-semibold bg-emerald-500 text-white px-2 py-0.5 rounded-full">Agent</span>
+        <h1 className="font-display text-3xl font-semibold tracking-tight text-navy">Agent Dashboard</h1>
+        <span className="text-[10px] font-bold uppercase tracking-wider bg-navy text-white px-2 py-0.5 rounded">Agent</span>
       </div>
       <p className="text-sm text-muted-foreground mb-6">Welcome, {user!.name}. Here are the tasks assigned to you.</p>
 
       {/* OTP safety warning — always visible */}
-      <Alert className="mb-6 border-amber-200 bg-amber-50">
-        <ShieldAlert className="h-4 w-4 text-amber-600" />
-        <AlertTitle className="text-amber-800">Security reminder</AlertTitle>
-        <AlertDescription className="text-amber-700">
+      <Alert className="mb-6 rounded border-l-2 border-l-destructive border-y border-r border-destructive/30 bg-destructive/5">
+        <ShieldAlert className="h-4 w-4 text-destructive" />
+        <AlertTitle className="text-navy">Security reminder</AlertTitle>
+        <AlertDescription className="text-muted-foreground">
           Never ask customers for banking OTPs, UPI PINs, or passwords. Only request the OTP needed for the
           specific government service.
         </AlertDescription>
@@ -97,20 +97,20 @@ export default function AgentDashboard() {
 
       {loading ? (
         <div className="flex justify-center py-20">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
         </div>
       ) : (
         <>
           {/* Stats */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-7">
             {statCards.map((s, i) => (
-              <Card key={i}>
+              <Card key={i} className="rounded border border-border">
                 <CardContent className="pt-4 pb-3 flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${s.color}`}>
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-navy text-gold">
                     <s.icon size={20} />
                   </div>
                   <div className="min-w-0">
-                    <p className="text-xl font-bold">{s.value}</p>
+                    <p className="font-display text-2xl font-semibold text-navy tnum">{s.value}</p>
                     <p className="text-xs text-muted-foreground leading-tight">{s.label}</p>
                   </div>
                 </CardContent>
@@ -126,10 +126,10 @@ export default function AgentDashboard() {
                 <button
                   key={c.key}
                   onClick={() => setFilter(c.key)}
-                  className={`px-3.5 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                  className={`px-3.5 py-1.5 rounded text-xs font-medium transition-colors ${
                     filter === c.key
-                      ? "bg-emerald-500 text-white"
-                      : "bg-muted text-muted-foreground hover:bg-muted/80"
+                      ? "bg-navy text-white"
+                      : "bg-secondary text-muted-foreground hover:text-navy"
                   }`}
                 >
                   {c.label}{n > 0 ? ` (${n})` : ""}
@@ -140,7 +140,7 @@ export default function AgentDashboard() {
 
           {/* Task list */}
           {visible.length === 0 ? (
-            <Card>
+            <Card className="rounded border border-border">
               <CardContent className="py-14 text-center text-muted-foreground">
                 <Inbox className="mx-auto mb-3 text-muted-foreground/30" size={40} />
                 <p className="font-medium">
@@ -151,22 +151,22 @@ export default function AgentDashboard() {
           ) : (
             <div className="space-y-3">
               {visible.map((r) => (
-                <Card key={r.id} className="hover:shadow-sm transition-shadow">
+                <Card key={r.id} className="rounded border border-border transition-colors hover:border-gold">
                   <CardContent className="py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                        <h3 className="font-semibold text-gray-900">{r.serviceName}</h3>
+                        <h3 className="font-display text-lg font-semibold text-navy">{r.serviceName}</h3>
                         <StatusBadge status={r.status} />
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        <span className="font-mono">{r.requestNumber}</span>
-                        {" · "}Customer: <span className="font-medium text-gray-700">{r.customerName}</span>
+                        <span className="font-mono tnum">{r.requestNumber}</span>
+                        {" · "}Customer: <span className="font-medium text-foreground">{r.customerName}</span>
                       </p>
                       <p className="text-xs text-muted-foreground">
                         Created: {new Date(r.createdAt).toLocaleDateString("en-IN")}
                       </p>
                     </div>
-                    <Button asChild variant="outline" size="sm" className="shrink-0">
+                    <Button asChild variant="outline" size="sm" className="shrink-0 border-navy/20 text-navy hover:text-navy">
                       <Link to={`/agent/tasks/${r.id}`}>
                         <Eye size={14} className="mr-1" /> Open Task
                       </Link>

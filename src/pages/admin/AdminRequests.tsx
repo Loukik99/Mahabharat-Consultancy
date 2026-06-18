@@ -8,7 +8,6 @@ import { serviceById, serviceCategories } from "@/data/catalog";
 import { StatusBadge } from "@/components/StatusBadge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import { Eye, Filter, Search } from "lucide-react";
@@ -28,7 +27,7 @@ function AdminNav({ active }: { active?: string }) {
   return (
     <div className="flex flex-wrap gap-1.5 mb-6">
       {ADMIN_LINKS.map((l) => (
-        <Link key={l.to} to={l.to} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${active === l.to ? "bg-orange-500 text-white" : "bg-orange-50 text-orange-700 hover:bg-orange-100"}`}>
+        <Link key={l.to} to={l.to} className={`text-xs font-semibold px-3 py-1.5 rounded transition-colors ${active === l.to ? "bg-navy text-white" : "bg-secondary text-muted-foreground hover:text-navy"}`}>
           {l.label}
         </Link>
       ))}
@@ -85,7 +84,8 @@ export default function AdminRequests() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold tracking-tight mb-1">All Requests ({filtered.length})</h1>
+      <p className="eyebrow text-gold">Admin</p>
+      <h1 className="font-display text-3xl font-semibold tracking-tight text-navy mb-1">All Requests ({filtered.length})</h1>
       <p className="text-sm text-muted-foreground mb-5">View, filter and open any service request</p>
 
       <AdminNav active="/admin/requests" />
@@ -112,36 +112,36 @@ export default function AdminRequests() {
         </div>
       </CardContent></Card>
 
-      <Card><CardContent className="pt-4 overflow-x-auto">
+      <div className="bg-card border border-border rounded p-4 overflow-x-auto">
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
           </div>
         ) : (
-          <Table>
-            <TableHeader><TableRow>
-              <TableHead>Request #</TableHead><TableHead>Service</TableHead><TableHead>Customer</TableHead><TableHead>Agent</TableHead><TableHead>Status</TableHead><TableHead>Created</TableHead><TableHead></TableHead>
-            </TableRow></TableHeader>
-            <TableBody>
+          <table className="w-full text-sm">
+            <thead><tr className="text-xs uppercase tracking-wider text-muted-foreground border-b border-border">
+              <th className="text-left font-medium py-2 pr-3">Request #</th><th className="text-left font-medium py-2 pr-3">Service</th><th className="text-left font-medium py-2 pr-3">Customer</th><th className="text-left font-medium py-2 pr-3">Agent</th><th className="text-left font-medium py-2 pr-3">Status</th><th className="text-right font-medium py-2 pr-3">Created</th><th className="py-2"></th>
+            </tr></thead>
+            <tbody>
               {filtered.map((r) => {
                 const agentName = r.assignedAgentId ? nameById[r.assignedAgentId] : null;
                 return (
-                  <TableRow key={r.id}>
-                    <TableCell className="font-medium">{r.requestNumber}</TableCell>
-                    <TableCell>{serviceById(r.serviceId)?.name ?? r.serviceId}</TableCell>
-                    <TableCell>{nameById[r.userId] ?? "—"}</TableCell>
-                    <TableCell>{agentName ? agentName : <span className="text-muted-foreground">Unassigned</span>}</TableCell>
-                    <TableCell><StatusBadge status={r.status} /></TableCell>
-                    <TableCell className="text-muted-foreground">{new Date(r.createdAt).toLocaleDateString("en-IN")}</TableCell>
-                    <TableCell><Link to={`/admin/requests/${r.id}`} className="text-orange-600 flex items-center gap-1 text-xs"><Eye size={14} /> View</Link></TableCell>
-                  </TableRow>
+                  <tr key={r.id} className="border-b border-border/60 hover:bg-secondary/40">
+                    <td className="py-2.5 pr-3 font-medium text-navy">{r.requestNumber}</td>
+                    <td className="py-2.5 pr-3">{serviceById(r.serviceId)?.name ?? r.serviceId}</td>
+                    <td className="py-2.5 pr-3">{nameById[r.userId] ?? "—"}</td>
+                    <td className="py-2.5 pr-3">{agentName ? agentName : <span className="text-muted-foreground">Unassigned</span>}</td>
+                    <td className="py-2.5 pr-3"><StatusBadge status={r.status} /></td>
+                    <td className="py-2.5 pr-3 text-right text-muted-foreground tnum">{new Date(r.createdAt).toLocaleDateString("en-IN")}</td>
+                    <td className="py-2.5"><Link to={`/admin/requests/${r.id}`} className="text-navy hover:text-gold flex items-center gap-1 text-xs"><Eye size={14} /> View</Link></td>
+                  </tr>
                 );
               })}
-              {filtered.length === 0 && <TableRow><TableCell colSpan={7} className="text-center py-8 text-muted-foreground">No requests found.</TableCell></TableRow>}
-            </TableBody>
-          </Table>
+              {filtered.length === 0 && <tr><td colSpan={7} className="text-center py-8 text-muted-foreground">No requests found.</td></tr>}
+            </tbody>
+          </table>
         )}
-      </CardContent></Card>
+      </div>
     </div>
   );
 }

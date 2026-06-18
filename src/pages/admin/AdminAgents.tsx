@@ -7,9 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Plus, Trash2, Download } from "lucide-react";
@@ -25,7 +23,7 @@ function AdminNav({ active }: { active?: string }) {
   return (
     <div className="flex flex-wrap gap-1.5 mb-6">
       {ADMIN_LINKS.map((l) => (
-        <Link key={l.to} to={l.to} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${active === l.to ? "bg-orange-500 text-white" : "bg-orange-50 text-orange-700 hover:bg-orange-100"}`}>{l.label}</Link>
+        <Link key={l.to} to={l.to} className={`text-xs font-semibold px-3 py-1.5 rounded transition-colors ${active === l.to ? "bg-navy text-white" : "bg-secondary text-muted-foreground hover:text-navy"}`}>{l.label}</Link>
       ))}
     </div>
   );
@@ -130,7 +128,10 @@ export default function AdminAgents() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-1">
-        <h1 className="text-2xl font-bold tracking-tight">Agents ({agents.length})</h1>
+        <div>
+          <p className="eyebrow text-gold">Admin</p>
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-navy">Agents ({agents.length})</h1>
+        </div>
         <div className="flex gap-2">
           <Button size="sm" variant="outline" onClick={exportCsv}><Download size={14} className="mr-1" /> Export CSV</Button>
           <Button size="sm" onClick={() => { setForm(emptyForm); setOpen(true); }}><Plus size={14} className="mr-1" /> Add Agent</Button>
@@ -140,38 +141,38 @@ export default function AdminAgents() {
 
       <AdminNav active="/admin/agents" />
 
-      <Card><CardContent className="pt-4 overflow-x-auto">
+      <div className="bg-card border border-border rounded p-4 overflow-x-auto">
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
           </div>
         ) : (
-          <Table>
-            <TableHeader><TableRow>
-              <TableHead>Name</TableHead><TableHead>Email</TableHead><TableHead>Phone</TableHead><TableHead>Assigned</TableHead><TableHead>Completed</TableHead><TableHead>Pending</TableHead><TableHead>Delayed</TableHead><TableHead>Active</TableHead><TableHead></TableHead>
-            </TableRow></TableHeader>
-            <TableBody>
+          <table className="w-full text-sm">
+            <thead><tr className="text-xs uppercase tracking-wider text-muted-foreground border-b border-border">
+              <th className="text-left font-medium py-2 pr-3">Name</th><th className="text-left font-medium py-2 pr-3">Email</th><th className="text-left font-medium py-2 pr-3">Phone</th><th className="text-right font-medium py-2 pr-3">Assigned</th><th className="text-right font-medium py-2 pr-3">Completed</th><th className="text-right font-medium py-2 pr-3">Pending</th><th className="text-right font-medium py-2 pr-3">Delayed</th><th className="text-left font-medium py-2 pr-3">Active</th><th className="py-2"></th>
+            </tr></thead>
+            <tbody>
               {agents.map((a) => {
                 const p = perfFor(a.id);
                 return (
-                  <TableRow key={a.id}>
-                    <TableCell className="font-medium">{a.name}</TableCell>
-                    <TableCell className="text-muted-foreground">{a.email}</TableCell>
-                    <TableCell>{a.phone}</TableCell>
-                    <TableCell>{p?.totalAssigned ?? 0}</TableCell>
-                    <TableCell className="text-green-600 font-medium">{p?.completed ?? 0}</TableCell>
-                    <TableCell>{p?.pending ?? 0}</TableCell>
-                    <TableCell className={(p?.delayed ?? 0) > 0 ? "text-red-600 font-bold" : ""}>{p?.delayed ?? 0}</TableCell>
-                    <TableCell><Switch checked={a.isActive} onCheckedChange={() => handleToggle(a)} /></TableCell>
-                    <TableCell><button onClick={() => setToDelete(a)} className="text-red-500 hover:text-red-700"><Trash2 size={15} /></button></TableCell>
-                  </TableRow>
+                  <tr key={a.id} className="border-b border-border/60 hover:bg-secondary/40">
+                    <td className="py-2.5 pr-3 font-medium text-navy">{a.name}</td>
+                    <td className="py-2.5 pr-3 text-muted-foreground">{a.email}</td>
+                    <td className="py-2.5 pr-3 tnum">{a.phone}</td>
+                    <td className="py-2.5 pr-3 text-right tnum">{p?.totalAssigned ?? 0}</td>
+                    <td className="py-2.5 pr-3 text-right tnum text-emerald-600 font-medium">{p?.completed ?? 0}</td>
+                    <td className="py-2.5 pr-3 text-right tnum">{p?.pending ?? 0}</td>
+                    <td className={`py-2.5 pr-3 text-right tnum ${(p?.delayed ?? 0) > 0 ? "text-destructive font-bold" : ""}`}>{p?.delayed ?? 0}</td>
+                    <td className="py-2.5 pr-3"><Switch checked={a.isActive} onCheckedChange={() => handleToggle(a)} /></td>
+                    <td className="py-2.5"><button onClick={() => setToDelete(a)} className="text-muted-foreground hover:text-destructive"><Trash2 size={15} /></button></td>
+                  </tr>
                 );
               })}
-              {agents.length === 0 && <TableRow><TableCell colSpan={9} className="text-center py-8 text-muted-foreground">No agents yet.</TableCell></TableRow>}
-            </TableBody>
-          </Table>
+              {agents.length === 0 && <tr><td colSpan={9} className="text-center py-8 text-muted-foreground">No agents yet.</td></tr>}
+            </tbody>
+          </table>
         )}
-      </CardContent></Card>
+      </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="max-w-md">
@@ -195,7 +196,7 @@ export default function AdminAgents() {
           <p className="text-sm text-muted-foreground">This permanently removes <strong>{toDelete?.name}</strong>. This cannot be undone.</p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setToDelete(null)}>Cancel</Button>
-            <Button className="bg-red-600 hover:bg-red-700" onClick={handleDelete}>Delete</Button>
+            <Button className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={handleDelete}>Delete</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

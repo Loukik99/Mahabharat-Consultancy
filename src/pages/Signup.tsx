@@ -38,12 +38,12 @@ export default function SignupPage() {
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-sm">
-        <Card>
+        <Card className="rounded border-border">
           <CardHeader className="text-center pb-4">
-            <div className="w-12 h-12 bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff] rounded-xl flex items-center justify-center mx-auto mb-2">
-              <span className="text-white font-bold text-xl">M</span>
+            <div className="w-12 h-12 bg-navy rounded flex items-center justify-center mx-auto mb-2">
+              <span className="font-display text-gold font-bold text-xl">M</span>
             </div>
-            <CardTitle className="text-xl">Create Account</CardTitle>
+            <CardTitle className="font-display text-xl text-navy">Create Account</CardTitle>
             <CardDescription>Join Mahabharat Consultancy</CardDescription>
           </CardHeader>
           <CardContent>
@@ -68,10 +68,10 @@ export default function SignupPage() {
                 <Label htmlFor="confirm">Confirm Password</Label>
                 <Input id="confirm" type="password" required value={form.confirm} onChange={update("confirm")} placeholder="Re-enter password" />
               </div>
-              <Button type="submit" disabled={submitting} className="w-full bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff]">{submitting ? "Creating Account…" : "Create Account"}</Button>
+              <Button type="submit" disabled={submitting} className="w-full bg-gold font-semibold text-gold-foreground hover:bg-gold/90">{submitting ? "Creating Account…" : "Create Account"}</Button>
             </form>
             <p className="text-center text-sm text-muted-foreground mt-4">
-              Already have an account? <Link to="/login" className="text-blue-600 font-medium hover:underline">Sign In</Link>
+              Already have an account? <Link to="/login" className="text-gold font-medium hover:underline">Sign In</Link>
             </p>
           </CardContent>
         </Card>

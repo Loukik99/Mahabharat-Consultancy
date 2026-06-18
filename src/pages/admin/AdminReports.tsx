@@ -8,7 +8,6 @@ import { getCustomers, getAgents } from "@/api/users.api";
 import { serviceById, serviceCategories, categoryById } from "@/data/catalog";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { toast } from "sonner";
 import { Download, Printer } from "lucide-react";
 
@@ -23,7 +22,7 @@ function AdminNav({ active }: { active?: string }) {
   return (
     <div className="flex flex-wrap gap-1.5 mb-6 print:hidden">
       {ADMIN_LINKS.map((l) => (
-        <Link key={l.to} to={l.to} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${active === l.to ? "bg-orange-500 text-white" : "bg-orange-50 text-orange-700 hover:bg-orange-100"}`}>{l.label}</Link>
+        <Link key={l.to} to={l.to} className={`text-xs font-semibold px-3 py-1.5 rounded transition-colors ${active === l.to ? "bg-navy text-white" : "bg-secondary text-muted-foreground hover:text-navy"}`}>{l.label}</Link>
       ))}
     </div>
   );
@@ -130,91 +129,110 @@ export default function AdminReports() {
   if (loading || !stats) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
       </div>
     );
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-2xl font-bold tracking-tight mb-1">Reports</h1>
+      <div className="print:hidden mb-1">
+        <p className="eyebrow text-gold">Insights</p>
+        <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-navy">Reports</h1>
+      </div>
       <p className="text-sm text-muted-foreground mb-5 print:hidden">Summary report with export options</p>
 
       <AdminNav active="/admin/reports" />
 
       <div className="flex flex-wrap gap-2 mb-6 print:hidden">
-        <Button size="sm" variant="outline" onClick={exportRequests}><Download size={14} className="mr-1" /> Export Requests CSV</Button>
-        <Button size="sm" variant="outline" onClick={exportPayments}><Download size={14} className="mr-1" /> Export Payments CSV</Button>
-        <Button size="sm" variant="outline" onClick={exportAgents}><Download size={14} className="mr-1" /> Export Agents CSV</Button>
+        <Button size="sm" variant="outline" className="border-border text-navy hover:border-gold hover:text-gold" onClick={exportRequests}><Download size={14} className="mr-1" /> Export Requests CSV</Button>
+        <Button size="sm" variant="outline" className="border-border text-navy hover:border-gold hover:text-gold" onClick={exportPayments}><Download size={14} className="mr-1" /> Export Payments CSV</Button>
+        <Button size="sm" variant="outline" className="border-border text-navy hover:border-gold hover:text-gold" onClick={exportAgents}><Download size={14} className="mr-1" /> Export Agents CSV</Button>
         <Button size="sm" onClick={() => window.print()}><Printer size={14} className="mr-1" /> Print / Save as PDF</Button>
       </div>
 
       {/* Print-friendly summary section */}
       <div id="report-print">
         <div className="hidden print:block mb-4">
-          <h2 className="text-xl font-bold">Mahabharat Consultancy — Summary Report</h2>
+          <h2 className="font-display text-xl font-semibold text-navy">Mahabharat Consultancy — Summary Report</h2>
           <p className="text-xs text-muted-foreground">Generated {new Date().toLocaleString("en-IN")}</p>
         </div>
 
         <Card className="mb-5"><CardContent className="pt-5">
-          <h2 className="font-semibold mb-3">Overview</h2>
+          <h2 className="font-display text-lg font-semibold text-navy mb-3">Overview</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
-            <p><span className="text-muted-foreground">Total Requests:</span> <strong>{stats.totalRequests}</strong></p>
-            <p><span className="text-muted-foreground">Pending:</span> <strong>{stats.pendingRequests}</strong></p>
-            <p><span className="text-muted-foreground">Completed:</span> <strong>{stats.completedRequests}</strong></p>
-            <p><span className="text-muted-foreground">Waiting Payment:</span> <strong>{stats.waitingPayment}</strong></p>
-            <p><span className="text-muted-foreground">Payments Received:</span> <strong>{stats.paymentsReceived}</strong></p>
-            <p><span className="text-muted-foreground">Customers:</span> <strong>{stats.totalCustomers}</strong></p>
-            <p><span className="text-muted-foreground">Agents:</span> <strong>{stats.totalAgents}</strong></p>
-            <p><span className="text-muted-foreground">Active Agents:</span> <strong>{stats.activeAgents}</strong></p>
+            <p><span className="text-muted-foreground">Total Requests:</span> <strong className="text-navy tnum">{stats.totalRequests}</strong></p>
+            <p><span className="text-muted-foreground">Pending:</span> <strong className="text-navy tnum">{stats.pendingRequests}</strong></p>
+            <p><span className="text-muted-foreground">Completed:</span> <strong className="text-navy tnum">{stats.completedRequests}</strong></p>
+            <p><span className="text-muted-foreground">Waiting Payment:</span> <strong className="text-navy tnum">{stats.waitingPayment}</strong></p>
+            <p><span className="text-muted-foreground">Payments Received:</span> <strong className="text-navy tnum">{stats.paymentsReceived}</strong></p>
+            <p><span className="text-muted-foreground">Customers:</span> <strong className="text-navy tnum">{stats.totalCustomers}</strong></p>
+            <p><span className="text-muted-foreground">Agents:</span> <strong className="text-navy tnum">{stats.totalAgents}</strong></p>
+            <p><span className="text-muted-foreground">Active Agents:</span> <strong className="text-navy tnum">{stats.activeAgents}</strong></p>
           </div>
         </CardContent></Card>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
           <Card><CardContent className="pt-5">
-            <h2 className="font-semibold mb-3">Requests by Category</h2>
-            <Table>
-              <TableHeader><TableRow><TableHead>Category</TableHead><TableHead>Count</TableHead></TableRow></TableHeader>
-              <TableBody>
+            <h2 className="font-display text-lg font-semibold text-navy mb-3">Requests by Category</h2>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-xs uppercase tracking-wider text-muted-foreground border-b border-border">
+                  <th className="text-left font-medium py-2">Category</th>
+                  <th className="text-right font-medium py-2">Count</th>
+                </tr>
+              </thead>
+              <tbody>
                 {countByCategory.map((c) => (
-                  <TableRow key={c.category}><TableCell>{c.category}</TableCell><TableCell>{c.count}</TableCell></TableRow>
+                  <tr key={c.category} className="border-b border-border/60"><td className="py-2">{c.category}</td><td className="py-2 text-right tnum">{c.count}</td></tr>
                 ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </CardContent></Card>
 
           <Card><CardContent className="pt-5">
-            <h2 className="font-semibold mb-3">Requests by Status</h2>
-            <Table>
-              <TableHeader><TableRow><TableHead>Status</TableHead><TableHead>Count</TableHead></TableRow></TableHeader>
-              <TableBody>
+            <h2 className="font-display text-lg font-semibold text-navy mb-3">Requests by Status</h2>
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-xs uppercase tracking-wider text-muted-foreground border-b border-border">
+                  <th className="text-left font-medium py-2">Status</th>
+                  <th className="text-right font-medium py-2">Count</th>
+                </tr>
+              </thead>
+              <tbody>
                 {countByStatus.map((s) => (
-                  <TableRow key={s.status}><TableCell>{s.status}</TableCell><TableCell>{s.count}</TableCell></TableRow>
+                  <tr key={s.status} className="border-b border-border/60"><td className="py-2">{s.status}</td><td className="py-2 text-right tnum">{s.count}</td></tr>
                 ))}
-              </TableBody>
-            </Table>
+              </tbody>
+            </table>
           </CardContent></Card>
         </div>
 
         <Card><CardContent className="pt-5">
-          <h2 className="font-semibold mb-3">Agent Performance</h2>
-          <Table>
-            <TableHeader><TableRow>
-              <TableHead>Agent</TableHead><TableHead>Assigned</TableHead><TableHead>Completed</TableHead><TableHead>Pending</TableHead><TableHead>Delayed</TableHead>
-            </TableRow></TableHeader>
-            <TableBody>
+          <h2 className="font-display text-lg font-semibold text-navy mb-3">Agent Performance</h2>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-xs uppercase tracking-wider text-muted-foreground border-b border-border">
+                <th className="text-left font-medium py-2">Agent</th>
+                <th className="text-right font-medium py-2">Assigned</th>
+                <th className="text-right font-medium py-2">Completed</th>
+                <th className="text-right font-medium py-2">Pending</th>
+                <th className="text-right font-medium py-2">Delayed</th>
+              </tr>
+            </thead>
+            <tbody>
               {performance.map((p) => (
-                <TableRow key={p.agentId}>
-                  <TableCell className="font-medium">{p.agentName}</TableCell>
-                  <TableCell>{p.totalAssigned}</TableCell>
-                  <TableCell>{p.completed}</TableCell>
-                  <TableCell>{p.pending}</TableCell>
-                  <TableCell className={p.delayed > 0 ? "text-red-600 font-bold" : ""}>{p.delayed}</TableCell>
-                </TableRow>
+                <tr key={p.agentId} className="border-b border-border/60">
+                  <td className="py-2 font-medium">{p.agentName}</td>
+                  <td className="py-2 text-right tnum">{p.totalAssigned}</td>
+                  <td className="py-2 text-right tnum">{p.completed}</td>
+                  <td className="py-2 text-right tnum">{p.pending}</td>
+                  <td className={`py-2 text-right tnum ${p.delayed > 0 ? "text-destructive font-bold" : ""}`}>{p.delayed}</td>
+                </tr>
               ))}
-              {performance.length === 0 && <TableRow><TableCell colSpan={5} className="text-center py-6 text-muted-foreground">No agents.</TableCell></TableRow>}
-            </TableBody>
-          </Table>
+              {performance.length === 0 && <tr><td colSpan={5} className="text-center py-6 text-muted-foreground">No agents.</td></tr>}
+            </tbody>
+          </table>
         </CardContent></Card>
       </div>
     </div>

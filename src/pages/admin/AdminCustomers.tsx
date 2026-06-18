@@ -5,9 +5,7 @@ import { getCustomers, setUserActive, deleteUser } from "@/api/users.api";
 import { listRequests } from "@/api/requests.api";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Trash2, Download } from "lucide-react";
@@ -23,7 +21,7 @@ function AdminNav({ active }: { active?: string }) {
   return (
     <div className="flex flex-wrap gap-1.5 mb-6">
       {ADMIN_LINKS.map((l) => (
-        <Link key={l.to} to={l.to} className={`text-xs font-semibold px-3 py-1.5 rounded-full transition-colors ${active === l.to ? "bg-orange-500 text-white" : "bg-orange-50 text-orange-700 hover:bg-orange-100"}`}>{l.label}</Link>
+        <Link key={l.to} to={l.to} className={`text-xs font-semibold px-3 py-1.5 rounded transition-colors ${active === l.to ? "bg-navy text-white" : "bg-secondary text-muted-foreground hover:text-navy"}`}>{l.label}</Link>
       ))}
     </div>
   );
@@ -111,41 +109,44 @@ export default function AdminCustomers() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <div className="flex items-center justify-between mb-1">
-        <h1 className="text-2xl font-bold tracking-tight">Customers ({customers.length})</h1>
+        <div>
+          <p className="eyebrow text-gold">Admin</p>
+          <h1 className="font-display text-3xl font-semibold tracking-tight text-navy">Customers ({customers.length})</h1>
+        </div>
         <Button size="sm" variant="outline" onClick={exportCsv}><Download size={14} className="mr-1" /> Export CSV</Button>
       </div>
       <p className="text-sm text-muted-foreground mb-5">Manage customer accounts</p>
 
       <AdminNav active="/admin/customers" />
 
-      <Card><CardContent className="pt-4 overflow-x-auto">
+      <div className="bg-card border border-border rounded p-4 overflow-x-auto">
         {loading ? (
           <div className="flex justify-center py-16">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
           </div>
         ) : (
-          <Table>
-            <TableHeader><TableRow>
-              <TableHead>Name</TableHead><TableHead>Email</TableHead><TableHead>Phone</TableHead><TableHead>City</TableHead><TableHead>Joined</TableHead><TableHead>Requests</TableHead><TableHead>Active</TableHead><TableHead></TableHead>
-            </TableRow></TableHeader>
-            <TableBody>
+          <table className="w-full text-sm">
+            <thead><tr className="text-xs uppercase tracking-wider text-muted-foreground border-b border-border">
+              <th className="text-left font-medium py-2 pr-3">Name</th><th className="text-left font-medium py-2 pr-3">Email</th><th className="text-left font-medium py-2 pr-3">Phone</th><th className="text-left font-medium py-2 pr-3">City</th><th className="text-right font-medium py-2 pr-3">Joined</th><th className="text-right font-medium py-2 pr-3">Requests</th><th className="text-left font-medium py-2 pr-3">Active</th><th className="py-2"></th>
+            </tr></thead>
+            <tbody>
               {customers.map((c) => (
-                <TableRow key={c.id}>
-                  <TableCell className="font-medium">{c.name}</TableCell>
-                  <TableCell className="text-muted-foreground">{c.email}</TableCell>
-                  <TableCell>{c.phone}</TableCell>
-                  <TableCell>{c.address?.city ?? "—"}</TableCell>
-                  <TableCell className="text-muted-foreground">{new Date(c.createdAt).toLocaleDateString("en-IN")}</TableCell>
-                  <TableCell>{reqCount(c.id)}</TableCell>
-                  <TableCell><Switch checked={c.isActive} onCheckedChange={() => handleToggle(c)} /></TableCell>
-                  <TableCell><button onClick={() => setToDelete(c)} className="text-red-500 hover:text-red-700"><Trash2 size={15} /></button></TableCell>
-                </TableRow>
+                <tr key={c.id} className="border-b border-border/60 hover:bg-secondary/40">
+                  <td className="py-2.5 pr-3 font-medium text-navy">{c.name}</td>
+                  <td className="py-2.5 pr-3 text-muted-foreground">{c.email}</td>
+                  <td className="py-2.5 pr-3 tnum">{c.phone}</td>
+                  <td className="py-2.5 pr-3">{c.address?.city ?? "—"}</td>
+                  <td className="py-2.5 pr-3 text-right text-muted-foreground tnum">{new Date(c.createdAt).toLocaleDateString("en-IN")}</td>
+                  <td className="py-2.5 pr-3 text-right tnum">{reqCount(c.id)}</td>
+                  <td className="py-2.5 pr-3"><Switch checked={c.isActive} onCheckedChange={() => handleToggle(c)} /></td>
+                  <td className="py-2.5"><button onClick={() => setToDelete(c)} className="text-muted-foreground hover:text-destructive"><Trash2 size={15} /></button></td>
+                </tr>
               ))}
-              {customers.length === 0 && <TableRow><TableCell colSpan={8} className="text-center py-8 text-muted-foreground">No customers yet.</TableCell></TableRow>}
-            </TableBody>
-          </Table>
+              {customers.length === 0 && <tr><td colSpan={8} className="text-center py-8 text-muted-foreground">No customers yet.</td></tr>}
+            </tbody>
+          </table>
         )}
-      </CardContent></Card>
+      </div>
 
       <Dialog open={!!toDelete} onOpenChange={(o) => !o && setToDelete(null)}>
         <DialogContent className="max-w-sm">
@@ -153,7 +154,7 @@ export default function AdminCustomers() {
           <p className="text-sm text-muted-foreground">This permanently removes <strong>{toDelete?.name}</strong>. This cannot be undone.</p>
           <DialogFooter>
             <Button variant="outline" onClick={() => setToDelete(null)}>Cancel</Button>
-            <Button className="bg-red-600 hover:bg-red-700" onClick={handleDelete}>Delete</Button>
+            <Button className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={handleDelete}>Delete</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

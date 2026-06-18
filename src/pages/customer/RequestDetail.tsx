@@ -97,7 +97,7 @@ export default function RequestDetail() {
   if (loading) {
     return (
       <div className="flex justify-center py-20">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600" />
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
       </div>
     );
   }
@@ -106,9 +106,9 @@ export default function RequestDetail() {
     return (
       <div className="max-w-md mx-auto px-4 py-20 text-center">
         <ShieldAlert className="mx-auto mb-3 text-muted-foreground/50" size={40} />
-        <h1 className="text-lg font-semibold">Request not found</h1>
+        <h1 className="font-display text-lg font-semibold text-navy">Request not found</h1>
         <p className="text-sm text-muted-foreground mb-4">This request does not exist or you are not authorised to view it.</p>
-        <Button asChild variant="outline"><Link to="/dashboard">Back to Dashboard</Link></Button>
+        <Button asChild variant="outline" className="border-navy/20 text-navy hover:text-navy"><Link to="/dashboard">Back to Dashboard</Link></Button>
       </div>
     );
   }
@@ -234,7 +234,7 @@ export default function RequestDetail() {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <button onClick={() => navigate(-1)} className="text-blue-600 text-sm font-medium hover:underline mb-4 inline-flex items-center gap-1">
+      <button onClick={() => navigate(-1)} className="text-sm font-medium text-navy hover:text-gold mb-4 inline-flex items-center gap-1 transition-colors">
         <ChevronLeft size={15} /> Back
       </button>
 
@@ -242,11 +242,11 @@ export default function RequestDetail() {
       <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-6">
         <div>
           <div className="flex items-center gap-2 flex-wrap">
-            <h1 className="text-2xl font-bold tracking-tight">{r.serviceName}</h1>
+            <h1 className="font-display text-3xl font-semibold tracking-tight text-navy">{r.serviceName}</h1>
             <StatusBadge status={r.status} />
           </div>
           <p className="text-sm text-muted-foreground mt-0.5">
-            <span className="font-mono">{r.requestNumber}</span> • {r.priceLabel}
+            <span className="font-mono tnum">{r.requestNumber}</span> • {r.priceLabel}
           </p>
           <p className="text-xs text-muted-foreground">
             Created {new Date(r.createdAt).toLocaleString("en-IN")} • Updated {new Date(r.updatedAt).toLocaleString("en-IN")}
@@ -258,9 +258,9 @@ export default function RequestDetail() {
         {/* LEFT — main content */}
         <div className="lg:col-span-2 space-y-6">
           {/* DOCUMENTS */}
-          <Card>
+          <Card className="rounded border border-border">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2"><FileText size={17} /> Documents</CardTitle>
+              <CardTitle className="font-display text-base text-navy flex items-center gap-2"><FileText size={17} className="text-gold" /> Documents</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {r.documents.length === 0 ? (
@@ -268,16 +268,16 @@ export default function RequestDetail() {
               ) : (
                 <div className="space-y-2">
                   {r.documents.map((d) => (
-                    <div key={d.id} className="flex items-center justify-between gap-2 bg-muted rounded-md px-3 py-2 text-sm">
+                    <div key={d.id} className="flex items-center justify-between gap-2 bg-secondary/60 rounded px-3 py-2 text-sm">
                       <div className="min-w-0">
-                        <p className="font-medium truncate">{d.label}</p>
+                        <p className="font-medium text-navy truncate">{d.label}</p>
                         <p className="text-xs text-muted-foreground truncate">
                           {d.fileName} • {new Date(d.uploadedAt).toLocaleDateString("en-IN")} • by {roleLabel(d.uploadedByRole)}
                         </p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
                         {editable && (
-                          <button onClick={() => handleRemoveDoc(d.id)} className="text-red-500 hover:text-red-700" title="Remove">
+                          <button onClick={() => handleRemoveDoc(d.id)} className="text-destructive hover:text-destructive/80" title="Remove">
                             <Trash2 size={15} />
                           </button>
                         )}
@@ -288,7 +288,7 @@ export default function RequestDetail() {
               )}
 
               {editable ? (
-                <div className="border-2 border-dashed rounded-lg p-3 space-y-3">
+                <div className="border-2 border-dashed border-border rounded p-3 space-y-3">
                   <p className="text-xs font-medium text-muted-foreground">
                     {r.status === "documents_required" ? "More documents required — add them below." : "Upload a document"}
                   </p>
@@ -317,17 +317,17 @@ export default function RequestDetail() {
                     accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"
                     onChange={handleFile}
                   />
-                  <Button type="button" size="sm" variant="outline" onClick={onPickFile} disabled={uploading}>
+                  <Button type="button" size="sm" variant="outline" onClick={onPickFile} disabled={uploading} className="border-navy/20 text-navy hover:text-navy">
                     <Upload size={14} className="mr-1.5" /> {uploading ? "Uploading..." : "Choose file & upload"}
                   </Button>
                   <p className="text-[11px] text-muted-foreground">Images, PDF, Word or Excel up to 5 MB.</p>
                 </div>
               ) : (
-                <div className="rounded-lg bg-blue-50 border border-blue-100 p-3 text-xs text-blue-800 flex items-start gap-2">
-                  <Lock size={14} className="mt-0.5 shrink-0" />
+                <div className="rounded border-l-2 border-navy bg-secondary/60 p-3 text-xs text-muted-foreground flex items-start gap-2">
+                  <Lock size={14} className="mt-0.5 shrink-0 text-navy" />
                   <span>
                     Our agent has started work — documents can no longer be changed here.{" "}
-                    <a href={waLink(`Hello, I need to update documents for request ${r.requestNumber}`)} target="_blank" rel="noopener noreferrer" className="font-semibold underline">
+                    <a href={waLink(`Hello, I need to update documents for request ${r.requestNumber}`)} target="_blank" rel="noopener noreferrer" className="font-semibold text-navy underline hover:text-gold">
                       Contact us on WhatsApp
                     </a>{" "}to change them.
                   </span>
@@ -337,11 +337,11 @@ export default function RequestDetail() {
           </Card>
 
           {/* DETAILS / EDIT */}
-          <Card>
+          <Card className="rounded border border-border">
             <CardHeader className="pb-3 flex-row items-center justify-between">
-              <CardTitle className="text-base">Your Details & Notes</CardTitle>
+              <CardTitle className="font-display text-base text-navy">Your Details & Notes</CardTitle>
               {editable && !editing && (
-                <Button size="sm" variant="ghost" onClick={() => { setEditNotes(r.notes); setEditDetails(r.applicantDetails ?? {}); setEditing(true); }}>
+                <Button size="sm" variant="ghost" onClick={() => { setEditNotes(r.notes); setEditDetails(r.applicantDetails ?? {}); setEditing(true); }} className="text-navy hover:text-gold">
                   <Pencil size={13} className="mr-1" /> Edit
                 </Button>
               )}
@@ -358,8 +358,8 @@ export default function RequestDetail() {
                   <div><Label className="text-xs">Additional Info</Label><Textarea rows={2} value={editDetails.additionalInfo ?? ""} onChange={(e) => setEditDetails({ ...editDetails, additionalInfo: e.target.value })} /></div>
                   <div><Label className="text-xs">Notes / Instructions</Label><Textarea rows={2} value={editNotes} onChange={(e) => setEditNotes(e.target.value)} /></div>
                   <div className="flex gap-2">
-                    <Button size="sm" onClick={handleSaveEdit} disabled={savingEdit} className="bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff]">{savingEdit ? "Saving..." : "Save"}</Button>
-                    <Button size="sm" variant="outline" onClick={() => setEditing(false)} disabled={savingEdit}>Cancel</Button>
+                    <Button size="sm" onClick={handleSaveEdit} disabled={savingEdit} className="bg-navy text-white hover:bg-navy/90">{savingEdit ? "Saving..." : "Save"}</Button>
+                    <Button size="sm" variant="outline" onClick={() => setEditing(false)} disabled={savingEdit} className="border-navy/20 text-navy hover:text-navy">Cancel</Button>
                   </div>
                 </>
               ) : (
@@ -377,8 +377,8 @@ export default function RequestDetail() {
               )}
 
               {editable && !editing && (
-                <div className="pt-2 border-t">
-                  <Button size="sm" variant="outline" className="border-red-200 text-red-600 hover:bg-red-50" onClick={() => setConfirmCancel(true)}>
+                <div className="pt-2 border-t border-border">
+                  <Button size="sm" variant="outline" className="border-destructive/30 text-destructive hover:bg-destructive/5" onClick={() => setConfirmCancel(true)}>
                     <XCircle size={14} className="mr-1.5" /> Cancel Request
                   </Button>
                 </div>
@@ -388,35 +388,35 @@ export default function RequestDetail() {
 
           {/* PAYMENT */}
           {inPaymentStage && (
-            <Card className="border-yellow-300">
+            <Card className="rounded border border-gold/40 border-l-2 border-l-gold bg-gold/5">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2"><Wallet size={17} /> Payment</CardTitle>
+                <CardTitle className="font-display text-base text-navy flex items-center gap-2"><Wallet size={17} className="text-gold" /> Payment</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="text-sm">
                   <p className="text-muted-foreground">Amount</p>
-                  <p className="font-semibold text-lg">{r.priceLabel}</p>
+                  <p className="font-display text-lg font-semibold text-navy">{r.priceLabel}</p>
                   {r.priceLabel === "Price on request" && (
                     <p className="text-xs text-muted-foreground">The final amount will be confirmed by the shop before you pay.</p>
                   )}
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
-                  <div className="border-2 border-dashed rounded-xl p-4 flex flex-col items-center gap-2.5">
-                    <p className="text-xs font-semibold flex items-center gap-1.5"><QrCode size={14} /> Scan to Pay (GPay/UPI)</p>
-                    <img src="Scanner.jpeg" alt="Scan to pay via UPI" className="h-52 w-52 object-contain rounded-lg" />
+                  <div className="rounded border border-gold/40 bg-card p-4 flex flex-col items-center gap-2.5">
+                    <p className="text-xs font-semibold text-navy flex items-center gap-1.5"><QrCode size={14} className="text-gold" /> Scan to Pay (GPay/UPI)</p>
+                    <img src="Scanner.jpeg" alt="Scan to pay via UPI" className="h-52 w-52 object-contain rounded" />
                     <div className="text-center">
-                      <p className="font-mono text-sm font-semibold">{site.upiId}</p>
+                      <p className="font-mono text-sm font-semibold text-navy">{site.upiId}</p>
                       <p className="text-xs text-muted-foreground">{site.upiPayeeName} · {site.upiBank}</p>
                     </div>
                     <div className="flex gap-2 w-full">
-                      <Button asChild size="sm" variant="outline" className="flex-1">
+                      <Button asChild size="sm" variant="outline" className="flex-1 border-navy/20 text-navy hover:text-navy">
                         <a href={upiPayLink(r.requestNumber)}>Pay to UPI ID</a>
                       </Button>
                       <Button
                         size="sm"
                         variant="outline"
-                        className="flex-1"
+                        className="flex-1 border-navy/20 text-navy hover:text-navy"
                         onClick={() => { navigator.clipboard?.writeText(site.upiId); toast.success("UPI ID copied"); }}
                       >
                         Copy UPI ID
@@ -427,7 +427,7 @@ export default function RequestDetail() {
 
                   <div className="space-y-3">
                     {r.isPaid ? (
-                      <div className="rounded-lg bg-green-50 border border-green-200 p-3 text-sm">
+                      <div className="rounded border border-emerald-200 bg-emerald-50 p-3 text-sm">
                         <StatusBadge status={r.paymentApprovedByAdmin ? "received" : "pending"} />
                         <p className="text-xs text-muted-foreground mt-1.5">
                           {r.paymentApprovedByAdmin
@@ -448,7 +448,7 @@ export default function RequestDetail() {
                             </SelectContent>
                           </Select>
                         </div>
-                        <Button className="w-full bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff]" onClick={handlePaid} disabled={paying}>{paying ? "Recording..." : "I have paid"}</Button>
+                        <Button className="w-full bg-gold font-semibold text-gold-foreground hover:bg-gold/90" onClick={handlePaid} disabled={paying}>{paying ? "Recording..." : "I have paid"}</Button>
                         <p className="text-xs text-muted-foreground">
                           After you mark this paid, the shop must verify your payment before your final files unlock.
                         </p>
@@ -457,7 +457,7 @@ export default function RequestDetail() {
                   </div>
                 </div>
 
-                <div className="rounded-lg bg-red-50 border border-red-200 p-2.5 text-xs text-red-700 flex items-start gap-2">
+                <div className="rounded border-l-2 border-destructive bg-destructive/5 p-2.5 text-xs text-destructive flex items-start gap-2">
                   <ShieldAlert size={14} className="mt-0.5 shrink-0" />
                   <span>Never share your banking OTP, UPI PIN, or passwords with anyone.</span>
                 </div>
@@ -466,29 +466,29 @@ export default function RequestDetail() {
           )}
 
           {/* DOWNLOADS */}
-          <Card>
+          <Card className="rounded border border-border">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2"><FileDown size={17} /> Final Files</CardTitle>
+              <CardTitle className="font-display text-base text-navy flex items-center gap-2"><FileDown size={17} className="text-gold" /> Final Files</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {r.deliverables.length === 0 ? (
                 <p className="text-sm text-muted-foreground">No final files yet. They'll appear here once your work is done.</p>
               ) : canDownload ? (
                 r.deliverables.map((f) => (
-                  <div key={f.id} className="flex items-center justify-between gap-2 bg-muted rounded-md px-3 py-2 text-sm">
+                  <div key={f.id} className="flex items-center justify-between gap-2 bg-secondary/60 rounded px-3 py-2 text-sm">
                     <div className="min-w-0">
-                      <p className="font-medium truncate">{f.fileName}</p>
+                      <p className="font-medium text-navy truncate">{f.fileName}</p>
                       <p className="text-xs text-muted-foreground">{new Date(f.uploadedAt).toLocaleDateString("en-IN")}</p>
                     </div>
-                    <Button size="sm" variant="outline" onClick={() => handleDownload(f.id, f.fileName)}>
+                    <Button size="sm" variant="outline" onClick={() => handleDownload(f.id, f.fileName)} className="border-navy/20 text-navy hover:text-navy">
                       <FileDown size={14} className="mr-1.5" /> Download
                     </Button>
                   </div>
                 ))
               ) : (
-                <div className="rounded-lg bg-muted/60 border p-4 text-center">
+                <div className="rounded border border-border bg-secondary/40 p-4 text-center">
                   <Lock className="mx-auto mb-2 text-muted-foreground/60" size={24} />
-                  <p className="text-sm font-medium">{r.deliverables.length} file(s) ready</p>
+                  <p className="text-sm font-medium text-navy">{r.deliverables.length} file(s) ready</p>
                   <p className="text-xs text-muted-foreground">Files unlock after the shop confirms your payment.</p>
                 </div>
               )}
@@ -496,9 +496,9 @@ export default function RequestDetail() {
           </Card>
 
           {/* COMMENTS */}
-          <Card>
+          <Card className="rounded border border-border">
             <CardHeader className="pb-3">
-              <CardTitle className="text-base flex items-center gap-2"><MessageSquare size={17} /> Agent Remarks & Messages</CardTitle>
+              <CardTitle className="font-display text-base text-navy flex items-center gap-2"><MessageSquare size={17} className="text-gold" /> Agent Remarks & Messages</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               {visibleComments.length === 0 ? (
@@ -506,16 +506,16 @@ export default function RequestDetail() {
               ) : (
                 <div className="space-y-2">
                   {visibleComments.map((c) => (
-                    <div key={c.id} className={`rounded-lg px-3 py-2 text-sm ${c.byRole === "customer" ? "bg-blue-50 ml-6" : "bg-muted mr-6"}`}>
+                    <div key={c.id} className={`rounded px-3 py-2 text-sm ${c.byRole === "customer" ? "bg-secondary/70 ml-6" : "bg-muted mr-6"}`}>
                       <p className="text-[11px] font-semibold text-muted-foreground">{roleLabel(c.byRole)} • {new Date(c.at).toLocaleString("en-IN")}</p>
-                      <p>{c.message}</p>
+                      <p className="text-foreground">{c.message}</p>
                     </div>
                   ))}
                 </div>
               )}
               <div className="flex gap-2 items-end">
                 <Textarea rows={2} placeholder="Message the agent..." value={message} onChange={(e) => setMessage(e.target.value)} className="flex-1" />
-                <Button size="sm" onClick={handleComment} disabled={!message.trim() || sending}><Send size={14} /></Button>
+                <Button size="sm" onClick={handleComment} disabled={!message.trim() || sending} className="bg-navy text-white hover:bg-navy/90"><Send size={14} /></Button>
               </div>
             </CardContent>
           </Card>
@@ -523,8 +523,8 @@ export default function RequestDetail() {
 
         {/* RIGHT — timeline */}
         <div className="space-y-6">
-          <Card>
-            <CardHeader className="pb-3"><CardTitle className="text-base flex items-center gap-2"><Lightbulb size={16} /> Progress</CardTitle></CardHeader>
+          <Card className="rounded border border-border">
+            <CardHeader className="pb-3"><CardTitle className="font-display text-base text-navy flex items-center gap-2"><Lightbulb size={16} className="text-gold" /> Progress</CardTitle></CardHeader>
             <CardContent><StatusTimeline request={r} /></CardContent>
           </Card>
         </div>
@@ -534,14 +534,14 @@ export default function RequestDetail() {
       <Dialog open={confirmCancel} onOpenChange={setConfirmCancel}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Cancel this request?</DialogTitle>
+            <DialogTitle className="font-display text-navy">Cancel this request?</DialogTitle>
             <DialogDescription>
               This will cancel request {r.requestNumber}. This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setConfirmCancel(false)} disabled={cancelling}>Keep Request</Button>
-            <Button className="bg-red-600 hover:bg-red-700" onClick={handleCancel} disabled={cancelling}>{cancelling ? "Cancelling..." : "Yes, Cancel"}</Button>
+            <Button variant="outline" onClick={() => setConfirmCancel(false)} disabled={cancelling} className="border-navy/20 text-navy hover:text-navy">Keep Request</Button>
+            <Button className="bg-destructive text-destructive-foreground hover:bg-destructive/90" onClick={handleCancel} disabled={cancelling}>{cancelling ? "Cancelling..." : "Yes, Cancel"}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
