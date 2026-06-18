@@ -1,0 +1,67 @@
+import {
+  Fingerprint, CreditCard, Vote, BookUser, BadgeIndianRupee, Home as HomeIcon,
+  ScrollText, Baby, FileText, Car, Receipt, ReceiptText, Landmark, Truck,
+  FileSpreadsheet, Factory, Award, School, ClipboardList, Shield, Anchor,
+  Plane, Briefcase, Ticket, ClipboardCheck, GraduationCap, NotebookPen,
+  PencilLine, Keyboard, Printer, ScanLine, Copy, Layers, Camera, Zap,
+  Droplets, Smartphone, Tv, CarFront, Building2, ShoppingCart, ShoppingBag,
+  Sparkles, type LucideIcon,
+} from "lucide-react";
+
+// Distinct icon per service (matched to the catalog slugs), CSC-style.
+const SERVICE_ICONS: Record<string, LucideIcon> = {
+  // Government documents
+  "aadhaar-update": Fingerprint,
+  "pan-card": CreditCard,
+  "voter-id": Vote,
+  "passport": BookUser,
+  "income-certificate": BadgeIndianRupee,
+  "domicile-certificate": HomeIcon,
+  "caste-certificate": ScrollText,
+  "birth-certificate": Baby,
+  "death-certificate": FileText,
+  "driving-license": Car,
+  // Tax & GST
+  "gst-registration": Receipt,
+  "gst-returns": ReceiptText,
+  "itr-filing": Landmark,
+  "eway-bill": Truck,
+  "gst-billing-excel": FileSpreadsheet,
+  "factory-billing": Factory,
+  // Exams & jobs
+  "scholarship-forms": Award,
+  "admission-forms": School,
+  "exam-form-filling": ClipboardList,
+  "army-exam": Shield,
+  "navy-exam": Anchor,
+  "airforce-exam": Plane,
+  "govt-job-forms": Briefcase,
+  "hall-ticket": Ticket,
+  "result-checking": ClipboardCheck,
+  "marksheet-print": GraduationCap,
+  // Document services
+  "resume": NotebookPen,
+  "online-form-filling": PencilLine,
+  "document-typing": Keyboard,
+  "printing": Printer,
+  "scanning": ScanLine,
+  "xerox": Copy,
+  "lamination": Layers,
+  "passport-photos": Camera,
+  // Bills & recharge
+  "electricity-bill": Zap,
+  "water-bill": Droplets,
+  "mobile-recharge": Smartphone,
+  "dth-recharge": Tv,
+  "fastag-recharge": CarFront,
+  // Business
+  "company-registration": Building2,
+  "amazon-seller": ShoppingCart,
+  "flipkart-seller": ShoppingBag,
+  // Other
+  "other-service": Sparkles,
+};
+
+export function serviceIcon(slug?: string): LucideIcon {
+  return (slug && SERVICE_ICONS[slug]) || FileText;
+}
