@@ -10,8 +10,7 @@ import { Input } from "@/components/ui/input";
 import {
   FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
   Search, Briefcase, ArrowRight, FileUp, Cog, Download,
-  ShieldCheck, Clock, BadgeIndianRupee, Headset, MapPin, Phone, Clock3,
-  MessageCircle, Lock, type LucideIcon,
+  MapPin, Phone, Clock3, MessageCircle, type LucideIcon,
 } from "lucide-react";
 
 const ICONS: Record<string, LucideIcon> = {
@@ -23,15 +22,6 @@ const STEPS = [
   { icon: FileUp, title: "Upload Documents", desc: "Securely share the required documents online." },
   { icon: Cog, title: "We Process It", desc: "Our team handles it on the official portals." },
   { icon: Download, title: "Pay & Download", desc: "Pay, and download once payment is approved." },
-];
-
-const WHY = [
-  { icon: ShieldCheck, title: "Verified & Trusted", desc: "We work only on official government websites — never fake portals." },
-  { icon: Clock, title: "Fast Turnaround", desc: "Quick, accurate processing and same-day help on many services." },
-  { icon: BadgeIndianRupee, title: "Transparent", desc: "Clear assistance with no hidden surprises — price confirmed upfront." },
-  { icon: Lock, title: "Document Privacy", desc: "Your files are stored securely with strict access control." },
-  { icon: Headset, title: "Real Human Help", desc: "Friendly, in-person assistance at every step of the way." },
-  { icon: Building2, title: "One Roof", desc: "40+ services across government, tax, exams, printing & bills." },
 ];
 
 const STATS = [
@@ -183,23 +173,6 @@ export default function Home() {
             <div key={s.label} className="text-center">
               <div className="font-display text-3xl font-semibold text-gold sm:text-4xl">{s.value}</div>
               <div className="mt-1 text-xs uppercase tracking-wider text-white/55">{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Why choose ───────────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <SectionHead eyebrow="Why us" title="Why choose Mahabharat" center />
-        <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {WHY.map((w) => (
-            <div key={w.title}
-              className="group rounded border border-border bg-card p-6 transition-all hover:-translate-y-0.5 hover:border-gold hover:shadow-md">
-              <div className="flex h-12 w-12 items-center justify-center rounded border border-gold/30 bg-gold/10 text-gold">
-                <w.icon size={22} />
-              </div>
-              <h3 className="mt-4 font-display text-lg font-semibold text-navy">{w.title}</h3>
-              <p className="mt-1.5 text-sm leading-relaxed text-muted-foreground">{w.desc}</p>
             </div>
           ))}
         </div>
