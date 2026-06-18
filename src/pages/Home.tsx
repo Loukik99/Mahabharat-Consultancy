@@ -2,7 +2,7 @@ import { useState, useEffect, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { serviceCategories } from "@/data/catalog";
 import { getServices, getCategories } from "@/api/services.api";
-import { serviceEmoji, serviceImage } from "@/data/serviceIcons";
+import { serviceIcon } from "@/data/serviceIcons";
 import type { Service, ServiceCategory } from "@/types";
 import { toast } from "sonner";
 import { site, waLink } from "@/config/site";
@@ -18,16 +18,16 @@ const ICONS: Record<string, LucideIcon> = {
   FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
 };
 
-// Soft per-category background tint behind each service icon.
+// Soft per-category tint + icon colour behind each service icon.
 // Full class strings so Tailwind keeps them in the build.
-const CATEGORY_TONE: Record<string, string> = {
-  govt_docs: "bg-blue-50",
-  tax_gst: "bg-emerald-50",
-  exams_jobs: "bg-amber-50",
-  documents: "bg-violet-50",
-  bills_recharge: "bg-rose-50",
-  business: "bg-cyan-50",
-  other: "bg-slate-100",
+const CATEGORY_TONE: Record<string, { bg: string; icon: string }> = {
+  govt_docs: { bg: "bg-blue-50", icon: "text-blue-600" },
+  tax_gst: { bg: "bg-emerald-50", icon: "text-emerald-600" },
+  exams_jobs: { bg: "bg-amber-50", icon: "text-amber-600" },
+  documents: { bg: "bg-violet-50", icon: "text-violet-600" },
+  bills_recharge: { bg: "bg-rose-50", icon: "text-rose-600" },
+  business: { bg: "bg-cyan-50", icon: "text-cyan-600" },
+  other: { bg: "bg-slate-100", icon: "text-slate-600" },
 };
 
 const STEPS = [
@@ -121,7 +121,7 @@ export default function Home() {
             const list = services.filter((s) => s.category === cat.id);
             if (!list.length) return null;
             const Icon = ICONS[cat.icon] ?? Sparkles;
-            const tone = CATEGORY_TONE[cat.id] ?? "bg-secondary";
+            const tone = CATEGORY_TONE[cat.id] ?? { bg: "bg-secondary", icon: "text-navy" };
             return (
               <div key={cat.id}>
                 <div className="mb-5 flex items-center gap-3">
@@ -141,15 +141,18 @@ export default function Home() {
                   </Link>
                 </div>
                 <div className="grid grid-cols-3 gap-2.5 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8">
-                  {list.map((s) => (
-                    <Link key={s.id} to={`/services/${s.id}`}
-                      className="group flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center shadow-[0_1px_6px_rgba(20,40,80,0.06)] ring-1 ring-black/5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(20,40,80,0.12)]">
-                      <span className={`flex h-12 w-12 items-center justify-center rounded-xl ${tone} transition-transform group-hover:scale-105`}>
-                        <ServiceTileIcon slug={s.slug} />
-                      </span>
-                      <span className="text-[11px] font-medium leading-tight text-navy line-clamp-2">{s.name}</span>
-                    </Link>
-                  ))}
+                  {list.map((s) => {
+                    const SvcIcon = serviceIcon(s.slug);
+                    return (
+                      <Link key={s.id} to={`/services/${s.id}`}
+                        className="group flex flex-col items-center gap-2 rounded-xl bg-white p-3 text-center shadow-[0_1px_6px_rgba(20,40,80,0.06)] ring-1 ring-black/5 transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_8px_20px_rgba(20,40,80,0.12)]">
+                        <span className={`flex h-12 w-12 items-center justify-center rounded-xl ${tone.bg} transition-transform group-hover:scale-105`}>
+                          <SvcIcon size={22} className={tone.icon} />
+                        </span>
+                        <span className="text-[11px] font-medium leading-tight text-navy line-clamp-2">{s.name}</span>
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             );
@@ -260,12 +263,4 @@ function ContactRow({ icon: Icon, children }: { icon: LucideIcon; children: Reac
       <p className="pt-1.5 text-sm text-foreground">{children}</p>
     </div>
   );
-}
-
-// Service icon: shows the supplied image (src/assets/services/<slug>.*) if
-// present, otherwise the emoji.
-function ServiceTileIcon({ slug }: { slug?: string }) {
-  const img = serviceImage(slug);
-  if (img) return <img src={img} alt="" className="h-9 w-9 object-contain" loading="lazy" />;
-  return <span className="text-2xl leading-none">{serviceEmoji(slug)}</span>;
 }
