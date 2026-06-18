@@ -30,67 +30,64 @@ export function Navbar() {
   ];
 
   const roleColors: Record<string, string> = {
-    admin: "bg-orange-500 text-white",
-    agent: "bg-emerald-500 text-white",
-    customer: "bg-blue-500 text-white",
+    admin: "bg-gold text-gold-foreground",
+    agent: "bg-navy text-white",
+    customer: "bg-secondary text-navy",
   };
 
   return (
     <>
-      {/* Top accent bar */}
-      <div className="h-1 bg-gradient-to-r from-[#4f8ef7] via-[#6c63ff] to-[#38bdf8]" />
-      <nav className={`sticky top-0 z-50 transition-all duration-300 bg-white ${scrolled ? "shadow-md" : "border-b border-gray-100"}`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-[60px] items-center justify-between">
+      <div className="gold-rule" />
+      <nav className={`sticky top-0 z-50 bg-background/95 backdrop-blur transition-shadow ${scrolled ? "shadow-[0_1px_0_hsl(var(--border)),0_8px_24px_-12px_rgba(11,30,58,0.25)]" : "border-b border-border"}`}>
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <img src={logoImg} alt="Mahabharat Consultancy" className="h-9 w-auto object-contain group-hover:scale-105 transition-transform duration-200" />
-              <div className="hidden sm:block">
-                <p className="text-[14px] font-bold leading-tight text-gray-900 tracking-tight">
-                  Mahabharat Consultancy
-                </p>
-                <p className="text-[9px] text-blue-600 font-semibold tracking-[0.15em] uppercase">One Stop Service Center</p>
+            <Link to="/" className="flex items-center gap-3 group">
+              <img src={logoImg} alt="Mahabharat Consultancy" className="h-10 w-auto object-contain" />
+              <div className="hidden sm:block leading-tight">
+                <p className="font-display text-[15px] font-semibold tracking-tight text-navy">Mahabharat Consultancy</p>
+                <p className="eyebrow text-[9px] text-gold">One Stop Service Center</p>
               </div>
             </Link>
 
             {/* Desktop nav */}
-            <div className="hidden md:flex items-center gap-1">
-              {navLinks.map(link => (
+            <div className="hidden items-center gap-1 md:flex">
+              {navLinks.map((link) => (
                 <Link key={link.to} to={link.to}
-                  className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    isActive(link.to) ? "bg-blue-50 text-blue-700" : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                  className={`relative px-3.5 py-2 text-sm font-medium transition-colors ${
+                    isActive(link.to) ? "text-navy" : "text-muted-foreground hover:text-navy"
                   }`}>
                   {link.label}
+                  {isActive(link.to) && <span className="absolute inset-x-3.5 -bottom-px h-0.5 bg-gold" />}
                 </Link>
               ))}
 
-              <div className="w-px h-6 bg-gray-200 mx-2" />
+              <div className="mx-3 h-6 w-px bg-border" />
 
               {user ? (
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-2 bg-gray-50 rounded-lg px-2.5 py-1.5">
-                    <div className="w-7 h-7 rounded-full bg-blue-600 flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">{user.name[0]}</span>
+                <div className="flex items-center gap-2.5">
+                  <div className="flex items-center gap-2 rounded bg-secondary/70 px-2.5 py-1.5">
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-navy text-xs font-bold text-gold">
+                      {user.name[0]}
                     </div>
-                    <span className="text-sm font-medium text-gray-700">{user.name.split(" ")[0]}</span>
+                    <span className="text-sm font-medium text-navy">{user.name.split(" ")[0]}</span>
                   </div>
-                  <span className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${roleColors[user.role]}`}>
+                  <span className={`inline-flex items-center gap-1 rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${roleColors[user.role]}`}>
                     {user.role === "admin" && <Crown size={10} />}
                     {user.role}
                   </span>
-                  <button onClick={handleLogout}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors" title="Logout">
+                  <button onClick={handleLogout} title="Logout"
+                    className="flex h-8 w-8 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive">
                     <LogOut size={15} />
                   </button>
                 </div>
               ) : (
                 <div className="flex items-center gap-2">
-                  <Button variant="ghost" size="sm" onClick={() => navigate("/login")} className="text-gray-600 font-medium text-sm">
+                  <Button variant="ghost" size="sm" onClick={() => navigate("/login")} className="font-medium text-navy hover:text-navy">
                     Sign In
                   </Button>
-                  <Button size="sm" onClick={() => navigate("/signup")}
-                    className="bg-gradient-to-r from-[#4f8ef7] to-[#6c63ff] hover:from-[#4080e8] hover:to-[#5d54f0] font-semibold text-xs shadow-md shadow-indigo-500/20">
-                    Get Started <ChevronRight size={13} className="ml-0.5" />
+                  <Button size="sm" onClick={() => navigate("/signup")} className="bg-gold font-semibold text-gold-foreground hover:bg-gold/90">
+                    Get Started <ChevronRight size={14} className="ml-0.5" />
                   </Button>
                 </div>
               )}
@@ -98,41 +95,39 @@ export function Navbar() {
 
             {/* Mobile toggle */}
             <button onClick={() => setOpen(!open)}
-              className="md:hidden w-9 h-9 rounded-lg border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors">
+              className="flex h-9 w-9 items-center justify-center rounded border border-border md:hidden">
               {open ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </div>
 
         {/* Mobile menu */}
-        <div className={`md:hidden overflow-hidden transition-all duration-300 ${open ? "max-h-80 border-t" : "max-h-0"}`}>
-          <div className="bg-white px-4 py-3 space-y-1">
-            {navLinks.map(link => (
+        <div className={`overflow-hidden border-t border-border transition-all duration-300 md:hidden ${open ? "max-h-96" : "max-h-0 border-t-0"}`}>
+          <div className="space-y-1 px-4 py-3">
+            {navLinks.map((link) => (
               <Link key={link.to} to={link.to} onClick={() => setOpen(false)}
-                className={`flex items-center gap-3 py-2.5 px-3 rounded-lg text-sm font-medium transition-colors ${
-                  isActive(link.to) ? "bg-blue-50 text-blue-700" : "text-gray-600 hover:bg-gray-50"
+                className={`flex items-center gap-3 rounded px-3 py-2.5 text-sm font-medium ${
+                  isActive(link.to) ? "bg-secondary text-navy" : "text-muted-foreground hover:bg-secondary/60"
                 }`}>
                 {link.label === "Dashboard" && <LayoutDashboard size={16} />}
                 {link.label}
               </Link>
             ))}
             {user ? (
-              <div className="flex items-center justify-between pt-2 mt-2 border-t">
+              <div className="mt-2 flex items-center justify-between border-t border-border pt-3">
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center">
-                    <span className="text-white text-xs font-bold">{user.name[0]}</span>
-                  </div>
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-navy text-xs font-bold text-gold">{user.name[0]}</div>
                   <div>
-                    <p className="text-sm font-medium">{user.name}</p>
-                    <p className="text-[10px] text-gray-400 uppercase">{user.role}</p>
+                    <p className="text-sm font-medium text-navy">{user.name}</p>
+                    <p className="text-[10px] uppercase tracking-wider text-muted-foreground">{user.role}</p>
                   </div>
                 </div>
-                <button onClick={handleLogout} className="text-sm text-red-500 font-medium px-3 py-1.5 rounded-lg hover:bg-red-50">Logout</button>
+                <button onClick={handleLogout} className="rounded px-3 py-1.5 text-sm font-medium text-destructive hover:bg-destructive/10">Logout</button>
               </div>
             ) : (
-              <div className="flex gap-2 pt-2 mt-2 border-t">
+              <div className="mt-2 flex gap-2 border-t border-border pt-3">
                 <Button variant="outline" size="sm" className="flex-1" onClick={() => { navigate("/login"); setOpen(false); }}>Sign In</Button>
-                <Button size="sm" className="flex-1 bg-blue-600" onClick={() => { navigate("/signup"); setOpen(false); }}>Get Started</Button>
+                <Button size="sm" className="flex-1 bg-gold text-gold-foreground hover:bg-gold/90" onClick={() => { navigate("/signup"); setOpen(false); }}>Get Started</Button>
               </div>
             )}
           </div>
