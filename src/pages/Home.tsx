@@ -99,7 +99,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <SectionHead eyebrow="What we do" title="Our services" sub="The main things we help you with — see the full list for all 40+ services." />
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {categories.slice(0, 5).map((cat) => {
+            {categories.slice(0, 6).map((cat) => {
               const count = services.filter((s) => s.category === cat.id).length;
               return (
                 <Link key={cat.id} to={`/services?cat=${cat.id}`}
