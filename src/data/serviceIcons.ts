@@ -65,3 +65,61 @@ const SERVICE_ICONS: Record<string, LucideIcon> = {
 export function serviceIcon(slug?: string): LucideIcon {
   return (slug && SERVICE_ICONS[slug]) || FileText;
 }
+
+// Colourful, realistic emoji per service (rendered as the card icon).
+const SERVICE_EMOJI: Record<string, string> = {
+  // Government documents
+  "aadhaar-update": "🪪",
+  "pan-card": "💳",
+  "voter-id": "🗳️",
+  "passport": "🛂",
+  "income-certificate": "💰",
+  "domicile-certificate": "🏠",
+  "caste-certificate": "📜",
+  "birth-certificate": "👶",
+  "death-certificate": "📄",
+  "driving-license": "🚗",
+  // Tax & GST
+  "gst-registration": "🧾",
+  "gst-returns": "📑",
+  "itr-filing": "🏛️",
+  "eway-bill": "🚚",
+  "gst-billing-excel": "📊",
+  "factory-billing": "🏭",
+  // Exams & jobs
+  "scholarship-forms": "🎓",
+  "admission-forms": "🏫",
+  "exam-form-filling": "📝",
+  "army-exam": "🎖️",
+  "navy-exam": "⚓",
+  "airforce-exam": "✈️",
+  "govt-job-forms": "💼",
+  "hall-ticket": "🎫",
+  "result-checking": "✅",
+  "marksheet-print": "📃",
+  // Document services
+  "resume": "📄",
+  "online-form-filling": "🖊️",
+  "document-typing": "⌨️",
+  "printing": "🖨️",
+  "scanning": "📠",
+  "xerox": "📑",
+  "lamination": "🗂️",
+  "passport-photos": "📸",
+  // Bills & recharge
+  "electricity-bill": "💡",
+  "water-bill": "💧",
+  "mobile-recharge": "📱",
+  "dth-recharge": "📺",
+  "fastag-recharge": "🛣️",
+  // Business
+  "company-registration": "🏢",
+  "amazon-seller": "🛒",
+  "flipkart-seller": "🛍️",
+  // Other
+  "other-service": "✨",
+};
+
+export function serviceEmoji(slug?: string): string {
+  return (slug && SERVICE_EMOJI[slug]) || "📋";
+}

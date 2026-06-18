@@ -2,7 +2,7 @@ import { useState, useEffect, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { serviceCategories } from "@/data/catalog";
 import { getServices, getCategories } from "@/api/services.api";
-import { serviceIcon } from "@/data/serviceIcons";
+import { serviceEmoji } from "@/data/serviceIcons";
 import type { Service, ServiceCategory } from "@/types";
 import { toast } from "sonner";
 import { site, waLink } from "@/config/site";
@@ -141,20 +141,17 @@ export default function Home() {
                   </Link>
                 </div>
                 <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-                  {list.map((s) => {
-                    const SvcIcon = serviceIcon(s.slug);
-                    return (
-                      <Link key={s.id} to={`/services/${s.id}`}
-                        className="group flex flex-col items-center gap-4 rounded-2xl bg-white p-5 pt-6 text-center shadow-[0_2px_12px_rgba(20,40,80,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(20,40,80,0.14)]">
-                        <span className="relative flex h-16 w-16 items-center justify-center transition-transform group-hover:scale-105">
-                          <span className={`stamp absolute inset-0 ${tone.frame}`} />
-                          <span className="stamp absolute inset-[2px] bg-white" />
-                          <SvcIcon size={28} className={`relative ${tone.icon}`} />
-                        </span>
-                        <span className="text-sm font-semibold leading-snug text-navy">{s.name}</span>
-                      </Link>
-                    );
-                  })}
+                  {list.map((s) => (
+                    <Link key={s.id} to={`/services/${s.id}`}
+                      className="group flex flex-col items-center gap-4 rounded-2xl bg-white p-5 pt-6 text-center shadow-[0_2px_12px_rgba(20,40,80,0.06)] transition-all duration-200 hover:-translate-y-1 hover:shadow-[0_12px_30px_rgba(20,40,80,0.14)]">
+                      <span className="relative flex h-16 w-16 items-center justify-center transition-transform group-hover:scale-105">
+                        <span className={`stamp absolute inset-0 ${tone.frame}`} />
+                        <span className="stamp absolute inset-[2px] bg-white" />
+                        <span className="relative text-3xl leading-none">{serviceEmoji(s.slug)}</span>
+                      </span>
+                      <span className="text-sm font-semibold leading-snug text-navy">{s.name}</span>
+                    </Link>
+                  ))}
                 </div>
               </div>
             );
