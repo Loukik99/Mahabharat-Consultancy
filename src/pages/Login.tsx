@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
+import logoImg from "@/assets/logo.jpeg";
 
 export default function LoginPage() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
@@ -35,9 +36,7 @@ export default function LoginPage() {
       <div className="w-full max-w-sm">
         <Card className="rounded border-border">
           <CardHeader className="text-center pb-4">
-            <div className="w-12 h-12 bg-navy rounded flex items-center justify-center mx-auto mb-2">
-              <span className="font-display text-gold font-bold text-xl">M</span>
-            </div>
+            <img src={logoImg} alt="Mahabharat Consultancy" className="mx-auto mb-2 h-14 w-auto object-contain" />
             <CardTitle className="font-display text-xl text-navy">Welcome Back</CardTitle>
             <CardDescription>Sign in to track your service requests</CardDescription>
           </CardHeader>
