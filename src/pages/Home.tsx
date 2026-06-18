@@ -17,6 +17,18 @@ const ICONS: Record<string, LucideIcon> = {
   FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
 };
 
+// Per-category icon tone for the service tiles (CSC-style colourful icons).
+// Full class strings so Tailwind keeps them in the build.
+const CATEGORY_TONE: Record<string, string> = {
+  govt_docs: "bg-blue-50 text-blue-600",
+  tax_gst: "bg-emerald-50 text-emerald-600",
+  exams_jobs: "bg-amber-50 text-amber-600",
+  documents: "bg-violet-50 text-violet-600",
+  bills_recharge: "bg-rose-50 text-rose-600",
+  business: "bg-cyan-50 text-cyan-600",
+  other: "bg-slate-100 text-slate-600",
+};
+
 const STEPS = [
   { icon: FileText, title: "Submit Request", desc: "Pick a service and tell us what you need." },
   { icon: FileUp, title: "Upload Documents", desc: "Securely share the required documents online." },
@@ -107,6 +119,7 @@ export default function Home() {
             const list = services.filter((s) => s.category === cat.id);
             if (!list.length) return null;
             const Icon = ICONS[cat.icon] ?? Sparkles;
+            const tone = CATEGORY_TONE[cat.id] ?? "bg-secondary text-navy";
             return (
               <div key={cat.id}>
                 <div className="mb-5 flex items-center gap-3">
@@ -125,14 +138,14 @@ export default function Home() {
                     View all <ArrowRight size={14} />
                   </Link>
                 </div>
-                <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
                   {list.map((s) => (
                     <Link key={s.id} to={`/services/${s.id}`}
-                      className="group flex flex-col items-center gap-2.5 rounded border border-border bg-card p-4 text-center transition-all hover:-translate-y-0.5 hover:border-gold hover:shadow-md">
-                      <span className="flex h-11 w-11 items-center justify-center rounded-full bg-secondary text-navy transition-colors group-hover:bg-gold/15 group-hover:text-gold">
-                        <Icon size={20} />
+                      className="group flex flex-col items-center gap-3 rounded-lg bg-card p-5 text-center shadow-sm ring-1 ring-black/5 transition-all duration-200 hover:-translate-y-1 hover:shadow-xl">
+                      <span className={`flex h-14 w-14 items-center justify-center rounded-xl ${tone} transition-transform group-hover:scale-110`}>
+                        <Icon size={26} />
                       </span>
-                      <span className="text-xs font-medium leading-snug text-navy">{s.name}</span>
+                      <span className="text-[13px] font-medium leading-snug text-navy">{s.name}</span>
                     </Link>
                   ))}
                 </div>
