@@ -9,11 +9,11 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import jobSeekerLogo from "@/assets/services/job-seeker.png";
 import {
   Search,
   ExternalLink,
   HelpCircle,
-  Briefcase,
   MapPin,
   Users,
   GraduationCap,
@@ -67,8 +67,8 @@ export default function GovtJobs() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="flex items-center gap-3">
-        <div className="flex h-11 w-11 items-center justify-center rounded bg-navy text-gold">
-          <Briefcase size={22} />
+        <div className="flex h-11 w-11 items-center justify-center rounded bg-white border border-border">
+          <img src={jobSeekerLogo} alt="Government jobs" className="h-8 w-8 object-contain" />
         </div>
         <div>
           <p className="eyebrow text-gold">Opportunities</p>
@@ -82,8 +82,8 @@ export default function GovtJobs() {
       {/* Explore more jobs on FreeJobAlert */}
       <div className="mt-5 flex flex-col gap-3 rounded border border-gold/40 bg-gold/5 p-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-navy text-gold">
-            <Briefcase size={18} />
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded bg-white border border-border">
+            <img src={jobSeekerLogo} alt="More jobs" className="h-8 w-8 object-contain" />
           </span>
           <div>
             <h2 className="font-display text-base font-semibold text-navy">Looking for railway, banking or other jobs?</h2>
