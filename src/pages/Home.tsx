@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { site, waLink } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import MagicBento from "@/components/MagicBento";
 import {
   FileText, Search, Briefcase, ArrowRight, FileUp, Cog, Download,
   MapPin, Phone, Clock3, MessageCircle, type LucideIcon,
@@ -94,30 +95,34 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Services (highlight cards) ───────────────────────── */}
-      <section className="bg-white">
+      {/* ── Services (Magic Bento) ───────────────────────────── */}
+      <section className="surface-navy">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <SectionHead eyebrow="What we do" title="Our services" sub="The main things we help you with — see the full list for all 40+ services." />
-          <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {categories.slice(0, 6).map((cat) => {
-              const count = services.filter((s) => s.category === cat.id).length;
-              return (
-                <Link key={cat.id} to={`/services?cat=${cat.id}`}
-                  className="group relative overflow-hidden rounded-xl border border-border bg-card p-6 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:border-gold hover:shadow-lg">
-                  <span className="absolute inset-x-0 top-0 h-1 origin-left scale-x-0 bg-gold transition-transform duration-300 group-hover:scale-x-100" />
-                  <h3 className="font-display text-xl font-semibold text-navy">{cat.name}</h3>
-                  {cat.nameHi && <p className="font-hi text-sm text-gold">{cat.nameHi}</p>}
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{cat.description}</p>
-                  {count > 0 && (
-                    <span className="mt-4 inline-flex items-center gap-1 text-sm font-medium text-gold transition-all group-hover:gap-2">
-                      Explore {count} services <ArrowRight size={14} />
-                    </span>
-                  )}
-                </Link>
-              );
-            })}
+          <div className="mb-10 text-center">
+            <p className="eyebrow text-gold">What we do</p>
+            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl">Our services</h2>
+            <p className="mt-2 text-sm text-white/60">Explore our main service areas — hover to preview, tap to open.</p>
           </div>
-          <div className="mt-9 text-center">
+
+          <MagicBento
+            cards={categories.slice(0, 6).map((cat) => {
+              const count = services.filter((s) => s.category === cat.id).length;
+              return {
+                title: cat.name,
+                description: cat.description,
+                label: cat.nameHi ? `${cat.nameHi} · ${count} services` : `${count} services`,
+                href: `/services?cat=${cat.id}`,
+              };
+            })}
+            glowColor="198, 162, 71"
+            spotlightRadius={360}
+            particleCount={10}
+            enableTilt={false}
+            enableMagnetism
+            clickEffect
+          />
+
+          <div className="mt-10 text-center">
             <Button asChild size="lg" className="bg-gold font-semibold text-gold-foreground hover:bg-gold/90">
               <Link to="/services">Browse all services <ArrowRight size={16} /></Link>
             </Button>
