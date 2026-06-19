@@ -5,7 +5,16 @@ const cloudinary = require("../config/cloudinary");
 const { ApiError } = require("./apiError");
 
 const uploadRoot = path.join(__dirname, "..", "..", env.uploadDir);
-fs.mkdirSync(uploadRoot, { recursive: true });
+// Only local-disk mode needs this directory. On read-only serverless
+// filesystems (e.g. Vercel) creating it throws — and Cloudinary mode never
+// touches it — so guard the call.
+if (env.storageMode !== "cloudinary") {
+  try {
+    fs.mkdirSync(uploadRoot, { recursive: true });
+  } catch {
+    /* read-only FS — ignore (Cloudinary mode doesn't use local disk) */
+  }
+}
 
 const FOLDER = "mahabharat";
 
