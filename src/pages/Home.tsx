@@ -9,9 +9,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Masonry from "@/components/Masonry";
 import {
-  FileText, Search, Briefcase, ArrowRight, FileUp, Cog, Download,
+  FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
+  Search, Briefcase, ArrowRight, FileUp, Cog, Download,
   MapPin, Phone, Clock3, MessageCircle, type LucideIcon,
 } from "lucide-react";
+
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
+};
 
 const STEPS = [
   { icon: FileText, title: "Submit Request", desc: "Pick a service and tell us what you need." },
@@ -104,13 +109,15 @@ export default function Home() {
               columnsConfig={[3, 3, 2, 1]}
               items={categories.slice(0, 6).map((cat, i) => {
                 const count = services.filter((s) => s.category === cat.id).length;
+                const Icon = CATEGORY_ICONS[cat.icon] ?? Sparkles;
                 return {
                   id: cat.id,
                   href: `/services?cat=${cat.id}`,
-                  height: [300, 240, 320, 260, 300, 240][i] ?? 280,
+                  height: [210, 175, 230, 195, 210, 175][i] ?? 200,
                   title: cat.name,
                   label: cat.nameHi ? `${cat.nameHi} · ${count} services` : `${count} services`,
                   description: cat.description,
+                  icon: <Icon size={22} className="text-navy" />,
                 };
               })}
             />

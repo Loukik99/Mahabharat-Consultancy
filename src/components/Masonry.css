@@ -18,11 +18,11 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 0.75rem;
+  gap: 0.5rem;
   width: 100%;
   height: 100%;
-  padding: 1.4rem;
-  border-radius: 14px;
+  padding: 1rem;
+  border-radius: 12px;
   border: 1px solid #e4e8ef;
   background: #ffffff;
   box-shadow: 0 6px 24px -14px rgba(20, 40, 80, 0.18);
@@ -52,16 +52,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 46px;
-  height: 46px;
-  margin-bottom: 0.75rem;
-  border-radius: 10px;
+  width: 38px;
+  height: 38px;
+  margin-bottom: 0.5rem;
+  border-radius: 9px;
   background: hsl(210 20% 96%);
   color: hsl(215 50% 16%);
 }
 .masonry-card__icon img {
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
 }
 
@@ -76,21 +76,21 @@
 .masonry-card__title {
   font-family: "Fraunces", Georgia, serif;
   font-weight: 600;
-  font-size: 20px;
+  font-size: 16px;
   line-height: 1.15;
   letter-spacing: -0.01em;
   color: hsl(215 50% 16%);
-  margin: 0 0 0.35rem;
+  margin: 0 0 0.25rem;
 }
 
 .masonry-card__desc {
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 12px;
+  line-height: 1.45;
   color: hsl(215 13% 42%);
   margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 4;
-  line-clamp: 4;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

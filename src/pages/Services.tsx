@@ -118,7 +118,7 @@ export default function Services() {
               const img = serviceImage(s.slug);
               const SvcIcon = serviceIcon(s.slug);
               const len = (s.description || "").length;
-              const height = 250 + (len > 100 ? 70 : len > 70 ? 35 : 0);
+              const height = 185 + (len > 100 ? 45 : len > 70 ? 22 : 0);
               return {
                 id: s.id,
                 href: `/services/${s.id}`,
