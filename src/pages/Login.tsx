@@ -30,8 +30,6 @@ export default function LoginPage() {
     }
   };
 
-  const quickLogin = (e: string, p: string) => { setEmailOrPhone(e); setPassword(p); };
-
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-sm">
@@ -79,13 +77,6 @@ export default function LoginPage() {
             <p className="text-center text-sm text-muted-foreground mt-4">
               Don't have an account? <Link to="/signup" className="text-gold font-medium hover:underline">Sign Up</Link>
             </p>
-
-            <div className="mt-5 p-3 bg-secondary rounded text-xs space-y-1.5">
-              <p className="font-semibold text-navy">Demo Accounts (click to fill):</p>
-              <button type="button" onClick={() => quickLogin("admin@mahabharat.com", "admin123")} className="block text-left w-full text-muted-foreground hover:text-gold">Admin: admin@mahabharat.com / admin123</button>
-              <button type="button" onClick={() => quickLogin("rajesh@mahabharat.com", "agent123")} className="block text-left w-full text-muted-foreground hover:text-gold">Agent: rajesh@mahabharat.com / agent123</button>
-              <button type="button" onClick={() => quickLogin("amit@example.com", "customer123")} className="block text-left w-full text-muted-foreground hover:text-gold">Customer: amit@example.com / customer123</button>
-            </div>
           </CardContent>
         </Card>
       </div>
