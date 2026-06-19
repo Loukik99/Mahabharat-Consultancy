@@ -5,6 +5,9 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import StaggeredMenu from "@/components/StaggeredMenu";
+import { site, waLink } from "@/config/site";
+import logoImg from "@/assets/logo.jpeg";
 
 // Public
 const Home = lazy(() => import("@/pages/Home"));
@@ -50,11 +53,51 @@ function Protected({ children, roles }: { children: React.ReactNode; roles: stri
 }
 
 export default function App() {
+  const { user } = useAuth();
+  const dash = user?.role === "admin" ? "#/admin" : user?.role === "agent" ? "#/agent" : "#/dashboard";
+
+  // Mobile-only creative nav (Staggered Menu)
+  const mobileItems = [
+    { label: "Home", link: "#/", ariaLabel: "Go to home" },
+    { label: "Services", link: "#/services", ariaLabel: "View services" },
+    { label: "Govt Jobs", link: "#/jobs", ariaLabel: "Government jobs" },
+    user
+      ? { label: "Dashboard", link: dash, ariaLabel: "Your dashboard" }
+      : { label: "Sign In", link: "#/login", ariaLabel: "Sign in" },
+  ];
+  const mobileSocials = [
+    { label: "WhatsApp", link: waLink() },
+    { label: "Call", link: `tel:${site.phone.replace(/\s+/g, "")}` },
+    { label: "Email", link: `mailto:${site.email}` },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen">
       <ScrollToTop />
-      <Navbar />
-      <main className="flex-1">
+
+      {/* Desktop navbar */}
+      <div className="hidden lg:block">
+        <Navbar />
+      </div>
+
+      {/* Mobile-only Staggered Menu (creative nav) */}
+      <div className="lg:hidden">
+        <StaggeredMenu
+          isFixed
+          position="right"
+          items={mobileItems}
+          socialItems={mobileSocials}
+          displaySocials
+          displayItemNumbering
+          logoUrl={logoImg}
+          colors={["#0b1b33", "#16335c"]}
+          accentColor="#c2a14d"
+          menuButtonColor="#0b1f3a"
+          openMenuButtonColor="#0b1f3a"
+        />
+      </div>
+
+      <main className="flex-1 pt-[60px] lg:pt-0">
         <Suspense fallback={<Loader />}>
           <Routes>
             {/* Public */}
