@@ -12,7 +12,7 @@ export const site = {
   address: "G.I.T College Road, Udyambag, Belagavi, Karnataka 590008",
   phone: "+91 89709 34940",
   whatsapp: "918970934940", // digits only, country code first — used in wa.me links
-  email: "info@mahabharatconsultancy.in",
+  email: "info.mahabharatgroup@gmail.com",
   workingHours: "Mon–Sat, 9:00 AM – 8:00 PM",
   // Replace the q= value with the real shop address for an accurate pin.
   mapEmbedUrl: "https://www.google.com/maps?q=G.I.T+College+Road,+Udyambag,+Belagavi,+Karnataka+590008&output=embed",
