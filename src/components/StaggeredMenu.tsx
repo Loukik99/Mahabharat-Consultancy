@@ -81,7 +81,7 @@ export default function StaggeredMenu({
       const plusV = plusVRef.current;
       const icon = iconRef.current;
       const textInner = textInnerRef.current;
-      if (!panel || !plusH || !plusV || !icon || !textInner) return;
+      if (!panel || !textInner) return;
 
       let preLayers: HTMLElement[] = [];
       if (preContainer) preLayers = Array.from(preContainer.querySelectorAll(".sm-prelayer"));
@@ -90,9 +90,9 @@ export default function StaggeredMenu({
       const offscreen = position === "left" ? -100 : 100;
       gsap.set([panel, ...preLayers], { xPercent: offscreen, opacity: 1 });
       if (preContainer) gsap.set(preContainer, { xPercent: 0, opacity: 1 });
-      gsap.set(plusH, { transformOrigin: "50% 50%", rotate: 0 });
-      gsap.set(plusV, { transformOrigin: "50% 50%", rotate: 90 });
-      gsap.set(icon, { rotate: 0, transformOrigin: "50% 50%" });
+      if (plusH) gsap.set(plusH, { transformOrigin: "50% 50%", rotate: 0 });
+      if (plusV) gsap.set(plusV, { transformOrigin: "50% 50%", rotate: 90 });
+      if (icon) gsap.set(icon, { rotate: 0, transformOrigin: "50% 50%" });
       gsap.set(textInner, { yPercent: 0 });
       if (toggleBtnRef.current) gsap.set(toggleBtnRef.current, { color: menuButtonColor });
     });
@@ -289,10 +289,6 @@ export default function StaggeredMenu({
                 <span className="sm-toggle-line" key={i}>{l}</span>
               ))}
             </span>
-          </span>
-          <span ref={iconRef} className="sm-icon" aria-hidden="true">
-            <span ref={plusHRef} className="sm-icon-line" />
-            <span ref={plusVRef} className="sm-icon-line sm-icon-line-v" />
           </span>
         </button>
       </header>
