@@ -139,6 +139,19 @@ for (const path in SERVICE_IMAGE_MODULES) {
   SERVICE_IMAGE[slug] = SERVICE_IMAGE_MODULES[path];
 }
 
+// One image can serve several related services. e.g. the generic "certificate"
+// image is reused for every certificate service.
+const IMAGE_ALIASES: Record<string, string[]> = {
+  certificate: ["caste-certificate", "income-certificate", "domicile-certificate", "birth-certificate", "death-certificate"],
+};
+for (const source in IMAGE_ALIASES) {
+  if (SERVICE_IMAGE[source]) {
+    for (const target of IMAGE_ALIASES[source]) {
+      if (!SERVICE_IMAGE[target]) SERVICE_IMAGE[target] = SERVICE_IMAGE[source];
+    }
+  }
+}
+
 export function serviceImage(slug?: string): string | undefined {
   return slug ? SERVICE_IMAGE[slug] : undefined;
 }

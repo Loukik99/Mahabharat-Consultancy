@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { getServices, getCategories } from "@/api/services.api";
 import { serviceCategories, categoryById } from "@/data/catalog";
+import { serviceIcon, serviceImage } from "@/data/serviceIcons";
 import type { Service, ServiceCategory } from "@/types";
 import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
@@ -112,10 +113,19 @@ export default function Services() {
         <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {services.map((s) => {
             const category = categoryById(s.category);
+            const img = serviceImage(s.slug);
+            const SvcIcon = serviceIcon(s.slug);
             return (
               <Link key={s.id} to={`/services/${s.id}`} className="group">
                 <Card className="h-full rounded border-border transition-colors hover:border-gold hover:shadow-sm">
                   <CardContent className="flex h-full flex-col pt-5">
+                    <div className="mb-3 flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg bg-secondary">
+                      {img ? (
+                        <img src={img} alt="" className="h-9 w-9 object-contain" />
+                      ) : (
+                        <SvcIcon size={22} className="text-navy" />
+                      )}
+                    </div>
                     <div className="mb-2 flex flex-wrap items-center gap-2">
                       {category && (
                         <Badge variant="secondary" className="font-medium">
