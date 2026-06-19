@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { site, waLink } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import MagicBento from "@/components/MagicBento";
+import Masonry from "@/components/Masonry";
 import {
   FileText, Search, Briefcase, ArrowRight, FileUp, Cog, Download,
   MapPin, Phone, Clock3, MessageCircle, type LucideIcon,
@@ -95,33 +95,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Services (Magic Bento) ───────────────────────────── */}
-      <section className="surface-navy">
+      {/* ── Services (Masonry) ───────────────────────────────── */}
+      <section className="bg-white">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <div className="mb-10 text-center">
-            <p className="eyebrow text-gold">What we do</p>
-            <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl">Our services</h2>
-            <p className="mt-2 text-sm text-white/60">Explore our main service areas — hover to preview, tap to open.</p>
+          <SectionHead eyebrow="What we do" title="Our services" sub="Explore our main service areas — tap a card to open all its services." center />
+          <div className="mt-10">
+            <Masonry
+              columnsConfig={[3, 3, 2, 1]}
+              items={categories.slice(0, 6).map((cat, i) => {
+                const count = services.filter((s) => s.category === cat.id).length;
+                return {
+                  id: cat.id,
+                  href: `/services?cat=${cat.id}`,
+                  height: [300, 240, 320, 260, 300, 240][i] ?? 280,
+                  title: cat.name,
+                  label: cat.nameHi ? `${cat.nameHi} · ${count} services` : `${count} services`,
+                  description: cat.description,
+                };
+              })}
+            />
           </div>
-
-          <MagicBento
-            cards={categories.slice(0, 6).map((cat) => {
-              const count = services.filter((s) => s.category === cat.id).length;
-              return {
-                title: cat.name,
-                description: cat.description,
-                label: cat.nameHi ? `${cat.nameHi} · ${count} services` : `${count} services`,
-                href: `/services?cat=${cat.id}`,
-              };
-            })}
-            glowColor="198, 162, 71"
-            spotlightRadius={360}
-            particleCount={10}
-            enableTilt={false}
-            enableMagnetism
-            clickEffect
-          />
-
           <div className="mt-10 text-center">
             <Button asChild size="lg" className="bg-gold font-semibold text-gold-foreground hover:bg-gold/90">
               <Link to="/services">Browse all services <ArrowRight size={16} /></Link>
