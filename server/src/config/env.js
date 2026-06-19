@@ -19,9 +19,17 @@ const env = {
     apiKey: process.env.CLOUDINARY_API_KEY || "",
     apiSecret: process.env.CLOUDINARY_API_SECRET || "",
   },
+  // Email (Gmail SMTP). EMAIL_PASS must be a Gmail *App Password* (16 chars),
+  // not the normal account password. Leave blank to disable email sending.
+  email: {
+    user: process.env.EMAIL_USER || "",
+    pass: process.env.EMAIL_PASS || "",
+    fromName: process.env.EMAIL_FROM_NAME || "Mahabharat Consultancy",
+  },
 };
 
 env.isProd = env.nodeEnv === "production";
+env.emailEnabled = Boolean(env.email.user && env.email.pass);
 // Use Cloudinary when fully configured, else fall back to local disk storage.
 env.storageMode =
   env.cloudinary.cloudName && env.cloudinary.apiKey && env.cloudinary.apiSecret ? "cloudinary" : "local";

@@ -3,6 +3,7 @@ const { signToken } = require("../middleware/auth");
 const { ApiError, asyncHandler } = require("../utils/apiError");
 const { serializeUser } = require("../utils/serializers");
 const { audit } = require("../utils/helpers");
+const { sendWelcomeEmail } = require("../utils/mailer");
 
 // POST /api/auth/register  (customers only)
 exports.register = asyncHandler(async (req, res) => {
@@ -17,6 +18,9 @@ exports.register = asyncHandler(async (req, res) => {
   await user.save();
   await CustomerProfile.create({ user: user._id });
   await audit(user, "register", "user", user._id);
+
+  // Send the welcome email (fire-and-forget; never blocks or fails signup).
+  sendWelcomeEmail(user);
 
   res.status(201).json({ success: true, token: signToken(user), user: serializeUser(user) });
 });
