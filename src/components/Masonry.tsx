@@ -36,14 +36,24 @@ const useMeasure = (): [React.RefObject<HTMLDivElement>, { width: number; height
     const el = ref.current;
     if (!el) return;
     const measure = () => {
-      const r = el.getBoundingClientRect();
-      setSize({ width: r.width, height: r.height });
+      const w = el.getBoundingClientRect().width || el.offsetWidth || el.parentElement?.offsetWidth || 0;
+      const h = el.getBoundingClientRect().height;
+      if (w) setSize({ width: w, height: h });
     };
-    measure(); // immediate, so the grid lays out on first paint
+    measure(); // immediate
+    // Re-measure across the next frames in case layout settles after mount
+    // (some environments don't fire ResizeObserver reliably on first paint).
+    const r1 = requestAnimationFrame(() => {
+      measure();
+      requestAnimationFrame(measure);
+    });
+    const t = setTimeout(measure, 150);
     const ro = new ResizeObserver(measure);
     ro.observe(el);
     window.addEventListener("resize", measure);
     return () => {
+      cancelAnimationFrame(r1);
+      clearTimeout(t);
       ro.disconnect();
       window.removeEventListener("resize", measure);
     };

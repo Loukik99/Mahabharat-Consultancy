@@ -155,6 +155,7 @@ const IMAGE_ALIASES: Record<string, string[]> = {
   "utility-bill": ["electricity-bill", "water-bill"],
   pay: ["scholarship-forms"],
   "job-seeker": ["govt-job-forms"],
+  exam: ["exam-form-filling", "admission-forms", "online-form-filling"],
 };
 for (const source in IMAGE_ALIASES) {
   if (SERVICE_IMAGE[source]) {
