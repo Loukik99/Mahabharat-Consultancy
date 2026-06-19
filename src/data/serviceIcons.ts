@@ -139,10 +139,21 @@ for (const path in SERVICE_IMAGE_MODULES) {
   SERVICE_IMAGE[slug] = SERVICE_IMAGE_MODULES[path];
 }
 
-// One image can serve several related services. e.g. the generic "certificate"
-// image is reused for every certificate service.
+// Map a supplied image file (by its filename, minus extension) to the service
+// slug(s) it should appear on. Lets one image serve several services and lets
+// generically-named files map to the right service.
 const IMAGE_ALIASES: Record<string, string[]> = {
   certificate: ["caste-certificate", "income-certificate", "domicile-certificate", "birth-certificate", "death-certificate"],
+  "air-force": ["airforce-exam"],
+  voter: ["voter-id"],
+  bill: ["gst-registration", "gst-returns"],
+  tax: ["itr-filing"],
+  lorry: ["eway-bill"],
+  goods: ["amazon-seller", "flipkart-seller"],
+  warehouse: ["factory-billing"],
+  car: ["fastag-recharge"],
+  "utility-bill": ["electricity-bill", "water-bill"],
+  pay: ["scholarship-forms"],
 };
 for (const source in IMAGE_ALIASES) {
   if (SERVICE_IMAGE[source]) {
