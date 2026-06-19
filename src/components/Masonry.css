@@ -48,6 +48,23 @@
 }
 .masonry-item:hover .masonry-card::before { transform: scaleX(1); }
 
+.masonry-card__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  margin-bottom: 0.75rem;
+  border-radius: 10px;
+  background: hsl(210 20% 96%);
+  color: hsl(215 50% 16%);
+}
+.masonry-card__icon img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
 .masonry-card__label {
   font-family: "IBM Plex Sans Devanagari", "IBM Plex Sans", sans-serif;
   font-size: 12px;
@@ -71,4 +88,9 @@
   line-height: 1.5;
   color: hsl(215 13% 42%);
   margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }

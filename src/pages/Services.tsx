@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { getServices, getCategories } from "@/api/services.api";
 import { serviceCategories, categoryById } from "@/data/catalog";
 import { serviceIcon, serviceImage } from "@/data/serviceIcons";
+import Masonry from "@/components/Masonry";
 import type { Service, ServiceCategory } from "@/types";
 import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Search, ArrowRight, Clock, SearchX } from "lucide-react";
+import { Search, SearchX } from "lucide-react";
 
 export default function Services() {
   const [params, setParams] = useSearchParams();
@@ -110,55 +110,26 @@ export default function Services() {
           </CardContent>
         </Card>
       ) : (
-        <div className="mt-7 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {services.map((s) => {
-            const category = categoryById(s.category);
-            const img = serviceImage(s.slug);
-            const SvcIcon = serviceIcon(s.slug);
-            return (
-              <Link key={s.id} to={`/services/${s.id}`} className="group">
-                <Card className="h-full rounded border-border transition-colors hover:border-gold hover:shadow-sm">
-                  <CardContent className="flex h-full flex-col pt-5">
-                    <div className="mb-3 flex h-12 w-12 items-center justify-center overflow-hidden rounded-lg bg-secondary">
-                      {img ? (
-                        <img src={img} alt="" className="h-9 w-9 object-contain" />
-                      ) : (
-                        <SvcIcon size={22} className="text-navy" />
-                      )}
-                    </div>
-                    <div className="mb-2 flex flex-wrap items-center gap-2">
-                      {category && (
-                        <Badge variant="secondary" className="font-medium">
-                          {category.name}
-                        </Badge>
-                      )}
-                      {s.popular && (
-                        <Badge className="border border-gold/30 bg-gold/10 text-gold hover:bg-gold/10">
-                          Popular
-                        </Badge>
-                      )}
-                    </div>
-                    <h3 className="font-display font-semibold text-navy transition-colors group-hover:text-gold">{s.name}</h3>
-                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{s.description}</p>
-
-                    <div className="mt-auto flex items-center justify-between gap-2 border-t border-border pt-3">
-                      <Badge variant="outline" className="font-medium">
-                        {s.priceLabel}
-                      </Badge>
-                      {s.processingTime && (
-                        <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                          <Clock size={12} /> {s.processingTime}
-                        </span>
-                      )}
-                    </div>
-                    <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-gold transition-all group-hover:gap-2">
-                      View details <ArrowRight size={14} />
-                    </span>
-                  </CardContent>
-                </Card>
-              </Link>
-            );
-          })}
+        <div className="mt-7">
+          <Masonry
+            columnsConfig={[4, 3, 2, 1]}
+            items={services.map((s) => {
+              const category = categoryById(s.category);
+              const img = serviceImage(s.slug);
+              const SvcIcon = serviceIcon(s.slug);
+              const len = (s.description || "").length;
+              const height = 250 + (len > 100 ? 70 : len > 70 ? 35 : 0);
+              return {
+                id: s.id,
+                href: `/services/${s.id}`,
+                height,
+                title: s.name,
+                label: category?.name,
+                description: s.description,
+                icon: img ? <img src={img} alt="" /> : <SvcIcon size={26} className="text-navy" />,
+              };
+            })}
+          />
         </div>
       )}
     </div>

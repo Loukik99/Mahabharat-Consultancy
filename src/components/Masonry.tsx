@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { gsap } from "gsap";
 import "./Masonry.css";
@@ -14,6 +14,7 @@ export interface MasonryItem {
   title: string;
   label?: string;
   description?: string;
+  icon?: ReactNode;    // optional icon/image rendered at the top of the card
 }
 
 const useMedia = (queries: string[], values: number[], defaultValue: number): number => {
@@ -151,7 +152,10 @@ export default function Masonry({
           onMouseLeave={() => onLeave(item.id)}
         >
           <div className="masonry-card">
-            {item.label && <span className="masonry-card__label">{item.label}</span>}
+            <div>
+              {item.icon && <div className="masonry-card__icon">{item.icon}</div>}
+              {item.label && <span className="masonry-card__label">{item.label}</span>}
+            </div>
             <div className="masonry-card__body">
               <h3 className="masonry-card__title">{item.title}</h3>
               {item.description && <p className="masonry-card__desc">{item.description}</p>}
