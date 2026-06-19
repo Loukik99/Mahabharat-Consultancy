@@ -79,6 +79,26 @@ export default function GovtJobs() {
         </div>
       </div>
 
+      {/* Explore more jobs on FreeJobAlert */}
+      <div className="mt-5 flex flex-col gap-3 rounded border border-gold/40 bg-gold/5 p-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-start gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded bg-navy text-gold">
+            <Briefcase size={18} />
+          </span>
+          <div>
+            <h2 className="font-display text-base font-semibold text-navy">Looking for railway, banking or other jobs?</h2>
+            <p className="text-sm text-muted-foreground">
+              Explore thousands of the latest government jobs across India on FreeJobAlert — then ask us to help you apply.
+            </p>
+          </div>
+        </div>
+        <Button asChild className="shrink-0 bg-gold font-semibold text-gold-foreground hover:bg-gold/90">
+          <a href="https://www.freejobalert.com/" target="_blank" rel="noopener noreferrer">
+            Explore on FreeJobAlert <ExternalLink size={15} />
+          </a>
+        </Button>
+      </div>
+
       {/* Disclaimer */}
       <div className="mt-5 flex items-start gap-3 rounded border border-amber-300 bg-amber-50 p-4 text-amber-900">
         <AlertTriangle size={20} className="mt-0.5 shrink-0 text-amber-600" />
