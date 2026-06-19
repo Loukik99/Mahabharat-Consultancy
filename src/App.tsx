@@ -15,6 +15,7 @@ const Services = lazy(() => import("@/pages/Services"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
 const GovtJobs = lazy(() => import("@/pages/GovtJobs"));
 const Login = lazy(() => import("@/pages/Login"));
+const StaffLogin = lazy(() => import("@/pages/StaffLogin"));
 const Signup = lazy(() => import("@/pages/Signup"));
 
 // Customer
@@ -47,7 +48,12 @@ const Loader = () => (
 function Protected({ children, roles }: { children: React.ReactNode; roles: string[] }) {
   const { user, loading } = useAuth();
   if (loading) return <Loader />; // wait for session restore before deciding
-  if (!user) return <Navigate to="/login" replace />;
+  // Send unauthenticated visitors to the matching login: staff-only routes →
+  // staff login, customer routes → customer login.
+  if (!user) {
+    const staffOnly = !roles.includes("customer");
+    return <Navigate to={staffOnly ? "/staff" : "/login"} replace />;
+  }
   if (!roles.includes(user.role)) return <Navigate to="/" replace />;
   return <>{children}</>;
 }
@@ -106,6 +112,7 @@ export default function App() {
             <Route path="/services/:id" element={<ServiceDetail />} />
             <Route path="/jobs" element={<GovtJobs />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/staff" element={<StaffLogin />} />
             <Route path="/signup" element={<Signup />} />
 
             {/* Customer */}

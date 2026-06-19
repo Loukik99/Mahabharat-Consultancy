@@ -225,6 +225,10 @@ customer can download final deliverables.
 
 Enforced by [middleware/auth.js](server/src/middleware/auth.js) (`requireAuth`, `requireRole`).
 
+**Separate login doors:**
+- **Customers** sign in at `/login` (linked from the public site).
+- **Agents & admins** sign in at `/staff` — a private page not linked anywhere public; share the URL with staff directly. Each page only accepts its allowed roles.
+
 ---
 
 ## Environment Variables (`server/.env`)

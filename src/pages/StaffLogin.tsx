@@ -1,15 +1,20 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
+import { ShieldCheck } from "lucide-react";
 import ForgotPasswordDialog from "@/components/ForgotPasswordDialog";
 import logoImg from "@/assets/logo.jpeg";
 
-export default function LoginPage() {
+/**
+ * Staff-only sign in for agents and administrators. Not linked anywhere public —
+ * reachable only by direct URL (/staff). Customers are turned away here.
+ */
+export default function StaffLoginPage() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -21,14 +26,13 @@ export default function LoginPage() {
     try {
       setSubmitting(true);
       const user = await login(emailOrPhone.trim(), password);
-      // This is the customer door only — staff accounts are turned away here.
-      if (user.role !== "customer") {
+      if (user.role !== "agent" && user.role !== "admin") {
         logout();
-        toast.error("This is the customer login. Staff, please use your staff login page.");
+        toast.error("This login is for staff only. Customers, please use the customer login.");
         return;
       }
       toast.success(`Welcome back, ${user.name}!`);
-      navigate("/dashboard");
+      navigate(user.role === "admin" ? "/admin" : "/agent");
     } catch (err) {
       toast.error((err as Error).message);
     } finally {
@@ -39,11 +43,13 @@ export default function LoginPage() {
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-8">
       <div className="w-full max-w-sm">
-        <Card className="rounded border-border">
+        <Card className="rounded border-border border-t-2 border-t-navy">
           <CardHeader className="text-center pb-4">
             <img src={logoImg} alt="Mahabharat Consultancy" className="mx-auto mb-2 h-14 w-auto object-contain" />
-            <CardTitle className="font-display text-xl text-navy">Customer Login</CardTitle>
-            <CardDescription>Sign in to track your service requests</CardDescription>
+            <CardTitle className="font-display text-xl text-navy flex items-center justify-center gap-1.5">
+              <ShieldCheck size={18} className="text-gold" /> Staff Login
+            </CardTitle>
+            <CardDescription>Agents &amp; administrators only</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-3">
@@ -77,11 +83,11 @@ export default function LoginPage() {
                   placeholder="Enter password"
                 />
               </div>
-              <Button type="submit" disabled={submitting} className="w-full bg-gold font-semibold text-gold-foreground hover:bg-gold/90">{submitting ? "Signing In…" : "Sign In"}</Button>
+              <Button type="submit" disabled={submitting} className="w-full bg-navy font-semibold text-white hover:bg-navy/90">{submitting ? "Signing In…" : "Sign In"}</Button>
             </form>
 
-            <p className="text-center text-sm text-muted-foreground mt-4">
-              Don't have an account? <Link to="/signup" className="text-gold font-medium hover:underline">Sign Up</Link>
+            <p className="text-center text-xs text-muted-foreground mt-4">
+              Staff accounts are created by an administrator. There is no public sign-up.
             </p>
           </CardContent>
         </Card>
