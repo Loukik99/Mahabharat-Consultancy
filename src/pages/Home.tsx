@@ -95,7 +95,7 @@ export default function Home() {
       </section>
 
       {/* ── Services (highlight cards) ───────────────────────── */}
-      <section className="bg-[#FCEBD6]/70">
+      <section className="bg-white">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
           <SectionHead eyebrow="What we do" title="Our services" sub="The main things we help you with — see the full list for all 40+ services." />
           <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
