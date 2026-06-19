@@ -20,6 +20,9 @@ const userSchema = new mongoose.Schema(
     role: { type: String, enum: ["customer", "agent", "admin"], default: "customer", index: true },
     address: addressSchema,
     isActive: { type: Boolean, default: true },
+    // Password-reset OTP (hashed) + expiry. Selected only when verifying a reset.
+    resetOtpHash: { type: String, select: false },
+    resetOtpExpires: { type: Date, select: false },
   },
   { timestamps: true }
 );

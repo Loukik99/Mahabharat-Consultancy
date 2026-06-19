@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
+import AnimatedList from "@/components/AnimatedList";
 import type { ServiceCategory, Service } from "@/types";
 import { ChevronLeft, CheckCircle2, Info, FileText, ArrowRight } from "lucide-react";
 
@@ -220,15 +221,17 @@ export default function NewRequest() {
               </Card>
 
               {service.requiredDocuments.length > 0 && (
-                <div className="p-3 rounded border border-amber-200 bg-amber-50 text-sm">
-                  <p className="font-semibold text-xs text-amber-800 mb-1.5 flex items-center gap-1.5"><FileText size={13} /> Documents you'll need to upload:</p>
-                  <ul className="space-y-1">
-                    {service.requiredDocuments.map((d, i) => (
-                      <li key={i} className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <CheckCircle2 size={13} className="text-amber-500 shrink-0" /> {d}
-                      </li>
+                <div className="p-3 rounded border border-amber-200 bg-amber-50/60 text-sm">
+                  <p className="font-semibold text-xs text-amber-800 mb-2 flex items-center gap-1.5"><FileText size={13} /> Documents you'll need to upload:</p>
+                  <AnimatedList
+                    enableArrowNavigation={false}
+                    displayScrollbar
+                    items={service.requiredDocuments.map((d, i) => (
+                      <span key={i} className="flex items-center gap-2 text-xs text-foreground">
+                        <CheckCircle2 size={14} className="text-gold shrink-0" /> {d}
+                      </span>
                     ))}
-                  </ul>
+                  />
                   <p className="text-[11px] text-muted-foreground mt-2">You can upload these on the next screen after creating the request.</p>
                 </div>
               )}

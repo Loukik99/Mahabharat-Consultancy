@@ -4,6 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import * as Req from "@/api/requests.api";
 import type { RequestStatus, ServiceRequest } from "@/types";
 import { StatusBadge } from "@/components/StatusBadge";
+import DeleteAccountCard from "@/components/DeleteAccountCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -178,6 +179,10 @@ export default function AgentDashboard() {
           )}
         </>
       )}
+
+      <div className="mt-10 max-w-2xl">
+        <DeleteAccountCard role="agent" />
+      </div>
     </div>
   );
 }

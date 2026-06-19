@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
 import type { User } from "@/types";
-import { login as apiLogin, register as apiRegister, fetchMe, logout as apiLogout } from "@/api/auth.api";
+import { login as apiLogin, register as apiRegister, fetchMe, logout as apiLogout, deleteMyAccount as apiDeleteAccount } from "@/api/auth.api";
 import { tokenStore } from "@/lib/apiClient";
 
 interface AuthContextType {
@@ -9,6 +9,7 @@ interface AuthContextType {
   login: (emailOrPhone: string, password: string) => Promise<User>;
   register: (data: { name: string; email: string; phone: string; password: string }) => Promise<User>;
   logout: () => void;
+  deleteAccount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -51,8 +52,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   };
 
+  const deleteAccount = async () => {
+    await apiDeleteAccount();
+    setUser(null);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, deleteAccount }}>
       {children}
     </AuthContext.Provider>
   );

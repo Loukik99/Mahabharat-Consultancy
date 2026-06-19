@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
+import ForgotPasswordDialog from "@/components/ForgotPasswordDialog";
 import logoImg from "@/assets/logo.jpeg";
 
 export default function LoginPage() {
@@ -51,11 +52,17 @@ export default function LoginPage() {
                   autoComplete="username"
                   value={emailOrPhone}
                   onChange={(e) => setEmailOrPhone(e.target.value)}
-                  placeholder="you@example.com or 10-digit mobile"
+                  placeholder="Enter email or number"
                 />
               </div>
               <div>
-                <Label htmlFor="password">Password</Label>
+                <div className="flex items-center justify-between">
+                  <Label htmlFor="password">Password</Label>
+                  <ForgotPasswordDialog
+                    defaultValue={emailOrPhone}
+                    onReset={(id) => setEmailOrPhone(id)}
+                  />
+                </div>
                 <Input
                   id="password"
                   type="password"

@@ -23,3 +23,20 @@ export async function fetchMe(): Promise<User> {
 export function logout(): void {
   tokenStore.clear();
 }
+
+/** Step 1 of password reset — emails a 6-digit OTP to the matching account. */
+export async function requestPasswordReset(emailOrPhone: string): Promise<string> {
+  const { data } = await api.post<{ message: string }>("/auth/forgot-password", { emailOrPhone });
+  return data.message;
+}
+
+/** Step 2 — verify the OTP and set a new password. User then signs in fresh. */
+export async function resetPassword(emailOrPhone: string, otp: string, password: string): Promise<void> {
+  await api.post("/auth/reset-password", { emailOrPhone, otp, password });
+}
+
+/** Permanently delete the signed-in user's own account (customers & agents). */
+export async function deleteMyAccount(): Promise<void> {
+  await api.delete("/account");
+  tokenStore.clear();
+}

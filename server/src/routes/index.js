@@ -19,7 +19,10 @@ router.get("/health", (_req, res) => res.json({ status: "ok", time: new Date().t
 // ── Auth ──────────────────────────────────────────────────────────
 router.post("/auth/register", auth.register);
 router.post("/auth/login", auth.login);
+router.post("/auth/forgot-password", auth.forgotPassword); // emails a reset OTP
+router.post("/auth/reset-password", auth.resetPassword);   // verifies OTP + sets new password
 router.get("/auth/me", requireAuth, auth.me);
+router.delete("/account", requireAuth, auth.deleteMyAccount); // self-service account deletion (customers & agents)
 
 // ── Services (public read; admin write) ───────────────────────────
 router.get("/services/categories", services.listCategories);

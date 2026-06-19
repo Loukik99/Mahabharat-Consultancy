@@ -1,0 +1,85 @@
+/* AnimatedList — themed (navy/gold/white) adaptation of the reactbits component.
+   In-view scale/opacity is driven by IntersectionObserver + the transition below
+   (no motion/framer dependency). */
+
+.al-container {
+  position: relative;
+  width: 100%;
+}
+
+.al-list {
+  max-height: 320px;
+  overflow-y: auto;
+  padding: 4px 2px;
+}
+
+/* Slim, themed scrollbar */
+.al-list::-webkit-scrollbar {
+  width: 8px;
+}
+.al-list::-webkit-scrollbar-track {
+  background: #f1f3f7;
+  border-radius: 4px;
+}
+.al-list::-webkit-scrollbar-thumb {
+  background: #c2a14d; /* gold */
+  border-radius: 4px;
+}
+
+.al-list.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.al-list.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.al-item-wrap {
+  margin-bottom: 0.6rem;
+  cursor: default;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  will-change: transform, opacity;
+}
+
+.al-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 12px 14px;
+  background-color: #ffffff;
+  border: 1px solid #e4e8ef;
+  border-radius: 8px;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.al-item.selected {
+  border-color: #c2a14d; /* gold */
+  background-color: #fbf7ec;
+  box-shadow: 0 1px 0 rgba(194, 161, 77, 0.25);
+}
+
+.al-item-text {
+  color: #0b1f3a; /* navy */
+  font-size: 13px;
+  margin: 0;
+}
+
+/* Fading edges so the list visibly "scrolls under" the surrounding card */
+.al-top-gradient,
+.al-bottom-gradient {
+  position: absolute;
+  left: 0;
+  right: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.al-top-gradient {
+  top: 0;
+  height: 36px;
+  background: linear-gradient(to bottom, #ffffff, transparent);
+}
+.al-bottom-gradient {
+  bottom: 0;
+  height: 48px;
+  background: linear-gradient(to top, #ffffff, transparent);
+}

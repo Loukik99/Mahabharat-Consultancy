@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
+import ForgotPasswordDialog from "@/components/ForgotPasswordDialog";
 import logoImg from "@/assets/logo.jpeg";
 
 export default function SignupPage() {
@@ -53,7 +54,7 @@ export default function SignupPage() {
               </div>
               <div>
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" required value={form.email} onChange={update("email")} placeholder="you@example.com" />
+                <Input id="email" type="email" required value={form.email} onChange={update("email")} placeholder="Enter email or number" />
               </div>
               <div>
                 <Label htmlFor="phone">Mobile Number</Label>
@@ -71,6 +72,9 @@ export default function SignupPage() {
             </form>
             <p className="text-center text-sm text-muted-foreground mt-4">
               Already have an account? <Link to="/login" className="text-gold font-medium hover:underline">Sign In</Link>
+            </p>
+            <p className="text-center text-sm text-muted-foreground mt-1">
+              <ForgotPasswordDialog />
             </p>
           </CardContent>
         </Card>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import * as Req from "@/api/requests.api";
 import { StatusBadge } from "@/components/StatusBadge";
+import DeleteAccountCard from "@/components/DeleteAccountCard";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
@@ -141,6 +142,10 @@ export default function CustomerDashboard() {
           })}
         </div>
       )}
+
+      <div className="mt-10 max-w-2xl">
+        <DeleteAccountCard role="customer" />
+      </div>
     </div>
   );
 }
