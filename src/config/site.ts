@@ -7,7 +7,7 @@
 // ──────────────────────────────────────────────────────────────────
 export const site = {
   name: "Mahabharat Consultancy",
-  tagline: "One Stop Service Center",
+  tagline: "Where Convenience Meets Reliability",
   ownerName: "Owner Name (to be confirmed)",
   address: "G.I.T College Road, Udyambag, Belagavi, Karnataka 590008",
   phone: "+91 89709 34940",

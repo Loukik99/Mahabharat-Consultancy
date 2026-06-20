@@ -4,6 +4,8 @@ import { getServices, getCategories } from "@/api/services.api";
 import { serviceCategories, categoryById } from "@/data/catalog";
 import { serviceIcon, serviceImage } from "@/data/serviceIcons";
 import Masonry from "@/components/Masonry";
+import codeImg from "@/assets/services/code.png";
+import { waLink } from "@/config/site";
 import type { Service, ServiceCategory } from "@/types";
 import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
@@ -113,22 +115,37 @@ export default function Services() {
         <div className="mt-7">
           <Masonry
             columnsConfig={[4, 3, 2, 1]}
-            items={services.map((s) => {
-              const category = categoryById(s.category);
-              const img = serviceImage(s.slug);
-              const SvcIcon = serviceIcon(s.slug);
-              const len = (s.description || "").length;
-              const height = 185 + (len > 100 ? 45 : len > 70 ? 22 : 0);
-              return {
-                id: s.id,
-                href: `/services/${s.id}`,
-                height,
-                title: s.name,
-                label: category?.name,
-                description: s.description,
-                icon: img ? <img src={img} alt="" /> : <SvcIcon size={26} className="text-navy" />,
-              };
-            })}
+            items={[
+              ...(cat !== "all" || search.trim()
+                ? []
+                : [
+                    {
+                      id: "digital-solutions-development",
+                      href: waLink("Hello Mahabharat Consultancy, I'm interested in Digital Solutions Development — website / mobile app / e-commerce / custom software / academic project."),
+                      height: 250,
+                      title: "Digital Solutions Development",
+                      label: "Digital Solutions",
+                      description: "We help businesses establish a strong online presence through modern websites, mobile applications, e-commerce platforms, and custom software solutions. We also provide guidance and development support for academic projects.",
+                      icon: <img src={codeImg} alt="Digital Solutions" />,
+                    },
+                  ]),
+              ...services.map((s) => {
+                const category = categoryById(s.category);
+                const img = serviceImage(s.slug);
+                const SvcIcon = serviceIcon(s.slug);
+                const len = (s.description || "").length;
+                const height = 185 + (len > 100 ? 45 : len > 70 ? 22 : 0);
+                return {
+                  id: s.id,
+                  href: `/services/${s.id}`,
+                  height,
+                  title: s.name,
+                  label: category?.name,
+                  description: s.description,
+                  icon: img ? <img src={img} alt="" /> : <SvcIcon size={26} className="text-navy" />,
+                };
+              }),
+            ]}
           />
         </div>
       )}

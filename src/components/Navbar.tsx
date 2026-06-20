@@ -46,7 +46,7 @@ export function Navbar() {
               <img src={logoImg} alt="Mahabharat Consultancy" className="h-10 w-auto object-contain" />
               <div className="hidden sm:block leading-tight">
                 <p className="font-display text-[15px] font-semibold tracking-tight text-navy">Mahabharat Consultancy</p>
-                <p className="eyebrow text-[9px] text-gold">One Stop Service Center</p>
+                <p className="eyebrow text-[9px] text-gold">Where Convenience Meets Reliability</p>
               </div>
             </Link>
 
