@@ -290,7 +290,7 @@ export default function RequestDetail() {
               {editable ? (
                 <div className="border-2 border-dashed border-border rounded p-3 space-y-3">
                   <p className="text-xs font-medium text-muted-foreground">
-                    {r.status === "documents_required" ? "More documents required — add them below." : "Upload a document"}
+                    {r.status === "documents_required" ? "More documents required, add them below." : "Upload a document"}
                   </p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <div>
@@ -326,7 +326,7 @@ export default function RequestDetail() {
                 <div className="rounded border-l-2 border-navy bg-secondary/60 p-3 text-xs text-muted-foreground flex items-start gap-2">
                   <Lock size={14} className="mt-0.5 shrink-0 text-navy" />
                   <span>
-                    Our agent has started work — documents can no longer be changed here.{" "}
+                    Our agent has started work, documents can no longer be changed here.{" "}
                     <a href={waLink(`Hello, I need to update documents for request ${r.requestNumber}`)} target="_blank" rel="noopener noreferrer" className="font-semibold text-navy underline hover:text-gold">
                       Contact us on WhatsApp
                     </a>{" "}to change them.

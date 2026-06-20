@@ -67,7 +67,7 @@ export const serviceCategories: ServiceCategory[] = [
     id: "other",
     name: "Other Services",
     nameHi: "अन्य सेवाएँ",
-    description: "Any other online work — tell us what you need",
+    description: "Any other online work, tell us what you need",
     icon: "Sparkles",
     accent: "from-slate-500 to-gray-600",
   },
@@ -115,7 +115,7 @@ export const serviceCatalog: Service[] = [
     [{ label: "Voter Services Portal (ECI)", url: "https://voters.eci.gov.in/" }],
     { processingTime: "As per ECI" }),
   svc("passport", "Passport Application Assistance", "govt_docs",
-    "Fresh passport or renewal — form filling, document prep and appointment booking.",
+    "Fresh passport or renewal, form filling, document prep and appointment booking.",
     ["Aadhaar Card", "PAN Card", "Address Proof", "Birth Certificate", "Passport Size Photos"],
     [{ label: "Passport Seva", url: "https://www.passportindia.gov.in/" }],
     { popular: true, processingTime: "Appointment based" }),
@@ -140,7 +140,7 @@ export const serviceCatalog: Service[] = [
     ["Proof of Death", "Deceased's ID Proof", "Applicant's ID Proof"],
     [{ label: "Civil Registration System", url: "https://crsorgi.gov.in/" }]),
   svc("driving-license", "Driving Licence", "govt_docs",
-    "Learner / permanent licence, renewal and duplicate — RTO documentation help.",
+    "Learner / permanent licence, renewal and duplicate, RTO documentation help.",
     ["Aadhaar Card", "Address Proof", "Age Proof", "Passport Size Photos"],
     [{ label: "Parivahan Sarathi", url: "https://sarathi.parivahan.gov.in/" }]),
 
@@ -174,7 +174,7 @@ export const serviceCatalog: Service[] = [
 
   // ── Exams & Jobs ──────────────────────────────────────────────
   svc("scholarship-forms", "Scholarship Forms", "exams_jobs",
-    "All kinds of scholarship applications — pre-matric, post-matric and merit.",
+    "All kinds of scholarship applications, pre-matric, post-matric and merit.",
     ["Aadhaar Card", "Income Certificate", "Marksheet", "Bank Passbook", "Passport Photo"],
     [{ label: "National Scholarship Portal", url: "https://scholarships.gov.in/" }],
     { popular: true }),

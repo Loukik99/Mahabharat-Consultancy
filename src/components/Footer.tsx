@@ -43,7 +43,7 @@ export function Footer() {
             </div>
             <p className="mt-5 text-sm leading-relaxed text-white/55">
               Your trusted online services center for government documents, tax &amp; GST, exam and job
-              forms, printing, and bill payments — serving Belagavi and beyond.
+              forms, printing, and bill payments, serving Belagavi and beyond.
             </p>
           </div>
 

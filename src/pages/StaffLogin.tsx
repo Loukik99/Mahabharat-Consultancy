@@ -35,7 +35,7 @@ export default function StaffLoginPage() {
         if (user.role === "customer") {
           toast.error("Customers should use the customer login page.");
         } else {
-          toast.error(`This account is ${user.role === "admin" ? "an admin" : "an agent"} — switch to the "${user.role}" tab.`);
+          toast.error(`This account is ${user.role === "admin" ? "an admin" : "an agent"}, switch to the "${user.role}" tab.`);
         }
         return;
       }

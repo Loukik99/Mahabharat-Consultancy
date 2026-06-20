@@ -74,7 +74,7 @@ export default function GovtJobs() {
           <p className="eyebrow text-gold">Opportunities</p>
           <h1 className="mt-1 font-display text-2xl font-semibold tracking-tight text-navy sm:text-3xl">Latest Government Jobs</h1>
           <p className="text-sm text-muted-foreground">
-            Central, state, defence, banking, railway and PSU openings — all in one place.
+            Central, state, defence, banking, railway and PSU openings, all in one place.
           </p>
         </div>
       </div>
@@ -88,7 +88,7 @@ export default function GovtJobs() {
           <div>
             <h2 className="font-display text-base font-semibold text-navy">Looking for railway, banking or other jobs?</h2>
             <p className="text-sm text-muted-foreground">
-              Explore thousands of the latest government jobs across India on FreeJobAlert — then ask us to help you apply.
+              Explore thousands of the latest government jobs across India on FreeJobAlert, then ask us to help you apply.
             </p>
           </div>
         </div>

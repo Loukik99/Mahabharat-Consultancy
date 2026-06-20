@@ -127,7 +127,7 @@ export default function CustomerDashboard() {
                     </p>
                     {awaiting && (
                       <p className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-0.5">
-                        <Wallet size={12} /> Payment due — pay now to unlock your files
+                        <Wallet size={12} /> Payment due, pay now to unlock your files
                       </p>
                     )}
                   </div>

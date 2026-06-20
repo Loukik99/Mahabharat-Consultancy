@@ -8,10 +8,12 @@ import { ScrollToTop } from "@/components/ScrollToTop";
 import StaggeredMenu from "@/components/StaggeredMenu";
 import { site, waLink } from "@/config/site";
 import logoImg from "@/assets/logo.jpeg";
+import Maintenance from "@/pages/Maintenance";
 
 // Public
 const Home = lazy(() => import("@/pages/Home"));
 const Services = lazy(() => import("@/pages/Services"));
+const DigitalSolutions = lazy(() => import("@/pages/DigitalSolutions"));
 const ServiceDetail = lazy(() => import("@/pages/ServiceDetail"));
 const GovtJobs = lazy(() => import("@/pages/GovtJobs"));
 const Login = lazy(() => import("@/pages/Login"));
@@ -59,6 +61,10 @@ function Protected({ children, roles }: { children: React.ReactNode; roles: stri
 }
 
 export default function App() {
+  // Maintenance mode — set VITE_MAINTENANCE=true (in Vercel env) and redeploy
+  // to show the "under maintenance" page across the whole site.
+  if (import.meta.env.VITE_MAINTENANCE === "true") return <Maintenance />;
+
   const { user } = useAuth();
   const dash = user?.role === "admin" ? "#/admin" : user?.role === "agent" ? "#/agent" : "#/dashboard";
 
@@ -109,6 +115,7 @@ export default function App() {
             {/* Public */}
             <Route path="/" element={<Home />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/digital-solutions" element={<DigitalSolutions />} />
             <Route path="/services/:id" element={<ServiceDetail />} />
             <Route path="/jobs" element={<GovtJobs />} />
             <Route path="/login" element={<Login />} />
@@ -138,9 +145,13 @@ export default function App() {
             <Route path="/admin/calls" element={<Protected roles={["admin"]}><AdminCalls /></Protected>} />
 
             <Route path="*" element={
-              <div className="min-h-[60vh] flex flex-col items-center justify-center">
-                <h1 className="text-4xl font-bold text-muted-foreground/30 mb-1">404</h1>
-                <p className="text-muted-foreground">Page not found</p>
+              <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6">
+                <img src={logoImg} alt={site.name} className="h-14 w-auto object-contain mb-4 opacity-90" />
+                <h1 className="font-display text-2xl font-semibold text-navy mb-1">Page not found</h1>
+                <p className="text-sm text-muted-foreground mb-5">The page you're looking for doesn't exist or may have moved.</p>
+                <a href="#/" className="inline-flex items-center rounded bg-gold px-5 py-2.5 text-sm font-semibold text-gold-foreground hover:bg-gold/90 transition-colors">
+                  Back to home
+                </a>
               </div>
             } />
           </Routes>
