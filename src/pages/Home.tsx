@@ -8,6 +8,7 @@ import { site, waLink } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Masonry from "@/components/Masonry";
+import codeImg from "@/assets/services/code.png";
 import {
   FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
   Search, Briefcase, ArrowRight, FileUp, Cog, Download,
@@ -107,19 +108,30 @@ export default function Home() {
           <div className="mt-10">
             <Masonry
               columnsConfig={[3, 3, 2, 1]}
-              items={categories.slice(0, 6).map((cat, i) => {
-                const count = services.filter((s) => s.category === cat.id).length;
-                const Icon = CATEGORY_ICONS[cat.icon] ?? Sparkles;
-                return {
-                  id: cat.id,
-                  href: `/services?cat=${cat.id}`,
-                  height: [210, 175, 230, 195, 210, 175][i] ?? 200,
-                  title: cat.name,
-                  label: cat.nameHi ? `${cat.nameHi} · ${count} services` : `${count} services`,
-                  description: cat.description,
-                  icon: <Icon size={22} className="text-navy" />,
-                };
-              })}
+              items={[
+                {
+                  id: "digital-solutions-development",
+                  href: waLink("Hello Mahabharat Consultancy, I'm interested in Digital Solutions Development — website / mobile app / e-commerce / custom software / academic project."),
+                  height: 235,
+                  title: "Digital Solutions Development",
+                  label: "New · Web · App · Software",
+                  description: "We help businesses establish a strong online presence through modern websites, mobile applications, e-commerce platforms, and custom software solutions. We also provide guidance and development support for academic projects.",
+                  icon: <img src={codeImg} alt="Digital Solutions" />,
+                },
+                ...categories.slice(0, 6).map((cat, i) => {
+                  const count = services.filter((s) => s.category === cat.id).length;
+                  const Icon = CATEGORY_ICONS[cat.icon] ?? Sparkles;
+                  return {
+                    id: cat.id,
+                    href: `/services?cat=${cat.id}`,
+                    height: [210, 175, 230, 195, 210, 175][i] ?? 200,
+                    title: cat.name,
+                    label: cat.nameHi ? `${cat.nameHi} · ${count} services` : `${count} services`,
+                    description: cat.description,
+                    icon: <Icon size={22} className="text-navy" />,
+                  };
+                }),
+              ]}
             />
           </div>
           <div className="mt-10 text-center">
