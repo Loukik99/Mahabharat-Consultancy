@@ -20,6 +20,10 @@ app.use(
       if (!origin) return cb(null, true);
       if (env.clientUrls.includes(origin)) return cb(null, true);
       if (!env.isProd && /^http:\/\/localhost:\d+$/.test(origin)) return cb(null, true);
+      // Production site: the custom domain (with or without www) and any Vercel
+      // deployment URL (single-project, same-origin deploy).
+      if (/^https:\/\/([a-z0-9-]+\.)?mahabharat\.net\.in$/.test(origin)) return cb(null, true);
+      if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin)) return cb(null, true);
       return cb(new Error(`Origin ${origin} not allowed by CORS`));
     },
     credentials: true,
