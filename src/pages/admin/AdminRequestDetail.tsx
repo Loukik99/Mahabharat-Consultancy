@@ -137,7 +137,7 @@ export default function AdminRequestDetail() {
   const handleMarkPaid = async () => {
     try {
       await markPaymentReceived(r.id);
-      toast.success("Payment marked received — files unlocked & request delivered");
+      toast.success("Payment marked received, files unlocked & request delivered");
       await load();
     } catch (e) {
       toast.error((e as Error).message);
@@ -190,7 +190,7 @@ export default function AdminRequestDetail() {
             {r.documents.length === 0 && <p className="text-xs text-muted-foreground">No documents uploaded.</p>}
             {r.documents.map((d) => (
               <div key={d.id} className="flex items-center justify-between bg-secondary/40 p-2 rounded mb-1 text-xs">
-                <span>{d.label} — {d.fileName} <span className="text-muted-foreground">({d.uploadedByRole})</span></span>
+                <span>{d.label}, {d.fileName} <span className="text-muted-foreground">({d.uploadedByRole})</span></span>
                 <span className="flex items-center gap-1 text-muted-foreground"><FileDown size={12} /> Staff download</span>
               </div>
             ))}
@@ -260,7 +260,7 @@ export default function AdminRequestDetail() {
             )}
             {r.paymentApprovedByAdmin ? (
               <div className="flex items-center gap-1.5 text-xs text-emerald-700 bg-emerald-50 p-2 rounded">
-                <CheckCircle size={14} /> Payment approved — downloads unlocked.
+                <CheckCircle size={14} /> Payment approved, downloads unlocked.
               </div>
             ) : showPaymentAction ? (
               <>

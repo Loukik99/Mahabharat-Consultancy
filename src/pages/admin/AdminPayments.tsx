@@ -86,7 +86,7 @@ export default function AdminPayments() {
   const handleMark = async (requestId: string) => {
     try {
       await markPaymentReceived(requestId);
-      toast.success("Payment marked received — downloads unlocked & delivered");
+      toast.success("Payment marked received, downloads unlocked & delivered");
       await load();
     } catch (e) {
       toast.error((e as Error).message);

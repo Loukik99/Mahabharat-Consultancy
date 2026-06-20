@@ -40,7 +40,7 @@ export default function AdminCalls() {
     setBusy(id);
     try {
       await decideCallRequest(id, action);
-      toast.success(action === "approve" ? "Call approved — agent & customer notified." : "Call request denied.");
+      toast.success(action === "approve" ? "Call approved, agent & customer notified." : "Call request denied.");
       await load();
     } catch (e) {
       toast.error((e as Error).message);

@@ -8,7 +8,7 @@ import { site, waLink } from "@/config/site";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Masonry from "@/components/Masonry";
-import codeImg from "@/assets/services/code.png";
+import { digitalSolutions } from "@/data/digitalSolutions";
 import {
   FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
   Search, Briefcase, ArrowRight, FileUp, Cog, Download,
@@ -18,6 +18,18 @@ import {
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
   FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
 };
+
+// Fixed order of the Home services grid ("__digital__" = the Digital Solutions card).
+const HOME_ORDER = [
+  "govt_docs",
+  "exams_jobs",
+  "documents",
+  "tax_gst",
+  "__digital__",
+  "bills_recharge",
+  "business",
+];
+const HOME_HEIGHTS = [210, 175, 205, 185, 215, 175, 195];
 
 const STEPS = [
   { icon: FileText, title: "Submit Request", desc: "Pick a service and tell us what you need." },
@@ -70,7 +82,7 @@ export default function Home() {
               <span className="block text-gold-gradient">Under One Roof.</span>
             </h1>
             <p className="mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg">
-              Government documents, GST &amp; tax, exam and job forms, printing, and bill payments —
+              Government documents, GST &amp; tax, exam and job forms, printing, and bill payments,
               prepared and filed for you at one trusted service center in Belagavi.
             </p>
 
@@ -80,7 +92,7 @@ export default function Home() {
                 <Input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search a service — Aadhaar, PAN, GST, scholarship…"
+                  placeholder="Search a service, Aadhaar, PAN, GST, scholarship…"
                   className="h-12 border-transparent bg-white pl-10 text-foreground shadow-lg"
                 />
               </div>
@@ -104,34 +116,37 @@ export default function Home() {
       {/* ── Services (Masonry) ───────────────────────────────── */}
       <section className="bg-white">
         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <SectionHead eyebrow="What we do" title="Our services" sub="Explore our main service areas — tap a card to open all its services." center />
+          <SectionHead eyebrow="What we do" title="Our services" sub="Explore our main service areas, tap a card to open all its services." center />
           <div className="mt-10">
             <Masonry
               columnsConfig={[3, 3, 2, 1]}
-              items={[
-                {
-                  id: "digital-solutions-development",
-                  href: waLink("Hello Mahabharat Consultancy, I'm interested in Digital Solutions Development — website / mobile app / e-commerce / custom software / academic project."),
-                  height: 235,
-                  title: "Digital Solutions Development",
-                  label: "New · Web · App · Software",
-                  description: "We help businesses establish a strong online presence through modern websites, mobile applications, e-commerce platforms, and custom software solutions. We also provide guidance and development support for academic projects.",
-                  icon: <img src={codeImg} alt="Digital Solutions" />,
-                },
-                ...categories.slice(0, 6).map((cat, i) => {
-                  const count = services.filter((s) => s.category === cat.id).length;
-                  const Icon = CATEGORY_ICONS[cat.icon] ?? Sparkles;
-                  return {
-                    id: cat.id,
-                    href: `/services?cat=${cat.id}`,
-                    height: [210, 175, 230, 195, 210, 175][i] ?? 200,
-                    title: cat.name,
-                    label: cat.nameHi ? `${cat.nameHi} · ${count} services` : `${count} services`,
-                    description: cat.description,
-                    icon: <Icon size={22} className="text-navy" />,
-                  };
-                }),
-              ]}
+              items={HOME_ORDER.flatMap((id, i) => {
+                const height = HOME_HEIGHTS[i] ?? 200;
+                if (id === "__digital__") {
+                  return [{
+                    id: digitalSolutions.id,
+                    href: digitalSolutions.href,
+                    height,
+                    title: digitalSolutions.title,
+                    label: "Web · App · Software",
+                    description: digitalSolutions.oneLiner,
+                    icon: <img src={digitalSolutions.icon} alt="Digital Solutions" />,
+                  }];
+                }
+                const cat = categories.find((c) => c.id === id);
+                if (!cat) return [];
+                const count = services.filter((s) => s.category === cat.id).length;
+                const Icon = CATEGORY_ICONS[cat.icon] ?? Sparkles;
+                return [{
+                  id: cat.id,
+                  href: `/services?cat=${cat.id}`,
+                  height,
+                  title: cat.name,
+                  label: cat.nameHi ? `${cat.nameHi} · ${count} services` : `${count} services`,
+                  description: cat.description,
+                  icon: <Icon size={22} className="text-navy" />,
+                }];
+              })}
             />
           </div>
           <div className="mt-10 text-center">
@@ -182,7 +197,7 @@ export default function Home() {
       <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
         <div className="rounded border-l-2 border-gold bg-secondary/60 p-5">
           <p className="text-sm leading-relaxed text-muted-foreground">
-            <span className="font-semibold text-navy">Disclaimer — </span>
+            <span className="font-semibold text-navy">Disclaimer, </span>
             {site.name} is a private assistance / service center. We are{" "}
             <span className="font-semibold text-navy">not a government agency</span> and do not represent
             UIDAI, the Income Tax Department, GST, or any government portal. For official services we guide

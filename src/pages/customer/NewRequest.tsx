@@ -137,7 +137,7 @@ export default function NewRequest() {
         <p className="eyebrow text-gold">Get started</p>
         <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-navy">New Service Request</h1>
         <p className="text-sm text-muted-foreground">
-          Step {step} of 2 — {step === 1 ? "choose a service" : "fill in details"}
+          Step {step} of 2, {step === 1 ? "choose a service" : "fill in details"}
         </p>
       </div>
 
@@ -261,7 +261,7 @@ export default function NewRequest() {
                 <Info size={15} className="mt-0.5 shrink-0 text-gold" />
                 <span>
                   Mahabharat Consultancy is an assistance / service center. We help you apply on the
-                  official government and service portals — we are not a government body and do not
+                  official government and service portals. We are not a government body and do not
                   charge any official fee on their behalf. The final amount is confirmed by the shop.
                 </span>
               </div>

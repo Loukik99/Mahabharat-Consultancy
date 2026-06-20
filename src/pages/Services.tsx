@@ -4,8 +4,7 @@ import { getServices, getCategories } from "@/api/services.api";
 import { serviceCategories, categoryById } from "@/data/catalog";
 import { serviceIcon, serviceImage } from "@/data/serviceIcons";
 import Masonry from "@/components/Masonry";
-import codeImg from "@/assets/services/code.png";
-import { waLink } from "@/config/site";
+import { digitalSolutions } from "@/data/digitalSolutions";
 import type { Service, ServiceCategory } from "@/types";
 import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
@@ -116,17 +115,18 @@ export default function Services() {
           <Masonry
             columnsConfig={[4, 3, 2, 1]}
             items={[
+              // Digital Solutions card appears only on the default (unfiltered) view.
               ...(cat !== "all" || search.trim()
                 ? []
                 : [
                     {
-                      id: "digital-solutions-development",
-                      href: waLink("Hello Mahabharat Consultancy, I'm interested in Digital Solutions Development — website / mobile app / e-commerce / custom software / academic project."),
-                      height: 250,
-                      title: "Digital Solutions Development",
+                      id: digitalSolutions.id,
+                      href: digitalSolutions.href,
+                      height: 190,
+                      title: digitalSolutions.title,
                       label: "Digital Solutions",
-                      description: "We help businesses establish a strong online presence through modern websites, mobile applications, e-commerce platforms, and custom software solutions. We also provide guidance and development support for academic projects.",
-                      icon: <img src={codeImg} alt="Digital Solutions" />,
+                      description: digitalSolutions.oneLiner,
+                      icon: <img src={digitalSolutions.icon} alt="Digital Solutions" />,
                     },
                   ]),
               ...services.map((s) => {
@@ -145,7 +145,7 @@ export default function Services() {
                   icon: img ? <img src={img} alt="" /> : <SvcIcon size={26} className="text-navy" />,
                 };
               }),
-            ]}
+            ].sort((a, b) => a.title.localeCompare(b.title))}
           />
         </div>
       )}

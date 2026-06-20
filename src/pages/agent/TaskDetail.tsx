@@ -320,8 +320,8 @@ export default function TaskDetail() {
                 <p className="font-medium text-navy">{r.customerName}</p>
               </div>
               <p className="text-xs text-muted-foreground italic pt-1">
-                Contact details are restricted. Use the secure call button below to reach the customer —
-                their phone number is never shown to you.
+                Contact details are restricted. Use the secure call button below to reach the customer.
+                Their phone number is never shown to you.
               </p>
               {r.notes && (
                 <div className="p-2.5 bg-secondary/60 rounded text-xs border border-border">
@@ -428,7 +428,7 @@ export default function TaskDetail() {
                     className="inline-flex items-center gap-1.5 bg-navy hover:bg-navy/90 text-white px-3 py-2 rounded text-xs font-semibold transition-colors"
                     title={link.note}
                   >
-                    <ExternalLink size={13} /> Open Official Website — {link.label}
+                    <ExternalLink size={13} /> Open Official Website, {link.label}
                   </a>
                 ))}
               </CardContent>
@@ -509,7 +509,7 @@ export default function TaskDetail() {
                 className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-border rounded p-4 cursor-pointer hover:border-gold hover:bg-secondary/40 transition-all text-center"
               >
                 <Upload size={20} className="text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">Click to upload completed file(s) — image, PDF, DOC or XLSX, max 5MB</span>
+                <span className="text-xs text-muted-foreground">Click to upload completed file(s), image, PDF, DOC or XLSX, max 5MB</span>
                 <input
                   id="deliverableFile"
                   type="file"
@@ -550,7 +550,7 @@ export default function TaskDetail() {
                 <Wallet size={15} className="mr-1.5" /> Mark Ready for Payment
               </Button>
               <p className="text-[11px] text-muted-foreground">
-                Payment is verified by an admin — agents cannot approve payments. Upload the completed file(s)
+                Payment is verified by an admin, agents cannot approve payments. Upload the completed file(s)
                 before marking ready.
               </p>
             </CardContent>

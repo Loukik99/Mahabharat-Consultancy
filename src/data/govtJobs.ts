@@ -12,7 +12,7 @@ import type { GovtJob } from "@/types";
 export const govtJobs: GovtJob[] = [
   {
     id: "job-ssc-cgl",
-    title: "SSC CGL — Combined Graduate Level",
+    title: "SSC CGL, Combined Graduate Level",
     organization: "Staff Selection Commission",
     sector: "central",
     qualification: "Bachelor's Degree",
@@ -24,7 +24,7 @@ export const govtJobs: GovtJob[] = [
   },
   {
     id: "job-ibps-po",
-    title: "IBPS PO / MT — Probationary Officer",
+    title: "IBPS PO / MT, Probationary Officer",
     organization: "Institute of Banking Personnel Selection",
     sector: "banking",
     qualification: "Any Graduate",
@@ -36,7 +36,7 @@ export const govtJobs: GovtJob[] = [
   },
   {
     id: "job-rrb-ntpc",
-    title: "RRB NTPC — Non-Technical Popular Categories",
+    title: "RRB NTPC, Non-Technical Popular Categories",
     organization: "Railway Recruitment Board",
     sector: "railway",
     qualification: "12th / Graduate",

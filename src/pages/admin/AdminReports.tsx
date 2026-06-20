@@ -155,7 +155,7 @@ export default function AdminReports() {
       {/* Print-friendly summary section */}
       <div id="report-print">
         <div className="hidden print:block mb-4">
-          <h2 className="font-display text-xl font-semibold text-navy">Mahabharat Consultancy — Summary Report</h2>
+          <h2 className="font-display text-xl font-semibold text-navy">Mahabharat Consultancy, Summary Report</h2>
           <p className="text-xs text-muted-foreground">Generated {new Date().toLocaleString("en-IN")}</p>
         </div>
 
