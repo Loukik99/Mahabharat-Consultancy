@@ -211,7 +211,6 @@ export default function Home() {
         <div className="mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:px-8">
           <div>
             <SectionHead eyebrow="Visit us" title="Come in, or reach out" />
-            <p className="mt-2 text-sm text-muted-foreground">{site.ownerName}</p>
             <div className="mt-7 space-y-5">
               <ContactRow icon={MapPin}>{site.address}</ContactRow>
               <ContactRow icon={Phone}>
