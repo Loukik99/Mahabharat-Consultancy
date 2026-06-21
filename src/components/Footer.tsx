@@ -80,7 +80,6 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-center justify-between gap-2 border-t border-white/10 pt-6 text-xs text-white/40 md:flex-row">
           <p>&copy; {new Date().getFullYear()} {site.name}. All rights reserved.</p>
-          <p>Owner: {site.ownerName}</p>
         </div>
       </div>
     </footer>
