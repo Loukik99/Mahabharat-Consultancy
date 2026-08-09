@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { gsap } from "gsap";
+import { site } from "@/config/site";
 import "./StaggeredMenu.css";
 
 // Adapted from reactbits.dev "Staggered Menu" — converted to TS, links use
@@ -271,9 +273,25 @@ export default function StaggeredMenu({
         ))}
       </div>
       <header className="staggered-menu-header" aria-label="Main navigation header">
-        <div className="sm-logo" aria-label="Logo">
-          {logoUrl && <img src={logoUrl} alt="Mahabharat Consultancy logo" className="sm-logo-img" draggable={false} />}
-        </div>
+        <Link to="/" className="sm-brand" aria-label={`${site.name} home`} onClick={closeMenu}>
+          <span className="sm-logo" aria-hidden="true">
+            {logoUrl && (
+              <img
+                src={logoUrl}
+                alt=""
+                className="sm-logo-img"
+                draggable={false}
+                width={40}
+                height={48}
+                decoding="async"
+              />
+            )}
+          </span>
+          <span className="sm-brand-text">
+            <span className="sm-brand-name">{site.name}</span>
+            <span className="sm-brand-tagline">{site.tagline}</span>
+          </span>
+        </Link>
         <button
           ref={toggleBtnRef}
           className="sm-toggle"

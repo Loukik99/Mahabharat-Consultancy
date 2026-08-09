@@ -12,6 +12,7 @@ import { JourneyTimeline } from "@/components/JourneyTimeline";
 import { TrustMetricsBar } from "@/components/TrustMetricsBar";
 import { HomeCta } from "@/components/HomeCta";
 import { Pill } from "@/components/Pill";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { Seo } from "@/components/Seo";
 import { pageSeo, organizationJsonLd, websiteJsonLd, webPageJsonLd } from "@/config/seo";
 import { digitalSolutions } from "@/data/digitalSolutions";
@@ -207,7 +208,7 @@ export default function Home() {
                 <Landmark size={12} className="text-navy" /> Trusted service center · Belagavi, Karnataka
               </Pill>
 
-              <h1 className="font-display mt-6 text-[2.5rem] font-extrabold leading-[1.08] tracking-[-0.02em] text-ink sm:text-[3.1rem] lg:text-[3.4rem]">
+              <h1 className="font-display mt-6 text-[clamp(1.85rem,8.2vw,2.5rem)] font-extrabold leading-[1.08] tracking-[-0.02em] text-ink sm:text-[3.1rem] lg:text-[3.4rem]">
                 All government &amp; online services,
                 <span className="block text-navy">under one roof.</span>
               </h1>
@@ -248,16 +249,16 @@ export default function Home() {
 
               <form
                 onSubmit={onSearch}
-                className="mt-4 flex items-center gap-2 rounded-[22px] border border-mist bg-white py-2 pl-5 pr-2 shadow-subtle transition-colors duration-300 focus-within:border-navy/30"
+                className="mt-4 flex items-center gap-2 rounded-[22px] border border-mist bg-white py-2 pl-4 pr-2 shadow-subtle transition-colors duration-300 focus-within:border-navy/30 sm:pl-5"
               >
                 <Search className="shrink-0 text-fog" size={18} />
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   placeholder="Search Aadhaar, PAN, GST, Passport…"
-                  className="h-11 min-w-0 flex-1 bg-transparent text-[15px] text-ink placeholder:text-fog focus:outline-none"
+                  className="h-11 min-w-0 flex-1 bg-transparent text-[14px] text-ink placeholder:text-fog focus:outline-none sm:text-[15px]"
                 />
-                <Button type="submit" className="h-11 shrink-0 rounded-full bg-navy px-6 text-[14px] font-semibold text-white hover:bg-navy/90">
+                <Button type="submit" className="h-11 shrink-0 rounded-full bg-navy px-4 text-[13px] font-semibold text-white hover:bg-navy/90 sm:px-6 sm:text-[14px]">
                   Search
                 </Button>
               </form>
@@ -285,13 +286,15 @@ export default function Home() {
       {/* ── Services — the premium service explorer ──────────── */}
       <section className="bg-snow">
         <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-          <SectionHeader
-            align="center"
-            title="Our services"
-            sub="Every category is one tap away from its full checklist, official links and quick services. Pick what you need and we take it from there."
-          />
-          <div className="mt-14 grid grid-cols-1 items-stretch gap-6 [grid-auto-rows:22rem] sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
-            {EXPLORER_CARDS.map((card) => {
+          <ScrollReveal direction="left">
+            <SectionHeader
+              align="center"
+              title="Our services"
+              sub="Every category is one tap away from its full checklist, official links and quick services. Pick what you need and we take it from there."
+            />
+          </ScrollReveal>
+          <div className="mt-14 grid grid-cols-1 items-stretch gap-6 [grid-auto-rows:minmax(18rem,auto)] sm:grid-cols-2 sm:gap-5 sm:[grid-auto-rows:22rem] lg:grid-cols-3 lg:gap-6">
+            {EXPLORER_CARDS.map((card, i) => {
               const maxQuick = 3;
               const liveService = card.serviceSlug
                 ? services.find((s) => s.slug === card.serviceSlug)
@@ -304,32 +307,33 @@ export default function Home() {
                   ? card.staticQuick.slice(0, maxQuick)
                   : services.filter((s) => s.category === card.id).slice(0, maxQuick).map((s) => s.name);
               return (
-                <ServiceExplorerCard
-                  key={card.id}
-                  href={href}
-                  size="standard"
-                  tone={card.tone}
-                  className="min-h-0 w-full"
-                  icon={
-                    card.id === "__digital__" ? (
-                      <img src={digitalSolutions.icon} alt="" className="h-6 w-6" aria-hidden="true" />
-                    ) : (
-                      <card.icon size={20} />
-                    )
-                  }
-                  title={card.title}
-                  description={card.description}
-                  quickItems={quick}
-                  ctaLabel={card.ctaLabel}
-                />
+                <ScrollReveal key={card.id} index={i} className="min-h-0 h-full w-full">
+                  <ServiceExplorerCard
+                    href={href}
+                    size="standard"
+                    tone={card.tone}
+                    className="min-h-0 h-full w-full"
+                    icon={
+                      card.id === "__digital__" ? (
+                        <img src={digitalSolutions.icon} alt="" className="h-6 w-6" aria-hidden="true" />
+                      ) : (
+                        <card.icon size={20} />
+                      )
+                    }
+                    title={card.title}
+                    description={card.description}
+                    quickItems={quick}
+                    ctaLabel={card.ctaLabel}
+                  />
+                </ScrollReveal>
               );
             })}
           </div>
-          <div className="mt-10 text-center">
+          <ScrollReveal direction="right" className="mt-10 text-center">
             <Button asChild size="lg" className="rounded-full bg-navy px-7 font-semibold text-white hover:bg-navy/90">
               <Link to="/services">Browse all services <ArrowRight size={16} /></Link>
             </Button>
-          </div>
+          </ScrollReveal>
         </div>
       </section>
 
@@ -345,10 +349,12 @@ export default function Home() {
       {/* ── FAQ ─────────────────────────────────────────────────── */}
       <section className="bg-white">
         <div className="mx-auto max-w-3xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-          <SectionHeader align="center" eyebrow="Questions" title="Frequently asked questions" />
-          <div className="mt-14">
+          <ScrollReveal direction="left">
+            <SectionHeader align="center" eyebrow="Questions" title="Frequently asked questions" />
+          </ScrollReveal>
+          <ScrollReveal direction="right" className="mt-14">
             <FaqAccordion items={FAQS} />
-          </div>
+          </ScrollReveal>
         </div>
       </section>
     </div>

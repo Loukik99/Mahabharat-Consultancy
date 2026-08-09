@@ -151,7 +151,7 @@ export default function App() {
         />
       </div>
 
-      <main className="flex-1 pt-[60px] lg:pt-0">
+      <main className="flex-1 pt-[64px] lg:pt-0">
         <Suspense fallback={<Loader />}>
           <Routes>
             {/* Public */}

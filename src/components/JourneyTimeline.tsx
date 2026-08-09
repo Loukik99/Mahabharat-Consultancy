@@ -45,6 +45,10 @@ export function JourneyTimeline() {
     const line = lineRef.current;
     if (!wrap || !track || !line) return;
 
+    const reduceMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
     let scrollTrigger: ScrollTrigger | null = null;
     let resizeFrame = 0;
 
@@ -56,6 +60,29 @@ export function JourneyTimeline() {
         cardRefs.current[i]?.classList.toggle("is-active", active);
       });
     };
+
+    const revealAll = () => {
+      maxProgressRef.current = 1;
+      applyProgress(1);
+    };
+
+    // Reduced motion / no-JS-friendly: show every step immediately.
+    if (reduceMotion) {
+      const centers = badgeRefs.current.map((el) => {
+        if (!el) return 0;
+        const r = el.getBoundingClientRect();
+        const wrapRect = wrap.getBoundingClientRect();
+        return r.top + r.height / 2 - wrapRect.top;
+      });
+      const top = centers[0] ?? 0;
+      const bottom = centers[centers.length - 1] ?? 0;
+      track.style.top = `${top}px`;
+      track.style.height = `${Math.max(0, bottom - top)}px`;
+      line.style.top = `${top}px`;
+      line.style.height = `${Math.max(0, bottom - top)}px`;
+      revealAll();
+      return;
+    }
 
     const updateGeometry = () => {
       const wrapRect = wrap.getBoundingClientRect();
@@ -86,17 +113,30 @@ export function JourneyTimeline() {
 
     updateGeometry();
 
+    // First step should never wait for scroll — show it immediately.
+    maxProgressRef.current = Math.max(maxProgressRef.current, 0.001);
+    applyProgress(maxProgressRef.current);
+
     scrollTrigger = ScrollTrigger.create({
       trigger: wrap,
-      start: "top 80%",
-      end: "bottom 60%",
+      start: "top 90%",
+      end: "bottom 50%",
       onUpdate: (self) => {
         if (self.progress > maxProgressRef.current) {
           maxProgressRef.current = self.progress;
           applyProgress(maxProgressRef.current);
         }
       },
+      onEnter: (self) => {
+        if (self.progress > maxProgressRef.current) {
+          maxProgressRef.current = self.progress;
+          applyProgress(maxProgressRef.current);
+        }
+      },
     });
+
+    // Safety net: never leave journey cards stuck at opacity 0.
+    const fallback = window.setTimeout(revealAll, 1200);
 
     window.addEventListener("resize", onResize);
     const observer = new ResizeObserver(onResize);
@@ -106,6 +146,7 @@ export function JourneyTimeline() {
       window.removeEventListener("resize", onResize);
       observer.disconnect();
       cancelAnimationFrame(resizeFrame);
+      window.clearTimeout(fallback);
       scrollTrigger?.kill();
     };
   }, []);

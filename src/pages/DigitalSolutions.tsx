@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ChevronLeft, CheckCircle2, MessageCircle } from "lucide-react";
 import { digitalSolutions as ds } from "@/data/digitalSolutions";
 import { Button } from "@/components/ui/button";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { Seo } from "@/components/Seo";
 import {
   pageSeo,
@@ -43,7 +44,7 @@ export default function DigitalSolutions() {
         <ChevronLeft size={15} /> Back to services
       </Link>
 
-      <div className="rounded-xl border border-border bg-white overflow-hidden">
+      <ScrollReveal direction="left" className="rounded-xl border border-border bg-white overflow-hidden">
         <div className="surface-navy px-6 py-8 sm:px-10 flex items-center gap-4">
           <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-white/95 p-2">
             <img src={ds.icon} alt="Digital Solutions" className="h-full w-full object-contain" />
@@ -59,14 +60,14 @@ export default function DigitalSolutions() {
 
           <h2 className="mt-7 mb-3 font-display text-lg font-semibold text-navy">What we build</h2>
           <ul className="space-y-2.5">
-            {ds.highlights.map((h) => (
-              <li key={h} className="flex items-start gap-2.5 text-sm text-foreground">
+            {ds.highlights.map((h, i) => (
+              <ScrollReveal key={h} index={i} as="li" className="flex items-start gap-2.5 text-sm text-foreground">
                 <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-gold" /> {h}
-              </li>
+              </ScrollReveal>
             ))}
           </ul>
 
-          <div className="mt-8 rounded-lg border-l-2 border-gold bg-secondary/60 p-5">
+          <ScrollReveal direction="right" className="mt-8 rounded-lg border-l-2 border-gold bg-secondary/60 p-5">
             <p className="font-display text-base font-semibold text-navy">Want to build a website or app?</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Chat with us on WhatsApp and tell us about your project, we'll guide you from idea to launch.
@@ -76,9 +77,9 @@ export default function DigitalSolutions() {
                 <MessageCircle size={18} className="mr-1.5" /> Chat on WhatsApp
               </a>
             </Button>
-          </div>
+          </ScrollReveal>
         </div>
-      </div>
+      </ScrollReveal>
     </div>
   );
 }

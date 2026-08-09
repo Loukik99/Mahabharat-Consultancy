@@ -5,6 +5,7 @@ import { serviceCategories, categoryById, serviceCatalog } from "@/data/catalog"
 import { serviceIcon, serviceImage } from "@/data/serviceIcons";
 import { ServiceCard, type ServiceCardTone } from "@/components/ServiceCard";
 import { SectionHeader } from "@/components/SectionHeader";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { Seo } from "@/components/Seo";
 import { digitalSolutions } from "@/data/digitalSolutions";
 import {
@@ -91,14 +92,16 @@ export default function Services() {
     <div className="bg-white">
       <Seo {...pageSeo.services} jsonLd={servicesJsonLd} />
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
-        <SectionHeader
-          eyebrow="What we do"
-          title="Our services"
-          sub="Browse our government and online services. Pricing is shared on request."
-        />
+        <ScrollReveal direction="left">
+          <SectionHeader
+            eyebrow="What we do"
+            title="Our services"
+            sub="Browse our government and online services. Pricing is shared on request."
+          />
+        </ScrollReveal>
 
         {/* Search */}
-        <div className="relative mt-8 max-w-md">
+        <ScrollReveal direction="right" className="relative mt-8 max-w-md">
           <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-fog" size={16} />
           <input
             placeholder="Search services…"
@@ -106,7 +109,7 @@ export default function Services() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
-        </div>
+        </ScrollReveal>
 
         {/* Category chips */}
         <div className="mt-5 flex flex-wrap gap-2">
@@ -151,16 +154,19 @@ export default function Services() {
         ) : (
           <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {showDigital && (
-              <ServiceCard
-                href={digitalSolutions.href}
-                variant="standard"
-                tone="gold"
-                icon={<img src={digitalSolutions.icon} alt="" className="h-6 w-6" aria-hidden="true" />}
-                meta="Digital Solutions"
-                title={digitalSolutions.title}
-                description={digitalSolutions.oneLiner}
-                ctaLabel="Get a quote"
-              />
+              <ScrollReveal index={0} className="h-full">
+                <ServiceCard
+                  href={digitalSolutions.href}
+                  variant="standard"
+                  tone="gold"
+                  className="h-full"
+                  icon={<img src={digitalSolutions.icon} alt="" className="h-6 w-6" aria-hidden="true" />}
+                  meta="Digital Solutions"
+                  title={digitalSolutions.title}
+                  description={digitalSolutions.oneLiner}
+                  ctaLabel="Get a quote"
+                />
+              </ScrollReveal>
             )}
             {services
               .slice()
@@ -169,18 +175,21 @@ export default function Services() {
                 const category = categoryById(s.category);
                 const img = serviceImage(s.slug);
                 const SvcIcon = serviceIcon(s.slug);
+                const revealIndex = showDigital ? i + 1 : i;
                 return (
-                  <ServiceCard
-                    key={s.id}
-                    href={`/services/${s.slug || s.id}`}
-                    variant="standard"
-                    tone={toneFor(i)}
-                    icon={img ? <img src={img} alt="" className="h-6 w-6" aria-hidden="true" /> : <SvcIcon size={20} aria-hidden="true" />}
-                    meta={category?.name}
-                    title={s.name}
-                    description={s.description}
-                    ctaLabel="View details"
-                  />
+                  <ScrollReveal key={s.id} index={revealIndex} className="h-full">
+                    <ServiceCard
+                      href={`/services/${s.slug || s.id}`}
+                      variant="standard"
+                      tone={toneFor(i)}
+                      className="h-full"
+                      icon={img ? <img src={img} alt="" className="h-6 w-6" aria-hidden="true" /> : <SvcIcon size={20} aria-hidden="true" />}
+                      meta={category?.name}
+                      title={s.name}
+                      description={s.description}
+                      ctaLabel="View details"
+                    />
+                  </ScrollReveal>
                 );
               })}
           </div>

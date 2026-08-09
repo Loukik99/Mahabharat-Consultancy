@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import type { GovtJob } from "@/types";
 import { Button } from "@/components/ui/button";
 import { SectionHeader } from "@/components/SectionHeader";
+import { ScrollReveal } from "@/components/ScrollReveal";
 import { Seo } from "@/components/Seo";
 import { pageSeo, organizationJsonLd, webPageJsonLd } from "@/config/seo";
 import { cn } from "@/lib/utils";
@@ -72,7 +73,7 @@ export default function GovtJobs() {
         jsonLd={[organizationJsonLd(), webPageJsonLd(pageSeo.jobs)]}
       />
       <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
-        <div className="flex items-start gap-4">
+        <ScrollReveal direction="left" className="flex items-start gap-4">
           <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-mist bg-white shadow-subtle">
             <img src={jobSeekerLogo} alt="" className="h-8 w-8 object-contain" aria-hidden="true" />
           </div>
@@ -81,10 +82,10 @@ export default function GovtJobs() {
             title="Latest Government Jobs"
             sub="Central, state, defence, banking, railway and PSU openings, all in one place."
           />
-        </div>
+        </ScrollReveal>
 
         {/* Explore more jobs on FreeJobAlert */}
-        <div className="mt-8 flex flex-col gap-4 rounded-2xl border border-gold/35 bg-gold/[0.06] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
+        <ScrollReveal direction="right" className="mt-8 flex flex-col gap-4 rounded-2xl border border-gold/35 bg-gold/[0.06] p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
           <div className="flex items-start gap-3">
             <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-mist bg-white">
               <img src={jobSeekerLogo} alt="" className="h-8 w-8 object-contain" aria-hidden="true" />
@@ -106,16 +107,16 @@ export default function GovtJobs() {
               Explore on FreeJobAlert <ExternalLink size={15} />
             </a>
           </Button>
-        </div>
+        </ScrollReveal>
 
         {/* Disclaimer */}
-        <div className="mt-5 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50/80 p-4 text-amber-950 sm:p-5">
+        <ScrollReveal direction="left" delay={40} className="mt-5 flex items-start gap-3 rounded-2xl border border-amber-200 bg-amber-50/80 p-4 text-amber-950 sm:p-5">
           <AlertTriangle size={20} className="mt-0.5 shrink-0 text-amber-600" />
           <p className="text-sm leading-relaxed">
             We help you apply; applications are submitted on the official websites only. We are a
             private assistance / service center and do not represent any recruitment body.
           </p>
-        </div>
+        </ScrollReveal>
 
         {/* Search */}
         <div className="relative mt-8 max-w-md">
@@ -171,9 +172,10 @@ export default function GovtJobs() {
           <>
             {/* Mobile cards */}
             <div className="mt-8 space-y-4 lg:hidden">
-              {jobs.map((job) => (
-                <div
+              {jobs.map((job, i) => (
+                <ScrollReveal
                   key={job.id}
+                  index={i}
                   className="rounded-2xl border border-mist bg-white p-5 shadow-subtle transition-colors hover:border-navy/20"
                 >
                   <div className="flex items-start justify-between gap-2">
@@ -229,72 +231,74 @@ export default function GovtJobs() {
                       <HelpCircle size={14} /> Get Help Applying
                     </Button>
                   </div>
-                </div>
+                </ScrollReveal>
               ))}
             </div>
 
             {/* Desktop table */}
-            <div className="mt-8 hidden overflow-hidden rounded-2xl border border-mist bg-white shadow-subtle lg:block">
-              <table className="w-full text-sm">
-                <thead className="border-b border-mist bg-snow text-left text-[11px] font-semibold uppercase tracking-[0.06em] text-fog">
-                  <tr>
-                    <th className="px-4 py-3.5">Post</th>
-                    <th className="px-4 py-3.5">Sector</th>
-                    <th className="px-4 py-3.5">Qualification</th>
-                    <th className="px-4 py-3.5">Vacancies</th>
-                    <th className="px-4 py-3.5">Location</th>
-                    <th className="px-4 py-3.5">Last Date</th>
-                    <th className="px-4 py-3.5">Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {jobs.map((job) => (
-                    <tr key={job.id} className="border-b border-mist/70 transition-colors last:border-0 hover:bg-snow/80">
-                      <td className="px-4 py-3.5">
-                        <p className="font-semibold text-ink">{job.title}</p>
-                        <p className="text-xs text-smoke">{job.organization}</p>
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <span className="rounded-full bg-navy/[0.07] px-2.5 py-1 text-[11px] font-semibold text-navy">
-                          {sectorLabel(job.sector)}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3.5 text-smoke">{job.qualification}</td>
-                      <td className="px-4 py-3.5 tnum text-smoke">{job.vacancies ?? "-"}</td>
-                      <td className="px-4 py-3.5 text-smoke">{job.location}</td>
-                      <td className="px-4 py-3.5">
-                        <span className="tnum whitespace-nowrap text-ink">{formatDate(job.lastDate)}</span>
-                        {isClosingSoon(job.lastDate) && (
-                          <span className="ml-2 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800">
-                            Soon
-                          </span>
-                        )}
-                      </td>
-                      <td className="px-4 py-3.5">
-                        <div className="flex gap-2">
-                          <Button
-                            asChild
-                            variant="outline"
-                            size="sm"
-                            className="rounded-full border-mist bg-white text-ink hover:bg-ink/[0.03] hover:text-ink"
-                          >
-                            <a href={job.officialUrl} target="_blank" rel="noopener noreferrer">
-                              <ExternalLink size={14} /> Official
-                            </a>
-                          </Button>
-                          <Button
-                            size="sm"
-                            className="rounded-full bg-navy font-semibold text-white hover:bg-navy/90"
-                            onClick={helpApplying}
-                          >
-                            <HelpCircle size={14} /> Get Help
-                          </Button>
-                        </div>
-                      </td>
+            <div className="mt-8 hidden lg:block">
+              <ScrollReveal direction="left" className="overflow-hidden rounded-2xl border border-mist bg-white shadow-subtle">
+                <table className="w-full text-sm">
+                  <thead className="border-b border-mist bg-snow text-left text-[11px] font-semibold uppercase tracking-[0.06em] text-fog">
+                    <tr>
+                      <th className="px-4 py-3.5">Post</th>
+                      <th className="px-4 py-3.5">Sector</th>
+                      <th className="px-4 py-3.5">Qualification</th>
+                      <th className="px-4 py-3.5">Vacancies</th>
+                      <th className="px-4 py-3.5">Location</th>
+                      <th className="px-4 py-3.5">Last Date</th>
+                      <th className="px-4 py-3.5">Action</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {jobs.map((job) => (
+                      <tr key={job.id} className="border-b border-mist/70 transition-colors last:border-0 hover:bg-snow/80">
+                        <td className="px-4 py-3.5">
+                          <p className="font-semibold text-ink">{job.title}</p>
+                          <p className="text-xs text-smoke">{job.organization}</p>
+                        </td>
+                        <td className="px-4 py-3.5">
+                          <span className="rounded-full bg-navy/[0.07] px-2.5 py-1 text-[11px] font-semibold text-navy">
+                            {sectorLabel(job.sector)}
+                          </span>
+                        </td>
+                        <td className="px-4 py-3.5 text-smoke">{job.qualification}</td>
+                        <td className="px-4 py-3.5 tnum text-smoke">{job.vacancies ?? "-"}</td>
+                        <td className="px-4 py-3.5 text-smoke">{job.location}</td>
+                        <td className="px-4 py-3.5">
+                          <span className="tnum whitespace-nowrap text-ink">{formatDate(job.lastDate)}</span>
+                          {isClosingSoon(job.lastDate) && (
+                            <span className="ml-2 rounded-full border border-amber-200 bg-amber-100 px-2 py-0.5 text-[11px] font-semibold text-amber-800">
+                              Soon
+                            </span>
+                          )}
+                        </td>
+                        <td className="px-4 py-3.5">
+                          <div className="flex gap-2">
+                            <Button
+                              asChild
+                              variant="outline"
+                              size="sm"
+                              className="rounded-full border-mist bg-white text-ink hover:bg-ink/[0.03] hover:text-ink"
+                            >
+                              <a href={job.officialUrl} target="_blank" rel="noopener noreferrer">
+                                <ExternalLink size={14} /> Official
+                              </a>
+                            </Button>
+                            <Button
+                              size="sm"
+                              className="rounded-full bg-navy font-semibold text-white hover:bg-navy/90"
+                              onClick={helpApplying}
+                            >
+                              <HelpCircle size={14} /> Get Help
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </ScrollReveal>
             </div>
           </>
         )}

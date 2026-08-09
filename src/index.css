@@ -65,6 +65,9 @@
     overflow-x: hidden;
     font-feature-settings: "ss01";
   }
+  html {
+    overflow-x: hidden;
+  }
   h1, h2, h3, h4, h5, h6, .font-display {
     font-family: 'Manrope', system-ui, sans-serif;
     letter-spacing: -0.02em;
@@ -172,6 +175,13 @@
     box-shadow: 0 20px 40px -22px rgba(15, 23, 42, 0.12);
     border-color: hsl(var(--gold) / 0.3);
   }
+  @media (prefers-reduced-motion: reduce) {
+    .journey-card {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+  }
 
   /* FAQ accordion — grid-rows trick expands/collapses smoothly no matter
      how long the answer text is, so no fixed max-height needs guessing. */
@@ -215,3 +225,45 @@
 .stagger-children > *:nth-child(4) { animation-delay: 0.20s; }
 .stagger-children > *:nth-child(5) { animation-delay: 0.25s; }
 .stagger-children > *:nth-child(6) { animation-delay: 0.30s; }
+
+/* Scroll reveal — left/right fade-in (driven by ScrollReveal.tsx).
+   Visible by default (no-JS / pre-mount). Hidden start state only applies
+   after JS arms `.scroll-reveal--ready`. Modest translate avoids overflow. */
+.scroll-reveal {
+  --scroll-reveal-distance: 28px;
+  --scroll-reveal-duration: 700ms;
+  --scroll-reveal-delay: 0ms;
+  will-change: auto;
+}
+@media (max-width: 1023px) {
+  .scroll-reveal {
+    /* Shorter travel on small screens avoids temporary horizontal overflow */
+    --scroll-reveal-distance: 14px;
+  }
+}
+.scroll-reveal--ready {
+  opacity: 0;
+  transition: none;
+}
+.scroll-reveal--ready.scroll-reveal--from-left {
+  transform: translate3d(calc(var(--scroll-reveal-distance) * -1), 0, 0);
+}
+.scroll-reveal--ready.scroll-reveal--from-right {
+  transform: translate3d(var(--scroll-reveal-distance), 0, 0);
+}
+.scroll-reveal--visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity var(--scroll-reveal-duration) ease-out var(--scroll-reveal-delay),
+    transform var(--scroll-reveal-duration) ease-out var(--scroll-reveal-delay);
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-reveal,
+  .scroll-reveal--ready,
+  .scroll-reveal--visible {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

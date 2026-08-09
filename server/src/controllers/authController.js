@@ -1,3 +1,4 @@
+const crypto = require("crypto");
 const { User, CustomerProfile, AgentProfile, ServiceRequest, Payment, Notification } = require("../models");
 const { signToken } = require("../middleware/auth");
 const { ApiError, asyncHandler } = require("../utils/apiError");
@@ -21,8 +22,13 @@ exports.register = asyncHandler(async (req, res) => {
   await CustomerProfile.create({ user: user._id });
   await audit(user, "register", "user", user._id);
 
-  // Send the welcome email (fire-and-forget; never blocks or fails signup).
-  sendWelcomeEmail(user);
+  // Welcome email ONLY after successful account creation (never on login).
+  // Do not fail signup if SMTP fails — account stays valid.
+  try {
+    await sendWelcomeEmail(user);
+  } catch (e) {
+    console.error("[mail] welcome email failed:", e.message);
+  }
 
   res.status(201).json({ success: true, token: signToken(user), user: serializeUser(user) });
 });
@@ -60,12 +66,18 @@ exports.forgotPassword = asyncHandler(async (req, res) => {
 
   // Always return the same message; only send mail when a (active) user exists.
   if (user && user.isActive) {
-    const otp = String(Math.floor(100000 + Math.random() * 900000)); // 6 digits
+    const otp = String(crypto.randomInt(100000, 1000000)); // cryptographically strong 6 digits
     user.resetOtpHash = await bcrypt.hash(otp, 10);
     user.resetOtpExpires = new Date(Date.now() + 10 * 60 * 1000);
     await user.save();
     await audit(user, "password_reset_requested", "user", user._id);
-    sendPasswordResetEmail(user, otp); // fire-and-forget
+    // Await send so SMTP failures are logged; still return the generic message
+    // so this endpoint never reveals whether an account exists.
+    try {
+      await sendPasswordResetEmail(user, otp);
+    } catch (e) {
+      console.error("[mail] password-reset email failed:", e.message);
+    }
   }
 
   res.json({ success: true, message: RESET_SENT_MSG });

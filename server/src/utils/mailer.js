@@ -13,31 +13,32 @@ if (env.emailEnabled) {
 async function sendMail({ to, subject, html, text }) {
   if (!transporter) {
     console.log(`[mail] not configured — skipping "${subject}" to ${to}`);
-    return;
+    return { skipped: true };
   }
-  try {
-    await transporter.sendMail({
-      from: `"${env.email.fromName}" <${env.email.user}>`,
-      to,
-      subject,
-      text,
-      html,
-    });
-    console.log(`[mail] sent "${subject}" to ${to}`);
-  } catch (e) {
-    console.error("[mail] send failed:", e.message);
-  }
+  const info = await transporter.sendMail({
+    from: `"${env.email.fromName}" <${env.email.user}>`,
+    to,
+    subject,
+    text,
+    html,
+  });
+  const accepted = Array.isArray(info.accepted) ? info.accepted.length : 0;
+  console.log(`[mail] sent "${subject}" to ${to} (accepted=${accepted}, id=${info.messageId || "n/a"})`);
+  return { skipped: false, accepted, messageId: info.messageId };
 }
 
-// Welcome email sent when a new customer registers.
+// Welcome email sent when a new customer registers (never on login).
 function sendWelcomeEmail(user) {
   const subject = "Welcome to Mahabharat Consultancy";
+  const safeName = String(user.name || "Customer").trim() || "Customer";
   const text =
-    `Hi ${user.name},\n\n` +
-    `Your account on Mahabharat Consultancy has been created successfully.\n` +
-    `You can now log in to submit service requests, upload documents and track their status.\n\n` +
-    `If you did not create this account, please ignore this email.\n\n` +
-    `— Mahabharat Consultancy, One Stop Service Center`;
+    `Hello ${safeName},\n\n` +
+    `Welcome to Mahabharat Consultancy.\n\n` +
+    `Your account has been successfully created.\n\n` +
+    `You can now use your account to access our services and manage your requests.\n\n` +
+    `Thank you,\n` +
+    `Mahabharat Consultancy\n` +
+    `One Stop Service Center`;
   const html = `
   <div style="font-family:Arial,Helvetica,sans-serif;max-width:560px;margin:auto;border:1px solid #e4e8ef;border-radius:10px;overflow:hidden">
     <div style="background:#0b1f3a;padding:20px 24px;color:#fff">
@@ -45,16 +46,17 @@ function sendWelcomeEmail(user) {
       <div style="font-size:11px;letter-spacing:2px;color:#c2a14d;text-transform:uppercase">One Stop Service Center</div>
     </div>
     <div style="padding:24px;color:#1f2a44;font-size:14px;line-height:1.6">
-      <p>Hi <strong>${user.name}</strong>,</p>
-      <p>Your account has been created successfully. 🎉</p>
-      <p>You can now log in to submit service requests, upload documents, and track their status from your dashboard.</p>
+      <p>Hello <strong>${safeName}</strong>,</p>
+      <p>Welcome to Mahabharat Consultancy.</p>
+      <p>Your account has been successfully created.</p>
+      <p>You can now use your account to access our services and manage your requests.</p>
+      <p style="margin-top:20px">Thank you,<br/><strong>Mahabharat Consultancy</strong></p>
       <p style="color:#6b7280;font-size:12px;margin-top:20px">If you did not create this account, you can safely ignore this email.</p>
     </div>
     <div style="background:#f7f8fa;padding:14px 24px;color:#6b7280;font-size:12px">
       Mahabharat Consultancy &middot; Belagavi, Karnataka
     </div>
   </div>`;
-  // Fire-and-forget: never block or fail registration because of email.
   return sendMail({ to: user.email, subject, text, html });
 }
 

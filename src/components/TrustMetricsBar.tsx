@@ -15,6 +15,11 @@ const METRICS: MetricItem[] = [
   { icon: Clock3, value: "Same-day", label: "Assistance" },
 ];
 
+function prefersReducedMotion(): boolean {
+  if (typeof window === "undefined" || !window.matchMedia) return false;
+  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+}
+
 /**
  * Premium dashboard-style statistics strip. Four facts inside a single
  * glass-on-white card (soft gradient wash, hairline border, one shared
@@ -30,24 +35,35 @@ export function TrustMetricsBar() {
   useEffect(() => {
     const el = wrapRef.current;
     if (!el) return;
+
+    if (prefersReducedMotion()) {
+      setInView(true);
+      return;
+    }
+
     let delivered = false;
-    const observer = new IntersectionObserver(
+    let observer: IntersectionObserver | null = null;
+    const show = () => {
+      if (delivered) return;
+      delivered = true;
+      setInView(true);
+      observer?.disconnect();
+    };
+
+    observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          delivered = true;
-          setInView(true);
-          observer.disconnect();
+        if (entry.isIntersecting || entry.intersectionRatio > 0) {
+          show();
         }
       },
-      { threshold: 0.3 }
+      { threshold: [0, 0.05, 0.15], rootMargin: "60px 0px 60px 0px" }
     );
     observer.observe(el);
-    // Safety net: reveal even if IntersectionObserver never fires (rare).
-    const fallback = window.setTimeout(() => {
-      if (!delivered) setInView(true);
-    }, 1200);
+
+    // Always reveal — never leave metrics stuck at opacity 0.
+    const fallback = window.setTimeout(show, 1200);
     return () => {
-      observer.disconnect();
+      observer?.disconnect();
       window.clearTimeout(fallback);
     };
   }, []);
@@ -64,10 +80,14 @@ export function TrustMetricsBar() {
               <div
                 key={m.label}
                 className={cn(
-                  "group flex flex-col items-center gap-3 px-4 py-8 text-center opacity-0 transition-[transform,background-color] duration-300 ease-out hover:-translate-y-1 hover:bg-navy/[0.025] sm:py-10",
-                  inView && "opacity-100"
+                  "group flex flex-col items-center gap-3 px-4 py-8 text-center transition-[transform,background-color,opacity] duration-300 ease-out hover:-translate-y-1 hover:bg-navy/[0.025] sm:py-10",
+                  inView ? "opacity-100" : "opacity-0"
                 )}
-                style={inView ? { animation: `slide-up 0.6s cubic-bezier(0.22,1,0.36,1) ${i * 90}ms forwards` } : undefined}
+                style={
+                  inView
+                    ? { animation: `slide-up 0.6s cubic-bezier(0.22,1,0.36,1) ${i * 90}ms forwards` }
+                    : undefined
+                }
               >
                 <span className="flex h-10 w-10 items-center justify-center rounded-full bg-navy/[0.06] text-navy transition-all duration-300 ease-out group-hover:-rotate-3 group-hover:scale-110 group-hover:bg-gold/[0.16] group-hover:text-gold-foreground">
                   <m.icon size={17} strokeWidth={2} />

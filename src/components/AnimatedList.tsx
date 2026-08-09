@@ -19,34 +19,40 @@ function AnimatedItem({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    let delivered = false;
+
+    if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
+      setInView(true);
+      return;
+    }
+
+    let revealed = false;
     let raf1 = 0;
     let raf2 = 0;
-    const obs = new IntersectionObserver(
+    let obs: IntersectionObserver | null = null;
+
+    const show = () => {
+      if (revealed) return;
+      revealed = true;
+      raf1 = requestAnimationFrame(() => {
+        raf2 = requestAnimationFrame(() => setInView(true));
+      });
+      obs?.disconnect();
+    };
+
+    obs = new IntersectionObserver(
       ([entry]) => {
-        delivered = true;
-        if (entry.isIntersecting) {
-          // Defer the reveal two frames. IO's first callback can fire before the
-          // browser paints the hidden start state; waiting two rAFs guarantees
-          // that hidden frame is painted, so the CSS transition has a "from"
-          // state and the scale + fade actually animates.
-          raf1 = requestAnimationFrame(() => {
-            raf2 = requestAnimationFrame(() => setInView(true));
-          });
-        } else {
-          setInView(false);
+        if (entry.isIntersecting || entry.intersectionRatio > 0) {
+          // Defer the reveal two frames so the CSS transition has a "from" state.
+          show();
         }
       },
-      { threshold: 0.2 }
+      { threshold: [0, 0.05, 0.15], rootMargin: "40px 0px 40px 0px" }
     );
     obs.observe(el);
-    // Safety net: if IO never delivers (rare/headless), reveal so content is
-    // never stuck hidden.
-    const t = window.setTimeout(() => {
-      if (!delivered) setInView(true);
-    }, 1200);
+    // Always reveal — never leave list rows stuck hidden (one-shot, no re-hide).
+    const t = window.setTimeout(show, 1500);
     return () => {
-      obs.disconnect();
+      obs?.disconnect();
       window.clearTimeout(t);
       cancelAnimationFrame(raf1);
       cancelAnimationFrame(raf2);

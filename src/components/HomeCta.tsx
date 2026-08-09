@@ -1,5 +1,6 @@
 import { MapPin, Phone, ArrowUpRight } from "lucide-react";
 import { site, waLink } from "@/config/site";
+import { ScrollReveal } from "@/components/ScrollReveal";
 
 function WhatsAppGlyph({ size = 19 }: { size?: number }) {
   return (
@@ -24,7 +25,7 @@ export function HomeCta() {
         <div className="overflow-hidden rounded-[28px] border border-mist bg-white shadow-card">
           <div className="grid items-start gap-10 p-8 sm:gap-12 sm:p-10 lg:grid-cols-[45%_55%] lg:gap-16 lg:p-12">
             {/* Left column (~45%): reach us now */}
-            <div>
+            <ScrollReveal direction="left">
               <p className="eyebrow text-navy">Get in touch</p>
               <h3 className="font-display mt-3 text-[1.55rem] font-extrabold leading-tight text-navy-deep sm:text-[1.8rem]">
                 Need help with your application?
@@ -50,10 +51,10 @@ export function HomeCta() {
                   <Phone size={16} /> Call Now
                 </a>
               </div>
-            </div>
+            </ScrollReveal>
 
             {/* Right column (~55%): find us */}
-            <div>
+            <ScrollReveal direction="right" delay={80}>
               <p className="eyebrow text-gold">Visit us</p>
               <h3 className="font-display mt-3 text-[1.55rem] font-extrabold leading-tight text-navy-deep sm:text-[1.8rem]">
                 Visit our service center
@@ -90,7 +91,7 @@ export function HomeCta() {
               >
                 View on Google Maps <ArrowUpRight size={14} />
               </a>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </div>
