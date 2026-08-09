@@ -8,6 +8,7 @@
     "dev": "nodemon src/index.js",
     "start": "node src/index.js",
     "seed": "node src/seed.js",
+    "sync-catalog": "node src/syncCatalog.js",
     "create-admin": "node src/createAdmin.js"
   },
   "dependencies": {

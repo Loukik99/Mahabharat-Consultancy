@@ -4,10 +4,11 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
 import ForgotPasswordDialog from "@/components/ForgotPasswordDialog";
-import logoImg from "@/assets/logo.jpeg";
+import { AuthShell, AuthCard, authInputClass, authLabelClass } from "@/components/AuthCard";
+import { Seo } from "@/components/Seo";
+import { pageSeo } from "@/config/seo";
 
 export default function SignupPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", confirm: "" });
@@ -38,47 +39,48 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-sm">
-        <Card className="rounded border-border">
-          <CardHeader className="text-center pb-4">
-            <img src={logoImg} alt="Mahabharat Consultancy" className="mx-auto mb-2 h-14 w-auto object-contain" />
-            <CardTitle className="font-display text-xl text-navy">Create Account</CardTitle>
-            <CardDescription>Join Mahabharat Consultancy</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <div>
-                <Label htmlFor="name">Full Name</Label>
-                <Input id="name" required value={form.name} onChange={update("name")} placeholder="Your name" />
-              </div>
-              <div>
-                <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" required value={form.email} onChange={update("email")} placeholder="Enter email or number" />
-              </div>
-              <div>
-                <Label htmlFor="phone">Mobile Number</Label>
-                <Input id="phone" type="tel" required inputMode="numeric" maxLength={10} placeholder="10-digit mobile" value={form.phone} onChange={update("phone")} />
-              </div>
-              <div>
-                <Label htmlFor="password">Password</Label>
-                <Input id="password" type="password" required minLength={6} value={form.password} onChange={update("password")} placeholder="At least 6 characters" />
-              </div>
-              <div>
-                <Label htmlFor="confirm">Confirm Password</Label>
-                <Input id="confirm" type="password" required value={form.confirm} onChange={update("confirm")} placeholder="Re-enter password" />
-              </div>
-              <Button type="submit" disabled={submitting} className="w-full bg-gold font-semibold text-gold-foreground hover:bg-gold/90">{submitting ? "Creating Account…" : "Create Account"}</Button>
-            </form>
-            <p className="text-center text-sm text-muted-foreground mt-4">
-              Already have an account? <Link to="/login" className="text-gold font-medium hover:underline">Sign In</Link>
-            </p>
-            <p className="text-center text-sm text-muted-foreground mt-1">
-              <ForgotPasswordDialog />
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <AuthShell>
+      <Seo {...pageSeo.signup} />
+      <AuthCard
+        title="Create your account"
+        subtitle="Join Mahabharat Consultancy in under a minute."
+        footer={
+          <div className="space-y-2">
+            <p>Already have an account? <Link to="/login" className="font-semibold text-gold hover:underline">Sign in</Link></p>
+            <ForgotPasswordDialog />
+          </div>
+        }
+      >
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="name" className={authLabelClass}>Full name</Label>
+            <Input id="name" required value={form.name} onChange={update("name")} placeholder="Your name" className={authInputClass} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="email" className={authLabelClass}>Email</Label>
+            <Input id="email" type="email" required value={form.email} onChange={update("email")} placeholder="you@example.com" className={authInputClass} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="phone" className={authLabelClass}>Mobile number</Label>
+            <Input id="phone" type="tel" required inputMode="numeric" maxLength={10} placeholder="10-digit mobile" value={form.phone} onChange={update("phone")} className={authInputClass} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="password" className={authLabelClass}>Password</Label>
+            <Input id="password" type="password" required minLength={6} value={form.password} onChange={update("password")} placeholder="At least 6 characters" className={authInputClass} />
+          </div>
+          <div className="space-y-1.5">
+            <Label htmlFor="confirm" className={authLabelClass}>Confirm password</Label>
+            <Input id="confirm" type="password" required value={form.confirm} onChange={update("confirm")} placeholder="Re-enter password" className={authInputClass} />
+          </div>
+          <Button
+            type="submit"
+            disabled={submitting}
+            className="h-12 w-full rounded-2xl bg-gold text-[15px] font-semibold text-gold-foreground shadow-glow-gold hover:bg-gold/90"
+          >
+            {submitting ? "Creating Account…" : "Create Account"}
+          </Button>
+        </form>
+      </AuthCard>
+    </AuthShell>
   );
 }

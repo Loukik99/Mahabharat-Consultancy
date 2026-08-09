@@ -24,7 +24,8 @@ app.use(
       // deployment URL (single-project, same-origin deploy).
       if (/^https:\/\/([a-z0-9-]+\.)?mahabharat\.net\.in$/.test(origin)) return cb(null, true);
       if (/^https:\/\/[a-z0-9-]+\.vercel\.app$/.test(origin)) return cb(null, true);
-      return cb(new Error(`Origin ${origin} not allowed by CORS`));
+      // Reject without throwing — a thrown Error becomes an unhelpful 500.
+      return cb(null, false);
     },
     credentials: true,
   })

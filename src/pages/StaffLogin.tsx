@@ -8,7 +8,9 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { toast } from "sonner";
 import { ShieldCheck, UserCog } from "lucide-react";
 import ForgotPasswordDialog from "@/components/ForgotPasswordDialog";
-import logoImg from "@/assets/logo.jpeg";
+import { Seo } from "@/components/Seo";
+import { pageSeo } from "@/config/seo";
+import logoImg from "@/assets/logo.png";
 
 type StaffRole = "admin" | "agent";
 
@@ -50,10 +52,18 @@ export default function StaffLoginPage() {
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-8">
+      <Seo {...pageSeo.staff} />
       <div className="w-full max-w-sm">
         <Card className="rounded border-border border-t-2 border-t-navy">
           <CardHeader className="text-center pb-4">
-            <img src={logoImg} alt="Mahabharat Consultancy" className="mx-auto mb-2 h-14 w-auto object-contain" />
+            <img
+              src={logoImg}
+              alt="Mahabharat Consultancy"
+              className="brand-logo mx-auto mb-2 h-16 w-auto"
+              width={64}
+              height={77}
+              decoding="async"
+            />
             <CardTitle className="font-display text-xl text-navy flex items-center justify-center gap-1.5">
               <ShieldCheck size={18} className="text-gold" /> Staff Login
             </CardTitle>

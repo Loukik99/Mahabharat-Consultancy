@@ -1,15 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { getServices, getCategories } from "@/api/services.api";
-import { serviceCategories, categoryById } from "@/data/catalog";
+import { serviceCategories, categoryById, serviceCatalog } from "@/data/catalog";
 import { serviceIcon, serviceImage } from "@/data/serviceIcons";
-import Masonry from "@/components/Masonry";
+import { ServiceCard, type ServiceCardTone } from "@/components/ServiceCard";
+import { SectionHeader } from "@/components/SectionHeader";
+import { Seo } from "@/components/Seo";
 import { digitalSolutions } from "@/data/digitalSolutions";
+import {
+  pageSeo,
+  organizationJsonLd,
+  websiteJsonLd,
+  webPageJsonLd,
+} from "@/config/seo";
 import type { Service, ServiceCategory } from "@/types";
 import { toast } from "sonner";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 import { Search, SearchX } from "lucide-react";
+
+const TONES: ServiceCardTone[] = ["navy", "emerald", "gold"];
+const toneFor = (i: number) => TONES[i % TONES.length];
 
 export default function Services() {
   const [params, setParams] = useSearchParams();
@@ -40,7 +50,21 @@ export default function Services() {
         const d = await getServices(cat, search.trim() || undefined);
         if (active) setServices(d);
       } catch (e) {
-        toast.error((e as Error).message);
+        // Offline / API failure: still show static catalog so the page stays crawlable
+        let fallback = serviceCatalog.filter((s) => s.isActive !== false);
+        if (cat !== "all") fallback = fallback.filter((s) => s.category === cat);
+        const q = search.trim().toLowerCase();
+        if (q) {
+          fallback = fallback.filter(
+            (s) =>
+              s.name.toLowerCase().includes(q) ||
+              s.description.toLowerCase().includes(q),
+          );
+        }
+        if (active) {
+          setServices(fallback);
+          toast.error((e as Error).message);
+        }
       } finally {
         if (active) setLoading(false);
       }
@@ -55,100 +79,113 @@ export default function Services() {
     setParams(next, { replace: true });
   };
 
+  const showDigital = cat === "all" && !search.trim();
+
+  // Category/search query params are filters — canonical always points at /services
+  const servicesJsonLd = useMemo(
+    () => [organizationJsonLd(), websiteJsonLd(), webPageJsonLd(pageSeo.services)],
+    [],
+  );
+
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-      <p className="eyebrow text-gold">What we do</p>
-      <h1 className="mt-2 font-display text-3xl font-semibold tracking-tight text-navy sm:text-4xl">Our Services</h1>
-      <p className="mt-2 text-sm text-muted-foreground">
-        Browse our government and online services. Pricing is shared on request.
-      </p>
-
-      {/* Search */}
-      <div className="relative mt-6 max-w-md">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" size={16} />
-        <Input
-          placeholder="Search services…"
-          className="pl-9"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+    <div className="bg-white">
+      <Seo {...pageSeo.services} jsonLd={servicesJsonLd} />
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
+        <SectionHeader
+          eyebrow="What we do"
+          title="Our services"
+          sub="Browse our government and online services. Pricing is shared on request."
         />
-      </div>
 
-      {/* Category chips */}
-      <div className="mt-4 flex flex-wrap gap-1.5">
-        <button
-          onClick={() => setCat("all")}
-          className={`rounded px-3 py-1.5 text-xs font-medium transition-colors ${
-            cat === "all" ? "bg-navy text-white" : "bg-secondary text-muted-foreground hover:text-navy"
-          }`}
-        >
-          All
-        </button>
-        {categories.map((c) => (
-          <button
-            key={c.id}
-            onClick={() => setCat(c.id)}
-            className={`rounded px-3 py-1.5 text-xs font-medium transition-colors ${
-              cat === c.id ? "bg-navy text-white" : "bg-secondary text-muted-foreground hover:text-navy"
-            }`}
-          >
-            {c.name}
-          </button>
-        ))}
-      </div>
-
-      {/* Grid */}
-      {loading ? (
-        <div className="flex justify-center py-20">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-gold" />
+        {/* Search */}
+        <div className="relative mt-8 max-w-md">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-fog" size={16} />
+          <input
+            placeholder="Search services…"
+            className="h-11 w-full rounded-full border border-mist bg-white pl-10 pr-4 text-[15px] text-ink shadow-subtle placeholder:text-fog transition-colors focus:border-navy/30 focus:outline-none"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
         </div>
-      ) : services.length === 0 ? (
-        <Card className="mt-8">
-          <CardContent className="flex flex-col items-center py-16 text-center text-muted-foreground">
-            <SearchX size={40} className="mb-3 text-muted-foreground/40" />
-            <p>No services found.</p>
-            <p className="mt-1 text-sm">Try a different category or search term.</p>
-          </CardContent>
-        </Card>
-      ) : (
-        <div className="mt-7">
-          <Masonry
-            columnsConfig={[4, 3, 2, 1]}
-            items={[
-              // Digital Solutions card appears only on the default (unfiltered) view.
-              ...(cat !== "all" || search.trim()
-                ? []
-                : [
-                    {
-                      id: digitalSolutions.id,
-                      href: digitalSolutions.href,
-                      height: 190,
-                      title: digitalSolutions.title,
-                      label: "Digital Solutions",
-                      description: digitalSolutions.oneLiner,
-                      icon: <img src={digitalSolutions.icon} alt="Digital Solutions" />,
-                    },
-                  ]),
-              ...services.map((s) => {
+
+        {/* Category chips */}
+        <div className="mt-5 flex flex-wrap gap-2">
+          <button
+            onClick={() => setCat("all")}
+            className={cn(
+              "rounded-full px-4 py-2 text-[13px] font-semibold transition-colors",
+              cat === "all"
+                ? "bg-navy text-white"
+                : "border border-mist bg-white text-ink hover:border-navy/25"
+            )}
+          >
+            All
+          </button>
+          {categories.map((c) => (
+            <button
+              key={c.id}
+              onClick={() => setCat(c.id)}
+              className={cn(
+                "rounded-full px-4 py-2 text-[13px] font-semibold transition-colors",
+                cat === c.id
+                  ? "bg-navy text-white"
+                  : "border border-mist bg-white text-ink hover:border-navy/25"
+              )}
+            >
+              {c.name}
+            </button>
+          ))}
+        </div>
+
+        {/* Grid */}
+        {loading ? (
+          <div className="flex justify-center py-24">
+            <div className="h-10 w-10 animate-spin rounded-full border-b-2 border-gold" />
+          </div>
+        ) : services.length === 0 && !showDigital ? (
+          <div className="mt-10 flex flex-col items-center rounded-2xl border border-mist bg-white py-16 text-center shadow-subtle">
+            <SearchX size={40} className="mb-3 text-fog/50" />
+            <p className="font-medium text-ink">No services found.</p>
+            <p className="mt-1 text-sm text-smoke">Try a different category or search term.</p>
+          </div>
+        ) : (
+          <div className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {showDigital && (
+              <ServiceCard
+                href={digitalSolutions.href}
+                variant="standard"
+                tone="gold"
+                icon={<img src={digitalSolutions.icon} alt="" className="h-6 w-6" aria-hidden="true" />}
+                meta="Digital Solutions"
+                title={digitalSolutions.title}
+                description={digitalSolutions.oneLiner}
+                ctaLabel="Get a quote"
+              />
+            )}
+            {services
+              .slice()
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((s, i) => {
                 const category = categoryById(s.category);
                 const img = serviceImage(s.slug);
                 const SvcIcon = serviceIcon(s.slug);
-                const len = (s.description || "").length;
-                const height = 185 + (len > 100 ? 45 : len > 70 ? 22 : 0);
-                return {
-                  id: s.id,
-                  href: `/services/${s.id}`,
-                  height,
-                  title: s.name,
-                  label: category?.name,
-                  description: s.description,
-                  icon: img ? <img src={img} alt="" /> : <SvcIcon size={26} className="text-navy" />,
-                };
-              }),
-            ].sort((a, b) => a.title.localeCompare(b.title))}
-          />
-        </div>
-      )}
+                return (
+                  <ServiceCard
+                    key={s.id}
+                    href={`/services/${s.slug || s.id}`}
+                    variant="standard"
+                    tone={toneFor(i)}
+                    icon={img ? <img src={img} alt="" className="h-6 w-6" aria-hidden="true" /> : <SvcIcon size={20} aria-hidden="true" />}
+                    meta={category?.name}
+                    title={s.name}
+                    description={s.description}
+                    ctaLabel="View details"
+                  />
+                );
+              })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -164,7 +164,7 @@ exports.setStatus = asyncHandler(async (req, res) => {
   r.statusHistory.push({ status, by: req.user.id, byRole: req.user.role, note });
   await r.save();
   await audit(req.user, "status_change", "request", r._id, `${r.requestNumber} → ${status}`);
-  await notify(r.customer._id || r.customer, `Your request ${r.requestNumber} is now "${status.replace(/_/g, " ")}".`, "info", `#/requests/${r._id}`);
+  await notify(r.customer._id || r.customer, `Your request ${r.requestNumber} is now "${status.replace(/_/g, " ")}".`, "info", `/requests/${r._id}`);
   res.json({ success: true, request: serializeRequest(r, req.user.role) });
 });
 
@@ -187,7 +187,7 @@ exports.addComment = asyncHandler(async (req, res) => {
   r.comments.push({ by: req.user.id, byRole: req.user.role, message: req.body.message, internal });
   await r.save();
   if (!internal && req.user.role !== "customer") {
-    await notify(r.customer._id || r.customer, `New remark on ${r.requestNumber}.`, "info", `#/requests/${r._id}`);
+    await notify(r.customer._id || r.customer, `New remark on ${r.requestNumber}.`, "info", `/requests/${r._id}`);
   }
   res.status(201).json({ success: true, request: serializeRequest(r, req.user.role) });
 });
@@ -203,7 +203,7 @@ exports.markReadyForPayment = asyncHandler(async (req, res) => {
   r.status = "waiting_payment";
   r.statusHistory.push({ status: "waiting_payment", by: req.user.id, byRole: req.user.role });
   await r.save();
-  await notify(r.customer._id || r.customer, `${r.requestNumber} is ready. Please complete payment.`, "warning", `#/requests/${r._id}`);
+  await notify(r.customer._id || r.customer, `${r.requestNumber} is ready. Please complete payment.`, "warning", `/requests/${r._id}`);
   await audit(req.user, "ready_for_payment", "request", r._id, r.requestNumber);
   res.json({ success: true, request: serializeRequest(r, req.user.role) });
 });

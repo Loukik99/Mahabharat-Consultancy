@@ -1,12 +1,26 @@
 import { Wrench } from "lucide-react";
-import logoImg from "@/assets/logo.jpeg";
+import logoImg from "@/assets/logo.png";
 import { site } from "@/config/site";
+import { Seo } from "@/components/Seo";
 
 /** Full-screen "under maintenance" page, shown when VITE_MAINTENANCE=true. */
 export default function Maintenance() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-6 text-center surface-navy">
-      <img src={logoImg} alt={site.name} className="h-16 w-auto rounded bg-white/95 p-1 mb-6" />
+      <Seo
+        title={`Maintenance | ${site.name}`}
+        description={`${site.name} is currently undergoing scheduled maintenance.`}
+        path="/"
+        noindex
+      />
+      <img
+        src={logoImg}
+        alt={site.name}
+        className="brand-logo mb-6 h-16 w-auto sm:h-20"
+        width={80}
+        height={98}
+        decoding="async"
+      />
       <span className="flex h-14 w-14 items-center justify-center rounded-full border border-gold/40 bg-white/5 text-gold mb-5">
         <Wrench size={26} />
       </span>

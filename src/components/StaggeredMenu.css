@@ -11,7 +11,8 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
+  width: 100%;
+  max-width: 100%;
   height: 100vh;
   z-index: 50;
   overflow: hidden;
@@ -24,10 +25,12 @@
   left: 0;
   width: 100%;
   height: 60px;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 1rem;
+  /* Small inset from both edges so Menu isn’t flush to the right */
+  padding: 0 max(1.25rem, env(safe-area-inset-right, 0px)) 0 max(1.25rem, env(safe-area-inset-left, 0px));
   background: #ffffff;
   border-bottom: 1px solid hsl(214 24% 90%);
   pointer-events: none;
@@ -36,7 +39,16 @@
 .staggered-menu-header > * { pointer-events: auto; }
 
 .sm-logo { display: flex; align-items: center; user-select: none; }
-.sm-logo-img { display: block; height: 34px; width: auto; object-fit: contain; }
+.sm-logo-img {
+  display: block;
+  height: 44px;
+  width: auto;
+  object-fit: contain;
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: high-quality;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
 
 .sm-toggle {
   position: relative;

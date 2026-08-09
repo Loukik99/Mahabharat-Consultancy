@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=IBM+Plex+Sans+Devanagari:wght@400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,40 +6,51 @@
 
 @layer base {
   :root {
-    /* Premium navy + gold "private wealth / fintech" palette (white base) */
-    --background: 0 0% 100%;           /* clean white page */
-    --foreground: 215 50% 14%;         /* deep navy ink */
-    --card: 0 0% 100%;
-    --card-foreground: 215 50% 14%;
+    /* Mahabharat Design Language: navy / emerald / gold on pure white */
+    --background: 0 0% 100%;           /* pure white canvas (matches navbar) */
+    --foreground: 219 66% 11%;         /* deep navy ink */
+    --card: 0 0% 100%;                 /* white card surface */
+    --card-foreground: 219 66% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 215 50% 14%;
+    --popover-foreground: 219 66% 11%;
 
-    --primary: 215 68% 16%;            /* navy — primary actions */
+    --primary: 217 68% 18%;            /* navy: primary actions */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 20% 96%;          /* cool light grey */
-    --secondary-foreground: 215 50% 16%;
-    --muted: 210 20% 96%;
-    --muted-foreground: 215 13% 42%;
+    --secondary: 220 16% 96%;          /* very light cool neutral */
+    --secondary-foreground: 219 50% 16%;
+    --muted: 220 16% 96%;
+    --muted-foreground: 216 10% 41%;
 
-    /* shadcn `accent` stays a subtle neutral (used for hover surfaces) */
-    --accent: 210 20% 94%;
-    --accent-foreground: 215 50% 16%;
+    --accent: 220 14% 95%;
+    --accent-foreground: 219 50% 16%;
 
     --destructive: 0 66% 46%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 24% 90%;
-    --input: 214 24% 90%;
-    --ring: 40 55% 50%;                /* gold focus ring */
+    --border: 220 16% 90%;             /* aligned with mist */
+    --input: 220 14% 88%;
+    --ring: 38 58% 48%;                 /* gold focus ring */
 
-    /* Brand tokens (used directly via text-gold / bg-navy etc.) */
-    --gold: 40 55% 50%;
-    --gold-foreground: 215 68% 13%;
-    --navy: 215 68% 16%;
-    --navy-deep: 216 64% 11%;
+    /* Brand tokens */
+    --gold: 38 58% 48%;
+    --gold-foreground: 219 66% 11%;
+    --navy: 217 68% 18%;
+    --navy-deep: 219 66% 11%;
+    --emerald: 162 65% 26%;
+    --emerald-foreground: 0 0% 100%;
+    --emerald-soft: 160 45% 94%;
 
-    --radius: 0.25rem;                 /* sharp, corporate corners */
+    --radius: 0.85rem;                 /* soft modern corners */
+
+    /* Cool neutral scale for Navbar / Hero and shared public pages.
+       Used for restrained surface hierarchy without cream tints. */
+    --ink: 220 22% 11%;                /* primary heading / body text */
+    --smoke: 220 9% 40%;               /* secondary copy */
+    --fog: 218 9% 58%;                 /* tertiary / meta text */
+    --mist: 220 16% 90%;               /* hairline borders */
+    --snow: 210 25% 98%;               /* alternate surface wash */
+    --paper: 0 0% 100%;                /* pure white canvas */
   }
 }
 
@@ -48,24 +59,35 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: 'IBM Plex Sans', system-ui, -apple-system, sans-serif;
+    @apply bg-white text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
     margin: 0;
     overflow-x: hidden;
     font-feature-settings: "ss01";
   }
   h1, h2, h3, h4, h5, h6, .font-display {
-    font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
-    font-optical-sizing: auto;
-    letter-spacing: -0.01em;
+    font-family: 'Manrope', system-ui, sans-serif;
+    letter-spacing: -0.02em;
+    font-weight: 700;
   }
-  /* Tabular figures for data-dense tables / numbers */
   table, .tnum { font-variant-numeric: tabular-nums; }
 }
 
 @layer components {
-  /* Hindi text */
-  .font-hi { font-family: 'IBM Plex Sans Devanagari', 'IBM Plex Sans', sans-serif; }
+  .font-hi { font-family: 'IBM Plex Sans Devanagari', 'Inter', sans-serif; }
+
+  /* Brand mark — keep edges sharp when downscaled on retina displays */
+  .brand-logo {
+    display: block;
+    width: auto;
+    max-width: none;
+    object-fit: contain;
+    object-position: center;
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: high-quality;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+  }
 
   /* Thin gold divider */
   .gold-rule {
@@ -73,21 +95,21 @@
     background: linear-gradient(90deg, transparent, hsl(var(--gold) / 0.7), transparent);
   }
 
-  /* Deep-navy surface (hero / footer) with subtle gold glow + grid texture */
+  /* Deep-navy surface (hero / footer / CTA bands) — warm shadow + fine grid texture */
   .surface-navy {
     background-color: hsl(var(--navy-deep));
     background-image:
-      radial-gradient(900px 400px at 85% -10%, hsl(var(--gold) / 0.16), transparent 60%),
-      radial-gradient(700px 500px at 0% 100%, hsl(215 60% 30% / 0.5), transparent 55%),
+      radial-gradient(900px 420px at 88% -10%, hsl(var(--gold) / 0.14), transparent 60%),
+      radial-gradient(760px 520px at -5% 105%, hsl(var(--emerald) / 0.22), transparent 55%),
       linear-gradient(hsl(0 0% 100% / 0.035) 1px, transparent 1px),
       linear-gradient(90deg, hsl(0 0% 100% / 0.035) 1px, transparent 1px);
-    background-size: auto, auto, 46px 46px, 46px 46px;
-    color: hsl(42 45% 96%);
+    background-size: auto, auto, 44px 44px, 44px 44px;
+    color: hsl(44 30% 96%);
   }
 
-  /* Gold gradient text for emphasis */
+  /* Gold gradient text for a single selectively-emphasised phrase */
   .text-gold-gradient {
-    background: linear-gradient(92deg, hsl(40 60% 62%), hsl(40 58% 46%));
+    background: linear-gradient(92deg, hsl(38 62% 62%), hsl(38 58% 46%));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -101,9 +123,81 @@
   /* Eyebrow label */
   .eyebrow {
     text-transform: uppercase;
-    letter-spacing: 0.22em;
+    letter-spacing: 0.16em;
     font-size: 0.7rem;
-    font-weight: 600;
+    font-weight: 700;
+    font-family: 'Manrope', system-ui, sans-serif;
+  }
+
+  /* Fine dot/grid texture, used behind hero + dark bands at low opacity */
+  .grid-texture {
+    background-image:
+      linear-gradient(hsl(0 0% 100% / 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(0 0% 100% / 0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(700px 420px at 70% 0%, black, transparent 75%);
+  }
+
+  /* Card hover lift — the single interaction pattern reused by every card */
+  .card-hover {
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.35s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 48px -16px rgba(15, 23, 42, 0.16);
+    border-color: hsl(var(--navy) / 0.22);
+  }
+
+  /* Journey timeline (How it works) — compact vertical line + step
+     activation. A single class toggle per element drives every visual
+     change, so the scroll handler only ever needs to add/remove
+     "is-active". Kept understated: a short fade + 24px slide-up per
+     card, no bounce or scale. */
+  .journey-badge {
+    transition: background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .journey-badge.is-active {
+    background-color: hsl(var(--gold));
+    border-color: hsl(var(--gold));
+    color: hsl(var(--gold-foreground));
+  }
+  .journey-card {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+  }
+  .journey-card.is-active {
+    opacity: 1;
+    transform: translateY(0);
+    box-shadow: 0 20px 40px -22px rgba(15, 23, 42, 0.12);
+    border-color: hsl(var(--gold) / 0.3);
+  }
+
+  /* FAQ accordion — grid-rows trick expands/collapses smoothly no matter
+     how long the answer text is, so no fixed max-height needs guessing. */
+  .faq-panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .faq-panel.is-open {
+    grid-template-rows: 1fr;
+  }
+  .faq-panel > div {
+    overflow: hidden;
+  }
+
+  /* Dark, moody authentication canvas (deliberately its own visual moment) */
+  .auth-canvas {
+    background-color: #07070b;
+    background-image:
+      radial-gradient(480px 320px at 50% -8%, hsl(var(--gold) / 0.28), transparent 65%),
+      radial-gradient(520px 360px at 15% 108%, hsl(var(--emerald) / 0.30), transparent 60%),
+      radial-gradient(420px 300px at 100% 100%, hsl(var(--navy) / 0.35), transparent 60%);
+  }
+  .auth-card-glow {
+    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 40px 80px -32px rgba(0,0,0,0.6);
   }
 }
 

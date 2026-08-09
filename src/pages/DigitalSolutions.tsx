@@ -2,10 +2,43 @@ import { Link } from "react-router-dom";
 import { ChevronLeft, CheckCircle2, MessageCircle } from "lucide-react";
 import { digitalSolutions as ds } from "@/data/digitalSolutions";
 import { Button } from "@/components/ui/button";
+import { Seo } from "@/components/Seo";
+import {
+  pageSeo,
+  organizationJsonLd,
+  webPageJsonLd,
+  serviceJsonLd,
+  breadcrumbJsonLd,
+} from "@/config/seo";
 
 export default function DigitalSolutions() {
+  const jsonLd = [
+    organizationJsonLd(),
+    webPageJsonLd(pageSeo.digitalSolutions),
+    serviceJsonLd({
+      name: ds.title,
+      description: ds.description,
+      path: pageSeo.digitalSolutions.path,
+    }),
+    breadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: "Services", path: "/services" },
+      { name: ds.title, path: "/digital-solutions" },
+    ]),
+  ];
+
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <Seo {...pageSeo.digitalSolutions} jsonLd={jsonLd} />
+      <nav aria-label="Breadcrumb" className="mb-6 text-sm text-muted-foreground">
+        <ol className="flex flex-wrap items-center gap-1.5">
+          <li><Link to="/" className="hover:text-navy">Home</Link></li>
+          <li aria-hidden="true">/</li>
+          <li><Link to="/services" className="hover:text-navy">Services</Link></li>
+          <li aria-hidden="true">/</li>
+          <li className="text-navy font-medium" aria-current="page">{ds.title}</li>
+        </ol>
+      </nav>
       <Link to="/services" className="text-sm font-medium text-navy hover:text-gold mb-6 inline-flex items-center gap-1 transition-colors">
         <ChevronLeft size={15} /> Back to services
       </Link>

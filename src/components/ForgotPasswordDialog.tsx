@@ -81,15 +81,15 @@ export default function ForgotPasswordDialog({
       <button
         type="button"
         onClick={openDialog}
-        className="text-xs text-gold font-medium hover:underline"
+        className="text-xs font-semibold text-gold hover:underline"
       >
         Forgot password?
       </button>
 
       <Dialog open={open} onOpenChange={(v) => !busy && setOpen(v)}>
-        <DialogContent>
+        <DialogContent className="rounded-3xl">
           <DialogHeader>
-            <DialogTitle>Reset your password</DialogTitle>
+            <DialogTitle className="font-display">Reset your password</DialogTitle>
             <DialogDescription>
               {step === "request"
                 ? "Enter the email or mobile number on your account. We'll email a 6-digit code."
@@ -155,14 +155,14 @@ export default function ForgotPasswordDialog({
           )}
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpen(false)} disabled={busy}>
+            <Button variant="outline" className="rounded-full" onClick={() => setOpen(false)} disabled={busy}>
               Cancel
             </Button>
             {step === "request" ? (
               <Button
                 onClick={sendCode}
                 disabled={busy}
-                className="bg-gold font-semibold text-gold-foreground hover:bg-gold/90"
+                className="rounded-full bg-gold font-semibold text-gold-foreground hover:bg-gold/90"
               >
                 {busy ? "Sending…" : "Send code"}
               </Button>
@@ -170,7 +170,7 @@ export default function ForgotPasswordDialog({
               <Button
                 onClick={doReset}
                 disabled={busy}
-                className="bg-gold font-semibold text-gold-foreground hover:bg-gold/90"
+                className="rounded-full bg-gold font-semibold text-gold-foreground hover:bg-gold/90"
               >
                 {busy ? "Resetting…" : "Reset password"}
               </Button>

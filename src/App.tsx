@@ -1,13 +1,15 @@
 import { lazy, Suspense } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { Seo } from "@/components/Seo";
 import StaggeredMenu from "@/components/StaggeredMenu";
 import { site, waLink } from "@/config/site";
-import logoImg from "@/assets/logo.jpeg";
+import { pageSeo } from "@/config/seo";
+import logoImg from "@/assets/logo.png";
 import Maintenance from "@/pages/Maintenance";
 
 // Public
@@ -49,6 +51,17 @@ const Loader = () => (
 
 function Protected({ children, roles }: { children: React.ReactNode; roles: string[] }) {
   const { user, loading } = useAuth();
+  const location = useLocation();
+
+  const privateMeta = (() => {
+    const p = location.pathname;
+    if (p.startsWith("/admin")) return { ...pageSeo.admin, path: p };
+    if (p.startsWith("/agent")) return { ...pageSeo.agent, path: p };
+    if (p.startsWith("/new-request")) return { ...pageSeo.newRequest, path: p };
+    if (p.startsWith("/requests")) return { ...pageSeo.requestDetail, path: p };
+    return { ...pageSeo.dashboard, path: p };
+  })();
+
   if (loading) return <Loader />; // wait for session restore before deciding
   // Send unauthenticated visitors to the matching login: staff-only routes →
   // staff login, customer routes → customer login.
@@ -57,7 +70,36 @@ function Protected({ children, roles }: { children: React.ReactNode; roles: stri
     return <Navigate to={staffOnly ? "/staff" : "/login"} replace />;
   }
   if (!roles.includes(user.role)) return <Navigate to="/" replace />;
-  return <>{children}</>;
+  return (
+    <>
+      <Seo {...privateMeta} noindex />
+      {children}
+    </>
+  );
+}
+
+function NotFoundPage() {
+  const location = useLocation();
+  return (
+    <>
+      <Seo {...pageSeo.notFound} path={location.pathname} />
+      <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6">
+        <img
+          src={logoImg}
+          alt={site.name}
+          className="brand-logo mb-4 h-16 w-auto"
+          width={64}
+          height={77}
+          decoding="async"
+        />
+        <h1 className="font-display text-2xl font-semibold text-navy mb-1">Page not found</h1>
+        <p className="text-sm text-muted-foreground mb-5">The page you're looking for doesn't exist or may have moved.</p>
+        <Link to="/" className="inline-flex items-center rounded bg-gold px-5 py-2.5 text-sm font-semibold text-gold-foreground hover:bg-gold/90 transition-colors">
+          Back to home
+        </Link>
+      </div>
+    </>
+  );
 }
 
 export default function App() {
@@ -66,16 +108,16 @@ export default function App() {
   if (import.meta.env.VITE_MAINTENANCE === "true") return <Maintenance />;
 
   const { user } = useAuth();
-  const dash = user?.role === "admin" ? "#/admin" : user?.role === "agent" ? "#/agent" : "#/dashboard";
+  const dash = user?.role === "admin" ? "/admin" : user?.role === "agent" ? "/agent" : "/dashboard";
 
   // Mobile-only creative nav (Staggered Menu)
   const mobileItems = [
-    { label: "Home", link: "#/", ariaLabel: "Go to home" },
-    { label: "Services", link: "#/services", ariaLabel: "View services" },
-    { label: "Govt Jobs", link: "#/jobs", ariaLabel: "Government jobs" },
+    { label: "Home", link: "/", ariaLabel: "Go to home" },
+    { label: "Services", link: "/services", ariaLabel: "View services" },
+    { label: "Govt Jobs", link: "/jobs", ariaLabel: "Government jobs" },
     user
       ? { label: "Dashboard", link: dash, ariaLabel: "Your dashboard" }
-      : { label: "Sign In", link: "#/login", ariaLabel: "Sign in" },
+      : { label: "Sign In", link: "/login", ariaLabel: "Sign in" },
   ];
   const mobileSocials = [
     { label: "WhatsApp", link: waLink() },
@@ -84,7 +126,7 @@ export default function App() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col bg-white">
       <ScrollToTop />
 
       {/* Desktop navbar */}
@@ -144,16 +186,7 @@ export default function App() {
             <Route path="/admin/audit" element={<Protected roles={["admin"]}><AdminAudit /></Protected>} />
             <Route path="/admin/calls" element={<Protected roles={["admin"]}><AdminCalls /></Protected>} />
 
-            <Route path="*" element={
-              <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6">
-                <img src={logoImg} alt={site.name} className="h-14 w-auto object-contain mb-4 opacity-90" />
-                <h1 className="font-display text-2xl font-semibold text-navy mb-1">Page not found</h1>
-                <p className="text-sm text-muted-foreground mb-5">The page you're looking for doesn't exist or may have moved.</p>
-                <a href="#/" className="inline-flex items-center rounded bg-gold px-5 py-2.5 text-sm font-semibold text-gold-foreground hover:bg-gold/90 transition-colors">
-                  Back to home
-                </a>
-              </div>
-            } />
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Suspense>
       </main>

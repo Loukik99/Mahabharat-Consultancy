@@ -95,7 +95,7 @@ export default function AdminRequestDetail() {
   if (!r) return <p className="text-center py-20 text-muted-foreground">Request not found</p>;
   if (!user) return <p className="text-center py-20 text-muted-foreground">Not authorized</p>;
 
-  const nameById = (uid: string) => agents.find((a) => a.id === uid)?.name ?? uid;
+  const nameById = (uid?: string) => (uid ? agents.find((a) => a.id === uid)?.name ?? uid : "Unknown");
 
   const handleAssign = async () => {
     if (!agentId) return toast.error("Select an agent");

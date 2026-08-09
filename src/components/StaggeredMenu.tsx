@@ -272,7 +272,7 @@ export default function StaggeredMenu({
       </div>
       <header className="staggered-menu-header" aria-label="Main navigation header">
         <div className="sm-logo" aria-label="Logo">
-          {logoUrl && <img src={logoUrl} alt="Logo" className="sm-logo-img" draggable={false} />}
+          {logoUrl && <img src={logoUrl} alt="Mahabharat Consultancy logo" className="sm-logo-img" draggable={false} />}
         </div>
         <button
           ref={toggleBtnRef}

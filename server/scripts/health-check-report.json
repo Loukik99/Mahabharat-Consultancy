@@ -1,0 +1,582 @@
+{
+  "at": "2026-08-09T09:57:12.931Z",
+  "base": "http://localhost:5000/api",
+  "tag": "HEALTHCHECK_1786269346874",
+  "config": {
+    "storageMode": "cloudinary",
+    "emailEnabled": true,
+    "hasMongo": true,
+    "callProvider": "stub",
+    "clientUrls": [
+      "http://localhost:5180"
+    ]
+  },
+  "counts": {
+    "pass": 76,
+    "fail": 0,
+    "skip": 4
+  },
+  "results": [
+    {
+      "api": "/health",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services/categories",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services/:id",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services/:slug",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services/:id (404)",
+      "method": "GET",
+      "status": 404,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/jobs",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/jobs?search",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/login (missing)",
+      "method": "POST",
+      "status": 400,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/login (bad creds)",
+      "method": "POST",
+      "status": 401,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/me (no token)",
+      "method": "GET",
+      "status": 401,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/me (bad token)",
+      "method": "GET",
+      "status": 401,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/register (missing)",
+      "method": "POST",
+      "status": 400,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/register",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/register (dup)",
+      "method": "POST",
+      "status": 409,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/login",
+      "method": "POST",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/me",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/forgot-password",
+      "method": "POST",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/forgot-password (missing)",
+      "method": "POST",
+      "status": 400,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/reset-password (bad otp)",
+      "method": "POST",
+      "status": 400,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/login (admin seed)",
+      "method": "POST",
+      "status": 401,
+      "result": "NOT TESTED",
+      "detail": "seed admin not in DB — bootstrapping temp admin"
+    },
+    {
+      "api": "/auth/login (temp admin)",
+      "method": "POST",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/login (agent seed)",
+      "method": "POST",
+      "status": 401,
+      "result": "NOT TESTED",
+      "detail": "seed agent not in DB — bootstrapping temp agent"
+    },
+    {
+      "api": "/auth/login (temp agent bootstrap)",
+      "method": "POST",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests (no auth)",
+      "method": "GET",
+      "status": 401,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/payments (no auth)",
+      "method": "GET",
+      "status": 401,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/customers (no auth)",
+      "method": "GET",
+      "status": 401,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/payments (customer denied)",
+      "method": "GET",
+      "status": 403,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/stats/admin (customer denied)",
+      "method": "GET",
+      "status": 403,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services POST (customer denied)",
+      "method": "POST",
+      "status": 403,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/comments",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/documents",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "upload storage provider",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": "docId=6a784ebd34221740315f3980"
+    },
+    {
+      "api": "/requests/:id/documents/:docId/download",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/documents/:docId",
+      "method": "DELETE",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/notifications",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/notifications/:id/read",
+      "method": "PATCH",
+      "status": "-",
+      "result": "NOT TESTED",
+      "detail": "no notifications"
+    },
+    {
+      "api": "/notifications/read-all",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services/:id",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services/:id/toggle",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services/:id/toggle (re-enable)",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/customers",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/agents",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/agents",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/:id",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/:id/active",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/:id/active (re-enable)",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/login (temp agent)",
+      "method": "POST",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/stats/admin",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/stats/agents",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/audit",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/payments",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/call-requests",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/assign",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/status",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/deliverables",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/ready",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/call-requests",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/calls",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/call-requests/:callId",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/calls/:callId/complete",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/pay",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/payment/received",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/deliverables/:delId/download",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/documents/:docId (late)",
+      "method": "DELETE",
+      "status": "-",
+      "result": "NOT TESTED",
+      "detail": "already covered while editable"
+    },
+    {
+      "api": "CORS localhost:5179",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": "ACAOrigin=http://localhost:5179"
+    },
+    {
+      "api": "frontend proxy :5179/api/health",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "cloudinary direct upload",
+      "method": "POST",
+      "status": 200,
+      "result": "PASS",
+      "detail": "publicIdPresent=true"
+    },
+    {
+      "api": "cloudinary signed URL fetch",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "email SMTP verify",
+      "method": "SMTP",
+      "status": 200,
+      "result": "PASS",
+      "detail": "transporter.verify ok"
+    },
+    {
+      "api": "mongodb ping",
+      "method": "CMD",
+      "status": 200,
+      "result": "PASS",
+      "detail": "db=mahabharat collections=10 ok=1"
+    },
+    {
+      "api": "mongodb read temp user",
+      "method": "READ",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/account (no auth)",
+      "method": "DELETE",
+      "status": 401,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/:id (404)",
+      "method": "DELETE",
+      "status": 404,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "cleanup",
+      "method": "DEL",
+      "status": 200,
+      "result": "PASS",
+      "detail": "temp data removed"
+    }
+  ],
+  "issues": []
+}

@@ -4,10 +4,11 @@ import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { toast } from "sonner";
 import ForgotPasswordDialog from "@/components/ForgotPasswordDialog";
-import logoImg from "@/assets/logo.jpeg";
+import { AuthShell, AuthCard, authInputClass, authLabelClass } from "@/components/AuthCard";
+import { Seo } from "@/components/Seo";
+import { pageSeo } from "@/config/seo";
 
 export default function LoginPage() {
   const [emailOrPhone, setEmailOrPhone] = useState("");
@@ -37,55 +38,57 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-8">
-      <div className="w-full max-w-sm">
-        <Card className="rounded border-border">
-          <CardHeader className="text-center pb-4">
-            <img src={logoImg} alt="Mahabharat Consultancy" className="mx-auto mb-2 h-14 w-auto object-contain" />
-            <CardTitle className="font-display text-xl text-navy">Customer Login</CardTitle>
-            <CardDescription>Sign in to track your service requests</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <div>
-                <Label htmlFor="emailOrPhone">Email or Mobile</Label>
-                <Input
-                  id="emailOrPhone"
-                  type="text"
-                  required
-                  autoComplete="username"
-                  value={emailOrPhone}
-                  onChange={(e) => setEmailOrPhone(e.target.value)}
-                  placeholder="Enter email or number"
-                />
-              </div>
-              <div>
-                <div className="flex items-center justify-between">
-                  <Label htmlFor="password">Password</Label>
-                  <ForgotPasswordDialog
-                    defaultValue={emailOrPhone}
-                    onReset={(id) => setEmailOrPhone(id)}
-                  />
-                </div>
-                <Input
-                  id="password"
-                  type="password"
-                  required
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter password"
-                />
-              </div>
-              <Button type="submit" disabled={submitting} className="w-full bg-gold font-semibold text-gold-foreground hover:bg-gold/90">{submitting ? "Signing In…" : "Sign In"}</Button>
-            </form>
-
-            <p className="text-center text-sm text-muted-foreground mt-4">
-              Don't have an account? <Link to="/signup" className="text-gold font-medium hover:underline">Sign Up</Link>
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <AuthShell>
+      <Seo {...pageSeo.login} />
+      <AuthCard
+        title="Welcome back"
+        subtitle="Sign in to track your service requests."
+        footer={
+          <>Don't have an account? <Link to="/signup" className="font-semibold text-gold hover:underline">Sign up</Link></>
+        }
+      >
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-1.5">
+            <Label htmlFor="emailOrPhone" className={authLabelClass}>Email or mobile</Label>
+            <Input
+              id="emailOrPhone"
+              type="text"
+              required
+              autoComplete="username"
+              value={emailOrPhone}
+              onChange={(e) => setEmailOrPhone(e.target.value)}
+              placeholder="Enter email or number"
+              className={authInputClass}
+            />
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <Label htmlFor="password" className={authLabelClass}>Password</Label>
+              <ForgotPasswordDialog
+                defaultValue={emailOrPhone}
+                onReset={(id) => setEmailOrPhone(id)}
+              />
+            </div>
+            <Input
+              id="password"
+              type="password"
+              required
+              autoComplete="current-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter password"
+              className={authInputClass}
+            />
+          </div>
+          <Button
+            type="submit"
+            disabled={submitting}
+            className="h-12 w-full rounded-2xl bg-gold text-[15px] font-semibold text-gold-foreground shadow-glow-gold hover:bg-gold/90"
+          >
+            {submitting ? "Signing In…" : "Sign In"}
+          </Button>
+        </form>
+      </AuthCard>
+    </AuthShell>
   );
 }

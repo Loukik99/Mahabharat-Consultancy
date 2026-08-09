@@ -106,7 +106,7 @@ exports.requestCall = asyncHandler(async (req, res) => {
   await notifyAdmins(
     `${req.user.name} requests permission to call the customer for ${reqDoc.requestNumber} — "${call.purpose}".`,
     "action",
-    `#/admin/calls`
+    `/admin/calls`
   );
   await audit(req.user, "call_permission_requested", "request", reqDoc._id, call.purpose);
   res.status(201).json({ success: true, call: shapeCall({ ...call.toObject(), request: reqDoc }) });
@@ -143,10 +143,10 @@ exports.decideCallRequest = asyncHandler(async (req, res) => {
 
   const reqNo = call.request?.requestNumber;
   if (action === "approve") {
-    await notify(call.agent, `Approved: you may now call the customer for ${reqNo} — "${call.purpose}".`, "success", `#/agent/tasks/${call.request._id}`);
-    await notify(call.request.customer._id, `Our agent will call you shortly regarding ${reqNo} (${call.purpose}). For your safety, never share any banking OTP, UPI PIN or password.`, "warning", `#/requests/${call.request._id}`);
+    await notify(call.agent, `Approved: you may now call the customer for ${reqNo} — "${call.purpose}".`, "success", `/agent/tasks/${call.request._id}`);
+    await notify(call.request.customer._id, `Our agent will call you shortly regarding ${reqNo} (${call.purpose}). For your safety, never share any banking OTP, UPI PIN or password.`, "warning", `/requests/${call.request._id}`);
   } else {
-    await notify(call.agent, `Your request to call the customer for ${reqNo} was declined by admin.`, "info", `#/agent/tasks/${call.request._id}`);
+    await notify(call.agent, `Your request to call the customer for ${reqNo} was declined by admin.`, "info", `/agent/tasks/${call.request._id}`);
   }
   await audit(req.user, action === "approve" ? "call_approved" : "call_denied", "request", call.request._id, call.purpose);
   res.json({ success: true, call: shapeCall(call) });

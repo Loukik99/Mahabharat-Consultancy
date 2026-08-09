@@ -1,0 +1,299 @@
+{
+  "at": "2026-08-09T09:50:56.176Z",
+  "tag": "HC2_1786268991503",
+  "counts": {
+    "pass": 41,
+    "fail": 0,
+    "skip": 0
+  },
+  "results": [
+    {
+      "api": "/auth/login (temp admin)",
+      "method": "POST",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/login (temp agent)",
+      "method": "POST",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/login (temp cust)",
+      "method": "POST",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/customers",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/agents",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/stats/admin",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/stats/agents",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/audit",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/payments",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/call-requests",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services/:id",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services/:id/toggle",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/services/:id/toggle (on)",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/agents",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/:id",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/:id/active",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/:id/active (on)",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/assign",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/status",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/deliverables",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "deliverable cloudinary meta in MongoDB",
+      "method": "READ",
+      "status": 200,
+      "result": "PASS",
+      "detail": "provider=cloudinary publicIdPresent=true"
+    },
+    {
+      "api": "/requests/:id/ready",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/call-requests",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/calls",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/call-requests/:callId",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/calls/:callId/complete",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/pay",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/payment/received",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/requests/:id/deliverables/:delId/download",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/notifications (after pay)",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/notifications/:id/read",
+      "method": "PATCH",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/auth/register (delete-me)",
+      "method": "POST",
+      "status": 201,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/account",
+      "method": "DELETE",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/account (admin blocked)",
+      "method": "DELETE",
+      "status": 403,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/:id",
+      "method": "DELETE",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "/users/:id (404)",
+      "method": "DELETE",
+      "status": 404,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "CORS evil origin blocked",
+      "method": "GET",
+      "status": 200,
+      "result": "PASS",
+      "detail": "no ACAO header"
+    },
+    {
+      "api": "cloudinary cleanup destroy",
+      "method": "DEL",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    },
+    {
+      "api": "cleanup",
+      "method": "DEL",
+      "status": 200,
+      "result": "PASS",
+      "detail": ""
+    }
+  ],
+  "issues": []
+}

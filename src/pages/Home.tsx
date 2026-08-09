@@ -1,55 +1,176 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { serviceCategories } from "@/data/catalog";
+import { serviceCategories, serviceCatalog, serviceById } from "@/data/catalog";
 import { getServices, getCategories } from "@/api/services.api";
 import type { Service, ServiceCategory } from "@/types";
 import { toast } from "sonner";
-import { site, waLink } from "@/config/site";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import Masonry from "@/components/Masonry";
+import { FaqAccordion } from "@/components/FaqAccordion";
+import { SectionHeader } from "@/components/SectionHeader";
+import { ServiceExplorerCard, type ExplorerCardSize, type ExplorerCardTone } from "@/components/ServiceExplorerCard";
+import { JourneyTimeline } from "@/components/JourneyTimeline";
+import { TrustMetricsBar } from "@/components/TrustMetricsBar";
+import { HomeCta } from "@/components/HomeCta";
+import { Pill } from "@/components/Pill";
+import { Seo } from "@/components/Seo";
+import { pageSeo, organizationJsonLd, websiteJsonLd, webPageJsonLd } from "@/config/seo";
 import { digitalSolutions } from "@/data/digitalSolutions";
 import {
-  FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
-  Search, Briefcase, ArrowRight, FileUp, Cog, Download,
-  MapPin, Phone, Clock3, MessageCircle, type LucideIcon,
+  FileText, Receipt, GraduationCap, Zap, Building2, Truck,
+  Search, Briefcase, ArrowRight, Cog, Landmark, Check, HandCoins,
+  type LucideIcon,
 } from "lucide-react";
 
-const CATEGORY_ICONS: Record<string, LucideIcon> = {
-  FileText, Receipt, GraduationCap, Printer, Zap, Building2, Sparkles,
-};
+// Uniform equal-height service explorer grid. Every card uses the same
+// size tier and column span so the layout stays balanced across rows.
+interface ExplorerCardConfig {
+  id: string;
+  href: string;
+  icon: LucideIcon;
+  title: string;
+  description: string;
+  size: ExplorerCardSize;
+  tone: ExplorerCardTone;
+  ctaLabel?: string;
+  /** When set, Home resolves this catalog slug to the live Mongo service id. */
+  serviceSlug?: string;
+  /** Static quick items for cards that aren't backed by a live category. */
+  staticQuick?: string[];
+}
 
-// Fixed order of the Home services grid ("__digital__" = the Digital Solutions card).
-const HOME_ORDER = [
-  "govt_docs",
-  "exams_jobs",
-  "documents",
-  "tax_gst",
-  "__digital__",
-  "bills_recharge",
-  "business",
+const EXPLORER_CARDS: ExplorerCardConfig[] = [
+  {
+    id: "govt_docs",
+    href: "/services?cat=govt_docs",
+    icon: FileText,
+    title: "Government Documents",
+    description: "Aadhaar, PAN, Voter ID, Passport and certificates, prepared and filed for you on the official portals.",
+    size: "standard",
+    tone: "navy",
+    ctaLabel: "Explore documents",
+  },
+  {
+    id: "exams_jobs",
+    href: "/services?cat=exams_jobs",
+    icon: GraduationCap,
+    title: "Exams & Jobs",
+    description: "Scholarships, admissions, exam forms, results and government job applications.",
+    size: "standard",
+    tone: "gold",
+  },
+  {
+    id: "epfo",
+    href: "/services/epfo-services",
+    serviceSlug: "epfo-services",
+    icon: HandCoins,
+    title: "EPFO",
+    description: "EPFO claims, withdrawals, KYC updates, UAN activation, pension assistance and related services.",
+    size: "standard",
+    tone: "emerald",
+    staticQuick: ["Claims & withdrawals", "UAN activation", "KYC updates"],
+  },
+  {
+    id: "tax_gst",
+    href: "/services?cat=tax_gst",
+    icon: Receipt,
+    title: "Tax & GST",
+    description: "GST registration, returns, ITR filing and e-way bills, handled by people who know the portals.",
+    size: "standard",
+    tone: "emerald",
+  },
+  {
+    id: "eway-bill",
+    href: "/services/eway-bill",
+    serviceSlug: "eway-bill",
+    icon: Truck,
+    title: "E-Way Bill",
+    description: "Generate and manage e-way bills for goods transport, ready in minutes.",
+    size: "standard",
+    tone: "gold",
+    ctaLabel: "Generate e-way bill",
+  },
+  {
+    id: "pmegp",
+    href: "/services/pmegp",
+    serviceSlug: "pmegp",
+    icon: Briefcase,
+    title: "PMEGP",
+    description: "Prime Minister's Employment Generation Programme for eligible individuals seeking assistance to establish new micro-enterprises and self-employment ventures.",
+    size: "standard",
+    tone: "navy",
+    staticQuick: ["New micro-enterprises", "Self-employment", "Official PMEGP portal"],
+  },
+  {
+    id: "bills_recharge",
+    href: "/services?cat=bills_recharge",
+    icon: Zap,
+    title: "Bills & Recharge",
+    description: "Electricity, water, mobile, DTH and FASTag, paid and recharged on the spot.",
+    size: "standard",
+    tone: "gold",
+  },
+  {
+    id: "__digital__",
+    href: digitalSolutions.href,
+    icon: Cog,
+    title: digitalSolutions.title,
+    description: digitalSolutions.oneLiner,
+    size: "standard",
+    tone: "navy",
+    ctaLabel: "Get a quote",
+    staticQuick: ["Websites", "Mobile apps", "E-commerce", "Custom software"],
+  },
+  {
+    id: "business",
+    href: "/services?cat=business",
+    icon: Building2,
+    title: "Business Registration",
+    description: "Company registration and online seller onboarding, from paperwork to approval.",
+    size: "standard",
+    tone: "navy",
+  },
 ];
-const HOME_HEIGHTS = [210, 175, 205, 185, 215, 175, 195];
 
-const STEPS = [
-  { icon: FileText, title: "Submit Request", desc: "Pick a service and tell us what you need." },
-  { icon: FileUp, title: "Upload Documents", desc: "Securely share the required documents online." },
-  { icon: Cog, title: "We Process It", desc: "Our team handles it on the official portals." },
-  { icon: Download, title: "Pay & Download", desc: "Pay, and download once payment is approved." },
+// Hero trust indicators: rendered as inline checkmark badges rather than
+// a stat-card grid (separate from the Trust Metrics Bar further down).
+const HERO_TRUST = [
+  { label: "Services", value: "40+" },
+  { label: "Official portals", value: "100%" },
+  { label: "Assistance", value: "Same-day" },
 ];
 
-const STATS = [
-  { value: "40+", label: "Services" },
-  { value: "7", label: "Categories" },
-  { value: "100%", label: "Official Portals" },
-  { value: "Same-Day", label: "Assistance" },
+// Hero workspace — suggested services shown as quick-action chips below
+// the search bar. Clicking one jumps straight into the service search.
+const SUGGESTED_SERVICES = ["Aadhaar", "PAN", "Passport", "GST"];
+
+const FAQS = [
+  {
+    q: "Is Mahabharat Consultancy a government office?",
+    a: "No. We are a private assistance and service center. We help you apply correctly on official government portals, and we never represent UIDAI, the Income Tax Department, GST, or any government body.",
+  },
+  {
+    q: "How do I track my request?",
+    a: "Once you submit a request from your dashboard, it moves through a visible status timeline: submitted, documents required, in review, in progress, waiting for payment, and completed, updated as our team works on it.",
+  },
+  {
+    q: "When do I pay, and when can I download my documents?",
+    a: "Pricing is confirmed with you before we start. Final deliverables unlock for download only after your payment is recorded and approved, you're never charged for work you haven't agreed to.",
+  },
+  {
+    q: "What documents do I need to upload?",
+    a: "Each service lists its own required-documents checklist on its detail page. You upload them securely from your dashboard once your request is created.",
+  },
+  {
+    q: "Can I get help the same day?",
+    a: "Most walk-in and online requests receive same-day assistance during working hours. More involved government processing times depend on the official portal, not on us.",
+  },
 ];
 
 export default function Home() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [categories, setCategories] = useState<ServiceCategory[]>(serviceCategories);
-  const [services, setServices] = useState<Service[]>([]);
+  const [services, setServices] = useState<Service[]>(serviceCatalog);
 
   useEffect(() => {
     let active = true;
@@ -58,7 +179,7 @@ export default function Home() {
         const [cats, svcs] = await Promise.all([getCategories(), getServices()]);
         if (active) { setCategories(cats); setServices(svcs); }
       } catch (e) {
-        if (active) setCategories(serviceCategories);
+        if (active) { setCategories(serviceCategories); setServices(serviceCatalog); }
         toast.error((e as Error).message);
       }
     })();
@@ -72,190 +193,164 @@ export default function Home() {
 
   return (
     <div>
+      <Seo
+        {...pageSeo.home}
+        jsonLd={[organizationJsonLd(), websiteJsonLd(), webPageJsonLd(pageSeo.home)]}
+      />
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="surface-navy relative overflow-hidden">
-        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-          <div className="max-w-3xl">
-            <p className="eyebrow text-gold">{site.tagline}</p>
-            <h1 className="mt-4 font-display text-4xl font-semibold leading-[1.05] sm:text-6xl">
-              All Government &amp; Online Services,
-              <span className="block text-gold-gradient">Under One Roof.</span>
-            </h1>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/70 sm:text-lg">
-              Government documents, GST &amp; tax, exam and job forms, printing, and bill payments,
-              prepared and filed for you at one trusted service center in Belagavi.
-            </p>
+      <section className="relative overflow-hidden bg-white">
+        <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pb-28 sm:pt-14 lg:px-8">
+          <div className="grid gap-14 lg:grid-cols-[1fr_1fr] lg:items-center lg:gap-20">
+            {/* Left — headline, CTAs, trust indicators */}
+            <div className="min-w-0 max-w-xl">
+              <Pill tone="outline">
+                <Landmark size={12} className="text-navy" /> Trusted service center · Belagavi, Karnataka
+              </Pill>
 
-            <form onSubmit={onSearch} className="mt-9 flex w-full max-w-xl gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground" size={18} />
-                <Input
+              <h1 className="font-display mt-6 text-[2.5rem] font-extrabold leading-[1.08] tracking-[-0.02em] text-ink sm:text-[3.1rem] lg:text-[3.4rem]">
+                All government &amp; online services,
+                <span className="block text-navy">under one roof.</span>
+              </h1>
+
+              <p className="mt-6 max-w-lg text-[16px] leading-[1.65] text-smoke sm:text-[17px]">
+                Government documents, GST and tax, exam and job forms, printing, and bill payments,
+                all prepared and filed for you at one trusted service center in Belagavi.
+              </p>
+
+              <div className="mt-8 flex flex-wrap gap-3">
+                <Button asChild size="lg" className="rounded-full bg-navy px-6 font-semibold text-white shadow-subtle hover:bg-navy/90">
+                  <Link to="/services">Browse Services <ArrowRight size={16} /></Link>
+                </Button>
+                <Button asChild size="lg" variant="outline" className="rounded-full border-mist bg-white text-ink hover:bg-ink/[0.03] hover:text-ink">
+                  <Link to="/jobs"><Briefcase size={16} /> Government Jobs</Link>
+                </Button>
+              </div>
+
+              <div className="mt-10 flex flex-wrap items-center gap-x-7 gap-y-3 border-t border-mist pt-7">
+                {HERO_TRUST.map((t) => (
+                  <div key={t.label} className="flex items-center gap-2">
+                    <span className="flex h-[18px] w-[18px] items-center justify-center rounded-full bg-emerald-soft text-emerald">
+                      <Check size={11} strokeWidth={3} />
+                    </span>
+                    <span className="text-[13.5px] text-ink">
+                      <span className="font-bold">{t.value}</span>{" "}
+                      <span className="text-smoke">{t.label}</span>
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right — the search experience: just the search bar and its
+                suggested-service chips, no surrounding card/box. */}
+            <div className="min-w-0 w-full">
+              <p className="font-display text-[19px] font-bold text-ink sm:text-[21px]">What are you looking for today?</p>
+
+              <form
+                onSubmit={onSearch}
+                className="mt-4 flex items-center gap-2 rounded-[22px] border border-mist bg-white py-2 pl-5 pr-2 shadow-subtle transition-colors duration-300 focus-within:border-navy/30"
+              >
+                <Search className="shrink-0 text-fog" size={18} />
+                <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Search a service, Aadhaar, PAN, GST, scholarship…"
-                  className="h-12 border-transparent bg-white pl-10 text-foreground shadow-lg"
+                  placeholder="Search Aadhaar, PAN, GST, Passport…"
+                  className="h-11 min-w-0 flex-1 bg-transparent text-[15px] text-ink placeholder:text-fog focus:outline-none"
                 />
-              </div>
-              <Button type="submit" size="lg" className="h-12 bg-gold px-6 font-semibold text-gold-foreground hover:bg-gold/90">
-                Search
-              </Button>
-            </form>
+                <Button type="submit" className="h-11 shrink-0 rounded-full bg-navy px-6 text-[14px] font-semibold text-white hover:bg-navy/90">
+                  Search
+                </Button>
+              </form>
 
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Button asChild size="lg" variant="outline" className="border-white/25 bg-white/5 text-white backdrop-blur hover:bg-white/10 hover:text-white">
-                <Link to="/services">Browse Services <ArrowRight size={16} /></Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="border-white/25 bg-white/5 text-white backdrop-blur hover:bg-white/10 hover:text-white">
-                <Link to="/jobs"><Briefcase size={16} /> Government Jobs</Link>
-              </Button>
+              <div className="mt-5">
+                <p className="text-[11px] font-bold uppercase tracking-[0.06em] text-fog">Suggested services</p>
+                <div className="mt-2.5 flex flex-wrap gap-2.5">
+                  {SUGGESTED_SERVICES.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onClick={() => navigate(`/services?q=${encodeURIComponent(s)}`)}
+                      className="cursor-pointer rounded-full border border-mist bg-white px-4 py-2.5 text-[13.5px] font-medium text-ink transition-all duration-300 ease-out hover:-translate-y-0.5 hover:border-gold/70 hover:shadow-subtle"
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── Services (Masonry) ───────────────────────────────── */}
-      <section className="bg-white">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <SectionHead eyebrow="What we do" title="Our services" sub="Explore our main service areas, tap a card to open all its services." center />
-          <div className="mt-10">
-            <Masonry
-              columnsConfig={[3, 3, 2, 1]}
-              items={HOME_ORDER.flatMap((id, i) => {
-                const height = HOME_HEIGHTS[i] ?? 200;
-                if (id === "__digital__") {
-                  return [{
-                    id: digitalSolutions.id,
-                    href: digitalSolutions.href,
-                    height,
-                    title: digitalSolutions.title,
-                    label: "Web · App · Software",
-                    description: digitalSolutions.oneLiner,
-                    icon: <img src={digitalSolutions.icon} alt="Digital Solutions" />,
-                  }];
-                }
-                const cat = categories.find((c) => c.id === id);
-                if (!cat) return [];
-                const count = services.filter((s) => s.category === cat.id).length;
-                const Icon = CATEGORY_ICONS[cat.icon] ?? Sparkles;
-                return [{
-                  id: cat.id,
-                  href: `/services?cat=${cat.id}`,
-                  height,
-                  title: cat.name,
-                  label: cat.nameHi ? `${cat.nameHi} · ${count} services` : `${count} services`,
-                  description: cat.description,
-                  icon: <Icon size={22} className="text-navy" />,
-                }];
-              })}
-            />
+      {/* ── Services — the premium service explorer ──────────── */}
+      <section className="bg-snow">
+        <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+          <SectionHeader
+            align="center"
+            title="Our services"
+            sub="Every category is one tap away from its full checklist, official links and quick services. Pick what you need and we take it from there."
+          />
+          <div className="mt-14 grid grid-cols-1 items-stretch gap-6 [grid-auto-rows:22rem] sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
+            {EXPLORER_CARDS.map((card) => {
+              const maxQuick = 3;
+              const liveService = card.serviceSlug
+                ? services.find((s) => s.slug === card.serviceSlug)
+                : undefined;
+              const href = liveService ? `/services/${liveService.id}` : card.href;
+              const quick =
+                card.serviceSlug === "eway-bill"
+                  ? (liveService?.requiredDocuments ?? serviceById("eway-bill")?.requiredDocuments ?? []).slice(0, maxQuick)
+                  : card.staticQuick
+                  ? card.staticQuick.slice(0, maxQuick)
+                  : services.filter((s) => s.category === card.id).slice(0, maxQuick).map((s) => s.name);
+              return (
+                <ServiceExplorerCard
+                  key={card.id}
+                  href={href}
+                  size="standard"
+                  tone={card.tone}
+                  className="min-h-0 w-full"
+                  icon={
+                    card.id === "__digital__" ? (
+                      <img src={digitalSolutions.icon} alt="" className="h-6 w-6" aria-hidden="true" />
+                    ) : (
+                      <card.icon size={20} />
+                    )
+                  }
+                  title={card.title}
+                  description={card.description}
+                  quickItems={quick}
+                  ctaLabel={card.ctaLabel}
+                />
+              );
+            })}
           </div>
           <div className="mt-10 text-center">
-            <Button asChild size="lg" className="bg-gold font-semibold text-gold-foreground hover:bg-gold/90">
+            <Button asChild size="lg" className="rounded-full bg-navy px-7 font-semibold text-white hover:bg-navy/90">
               <Link to="/services">Browse all services <ArrowRight size={16} /></Link>
             </Button>
           </div>
         </div>
       </section>
 
-      {/* ── How it works ─────────────────────────────────────── */}
-      <section className="border-y border-border bg-secondary/40">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-          <SectionHead eyebrow="The process" title="How it works" sub="Four simple steps from request to delivery." center />
-          <div className="relative mt-14 grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-            <div className="pointer-events-none absolute inset-x-0 top-8 hidden h-px bg-gradient-to-r from-transparent via-gold/40 to-transparent lg:block" />
-            {STEPS.map((step, i) => (
-              <div key={step.title} className="relative flex flex-col items-center text-center">
-                <div className="relative">
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full border border-gold/30 bg-navy text-gold shadow-sm">
-                    <step.icon size={24} />
-                  </div>
-                  <span className="absolute -right-1 -top-1 flex h-6 w-6 items-center justify-center rounded-full bg-gold font-display text-xs font-bold text-gold-foreground">
-                    {i + 1}
-                  </span>
-                </div>
-                <h3 className="mt-5 font-display text-lg font-semibold text-navy">{step.title}</h3>
-                <p className="mt-1.5 max-w-[15rem] text-sm leading-relaxed text-muted-foreground">{step.desc}</p>
-              </div>
-            ))}
+      {/* ── Trust metrics bar ───────────────────────────────────── */}
+      <TrustMetricsBar />
+
+      {/* ── How it works: scroll-driven journey timeline ───────── */}
+      <JourneyTimeline />
+
+      {/* ── Call to action: visit us / reach us now ─────────────── */}
+      <HomeCta />
+
+      {/* ── FAQ ─────────────────────────────────────────────────── */}
+      <section className="bg-white">
+        <div className="mx-auto max-w-3xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+          <SectionHeader align="center" eyebrow="Questions" title="Frequently asked questions" />
+          <div className="mt-14">
+            <FaqAccordion items={FAQS} />
           </div>
         </div>
       </section>
-
-      {/* ── Stats band ───────────────────────────────────────── */}
-      <section className="surface-navy">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-8 px-4 py-12 sm:px-6 lg:grid-cols-4 lg:px-8">
-          {STATS.map((s) => (
-            <div key={s.label} className="text-center">
-              <div className="font-display text-3xl font-semibold text-gold sm:text-4xl">{s.value}</div>
-              <div className="mt-1 text-xs uppercase tracking-wider text-white/55">{s.label}</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── Disclaimer ───────────────────────────────────────── */}
-      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="rounded border-l-2 border-gold bg-secondary/60 p-5">
-          <p className="text-sm leading-relaxed text-muted-foreground">
-            <span className="font-semibold text-navy">Disclaimer, </span>
-            {site.name} is a private assistance / service center. We are{" "}
-            <span className="font-semibold text-navy">not a government agency</span> and do not represent
-            UIDAI, the Income Tax Department, GST, or any government portal. For official services we guide
-            you to, and work only on, the official government websites.
-          </p>
-        </div>
-      </section>
-
-      {/* ── Contact / visit ──────────────────────────────────── */}
-      <section className="border-t border-border">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 items-stretch gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:px-8">
-          <div>
-            <SectionHead eyebrow="Visit us" title="Come in, or reach out" />
-            <div className="mt-7 space-y-5">
-              <ContactRow icon={MapPin}>{site.address}</ContactRow>
-              <ContactRow icon={Phone}>
-                <a href={`tel:${site.phone.replace(/\s+/g, "")}`} className="hover:text-gold">{site.phone}</a>
-              </ContactRow>
-              <ContactRow icon={Clock3}>{site.workingHours}</ContactRow>
-            </div>
-            <Button asChild size="lg" className="mt-7 bg-[#1FA855] text-white hover:bg-[#178a46]">
-              <a href={waLink(`Hello ${site.name}, I would like to know about your services.`)} target="_blank" rel="noopener noreferrer">
-                <MessageCircle size={18} /> Chat on WhatsApp
-              </a>
-            </Button>
-          </div>
-          <div className="overflow-hidden rounded border border-border shadow-sm">
-            <iframe
-              title={`${site.name} location map`}
-              src={site.mapEmbedUrl}
-              className="h-full min-h-[320px] w-full border-0"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
-          </div>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-function SectionHead({ eyebrow, title, sub, center }: { eyebrow: string; title: string; sub?: string; center?: boolean }) {
-  return (
-    <div className={center ? "text-center" : ""}>
-      <p className="eyebrow text-gold">{eyebrow}</p>
-      <h2 className="mt-2 font-display text-3xl font-semibold tracking-tight text-navy sm:text-4xl">{title}</h2>
-      {sub && <p className="mt-2 text-sm text-muted-foreground">{sub}</p>}
-    </div>
-  );
-}
-
-function ContactRow({ icon: Icon, children }: { icon: LucideIcon; children: React.ReactNode }) {
-  return (
-    <div className="flex items-start gap-3.5">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded border border-border bg-secondary/60 text-gold">
-        <Icon size={16} />
-      </span>
-      <p className="pt-1.5 text-sm text-foreground">{children}</p>
     </div>
   );
 }

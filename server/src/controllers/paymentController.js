@@ -58,6 +58,6 @@ exports.markReceived = asyncHandler(async (req, res) => {
   await r.save();
 
   await audit(req.user, "payment_received", "request", r._id, `${r.requestNumber} marked paid`);
-  await notify(r.customer, `Payment confirmed for ${r.requestNumber}. Your files are now available to download.`, "success", `#/requests/${r._id}`);
+  await notify(r.customer, `Payment confirmed for ${r.requestNumber}. Your files are now available to download.`, "success", `/requests/${r._id}`);
   res.json({ success: true, payment: serializePayment(p) });
 });

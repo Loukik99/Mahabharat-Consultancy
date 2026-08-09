@@ -5,7 +5,8 @@ import {
   Plane, Briefcase, Ticket, ClipboardCheck, GraduationCap, NotebookPen,
   PencilLine, Keyboard, Printer, ScanLine, Copy, Layers, Camera, Zap,
   Droplets, Smartphone, Tv, CarFront, Building2, ShoppingCart, ShoppingBag,
-  Sparkles, type LucideIcon,
+  Sparkles, FilePlus2, MonitorSmartphone, Store, BadgePercent,
+  Stamp, PenLine, Users, HandCoins, Scale, type LucideIcon,
 } from "lucide-react";
 
 // Distinct icon per service (matched to the catalog slugs), CSC-style.
@@ -21,6 +22,8 @@ const SERVICE_ICONS: Record<string, LucideIcon> = {
   "birth-certificate": Baby,
   "death-certificate": FileText,
   "driving-license": Car,
+  "epfo-services": HandCoins,
+  "pf-esic": Users,
   // Tax & GST
   "gst-registration": Receipt,
   "gst-returns": ReceiptText,
@@ -28,6 +31,8 @@ const SERVICE_ICONS: Record<string, LucideIcon> = {
   "eway-bill": Truck,
   "gst-billing-excel": FileSpreadsheet,
   "factory-billing": Factory,
+  "tax-invoice-dc": FilePlus2,
+  "billing-software": MonitorSmartphone,
   // Exams & jobs
   "scholarship-forms": Award,
   "admission-forms": School,
@@ -56,6 +61,12 @@ const SERVICE_ICONS: Record<string, LucideIcon> = {
   "fastag-recharge": CarFront,
   // Business
   "company-registration": Building2,
+  "pmegp": Briefcase,
+  "msme-udyam": BadgePercent,
+  "msme-trade-license": Stamp,
+  "fssai-license": Store,
+  "gem-portal": Scale,
+  "digital-signature": PenLine,
   "amazon-seller": ShoppingCart,
   "flipkart-seller": ShoppingBag,
   // Other
@@ -79,6 +90,8 @@ const SERVICE_EMOJI: Record<string, string> = {
   "birth-certificate": "👶",
   "death-certificate": "📄",
   "driving-license": "🚗",
+  "epfo-services": "🏦",
+  "pf-esic": "👷",
   // Tax & GST
   "gst-registration": "🧾",
   "gst-returns": "📑",
@@ -86,6 +99,8 @@ const SERVICE_EMOJI: Record<string, string> = {
   "eway-bill": "🚚",
   "gst-billing-excel": "📊",
   "factory-billing": "🏭",
+  "tax-invoice-dc": "🧾",
+  "billing-software": "💻",
   // Exams & jobs
   "scholarship-forms": "🎓",
   "admission-forms": "🏫",
@@ -114,6 +129,12 @@ const SERVICE_EMOJI: Record<string, string> = {
   "fastag-recharge": "🛣️",
   // Business
   "company-registration": "🏢",
+  "pmegp": "💼",
+  "msme-udyam": "🏷️",
+  "msme-trade-license": "🏪",
+  "fssai-license": "🍽️",
+  "gem-portal": "🏛️",
+  "digital-signature": "✍️",
   "amazon-seller": "🛒",
   "flipkart-seller": "🛍️",
   // Other
@@ -124,7 +145,7 @@ export function serviceEmoji(slug?: string): string {
   return (slug && SERVICE_EMOJI[slug]) || "📋";
 }
 
-// Per-service image icon — DROP-IN: add an image named "<slug>.png" (or .svg/
+// Per-service image icon. DROP-IN: add an image named "<slug>.png" (or .svg/
 // .jpg/.webp) into src/assets/services/ and it is auto-detected at build time
 // (Vite import.meta.glob) and shown on the card; otherwise the emoji is used.
 // e.g. src/assets/services/pan-card.png  →  shows on the PAN Card card.
@@ -143,18 +164,18 @@ for (const path in SERVICE_IMAGE_MODULES) {
 // slug(s) it should appear on. Lets one image serve several services and lets
 // generically-named files map to the right service.
 const IMAGE_ALIASES: Record<string, string[]> = {
-  certificate: ["caste-certificate", "income-certificate", "domicile-certificate", "birth-certificate", "death-certificate"],
+  certificate: ["caste-certificate", "income-certificate", "domicile-certificate", "birth-certificate", "death-certificate", "digital-signature"],
   "air-force": ["airforce-exam"],
   voter: ["voter-id"],
-  bill: ["gst-registration", "gst-returns"],
-  tax: ["itr-filing"],
+  bill: ["gst-registration", "gst-returns", "tax-invoice-dc"],
+  tax: ["itr-filing", "billing-software"],
   lorry: ["eway-bill"],
-  goods: ["amazon-seller", "flipkart-seller"],
+  goods: ["amazon-seller", "flipkart-seller", "msme-udyam", "msme-trade-license", "fssai-license", "gem-portal", "pmegp"],
   warehouse: ["factory-billing"],
   car: ["fastag-recharge"],
   "utility-bill": ["electricity-bill", "water-bill"],
   pay: ["scholarship-forms"],
-  "job-seeker": ["govt-job-forms"],
+  "job-seeker": ["govt-job-forms", "epfo-services", "pf-esic"],
   exam: ["exam-form-filling", "admission-forms", "online-form-filling"],
 };
 for (const source in IMAGE_ALIASES) {

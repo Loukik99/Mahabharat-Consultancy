@@ -16,6 +16,8 @@ export const site = {
   workingHours: "Mon–Sat, 9:00 AM – 8:00 PM",
   // Replace the q= value with the real shop address for an accurate pin.
   mapEmbedUrl: "https://www.google.com/maps?q=G.I.T+College+Road,+Udyambag,+Belagavi,+Karnataka+590008&output=embed",
+  // Full Google Maps page (not the embed), used for "View on Google Maps" links/buttons.
+  googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=G.I.T+College+Road,+Udyambag,+Belagavi,+Karnataka+590008",
   // UPI payment details (from the shop's GPay/ICICI QR).
   upiId: "ghansham40@icici",
   upiPayeeName: "GHANSHAM MAHADEV BAGEWADIKAR",

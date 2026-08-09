@@ -53,7 +53,7 @@ async function seedDatabase() {
   delivered.payment = pay._id; await delivered.save();
 
   await Notification.insertMany([
-    { user: cust1._id, message: "Agent requested a birth certificate for your Passport request.", type: "action", link: "#/requests/" + waiting._id },
+    { user: cust1._id, message: "Agent requested a birth certificate for your Passport request.", type: "action", link: "/requests/" + waiting._id },
     { user: cust1._id, message: "Your ITR Filing is ready. Please complete payment.", type: "warning" },
   ]);
   await AuditLog.create({ actor: admin._id, actorRole: "admin", action: "payment_received", targetType: "request", targetId: String(delivered._id), meta: "seed" });

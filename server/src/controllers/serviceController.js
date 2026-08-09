@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const { Service, ServiceCategory } = require("../models");
 const { ApiError, asyncHandler } = require("../utils/apiError");
 const { serializeService, serializeCategory } = require("../utils/serializers");
@@ -16,15 +17,18 @@ exports.list = asyncHandler(async (req, res) => {
   if (req.query.category && req.query.category !== "all") q.category = req.query.category;
   if (req.query.search) {
     const rx = new RegExp(req.query.search, "i");
-    q.$or = [{ name: rx }, { description: rx }];
+    q.$or = [{ name: rx }, { description: rx }, { slug: rx }];
   }
   const list = await Service.find(q).sort({ name: 1 });
   res.json({ success: true, services: list.map(serializeService) });
 });
 
-// GET /api/services/:id
+// GET /api/services/:id  — accepts Mongo ObjectId OR stable catalog slug
 exports.get = asyncHandler(async (req, res) => {
-  const s = await Service.findById(req.params.id);
+  const { id } = req.params;
+  const s = mongoose.isValidObjectId(id)
+    ? await Service.findById(id)
+    : await Service.findOne({ slug: id });
   if (!s) throw new ApiError(404, "Service not found");
   res.json({ success: true, service: serializeService(s) });
 });

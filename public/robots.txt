@@ -1,0 +1,16 @@
+# Mahabharat Consultancy — https://mahabharat.net.in
+User-agent: *
+Allow: /
+
+# Private / authenticated app areas (still protected by auth; this only guides crawlers)
+Disallow: /login
+Disallow: /signup
+Disallow: /staff
+Disallow: /dashboard
+Disallow: /new-request
+Disallow: /requests/
+Disallow: /agent
+Disallow: /admin
+Disallow: /api/
+
+Sitemap: https://mahabharat.net.in/sitemap.xml

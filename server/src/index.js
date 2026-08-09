@@ -17,8 +17,15 @@ const { connectDB } = require("./config/db");
     const { ensureFolders } = require("./utils/storage");
     ensureFolders().catch(() => {});
 
-    app.listen(env.port, () => {
+    const server = app.listen(env.port, () => {
       console.log(`🚀 API running on http://localhost:${env.port}  (${env.nodeEnv})`);
+    });
+    server.on("error", (err) => {
+      if (err.code === "EADDRINUSE") {
+        console.error(`Port ${env.port} is already in use. Stop the other process or set PORT.`);
+        process.exit(1);
+      }
+      throw err;
     });
   } catch (err) {
     console.error("Failed to start server:", err.message);
