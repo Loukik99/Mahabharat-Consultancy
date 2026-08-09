@@ -196,7 +196,7 @@ export default function ServiceDetail() {
             </div>
 
             {service.requiredDocuments.length > 0 && (
-              <ScrollReveal direction="right" className="mt-7">
+              <div className="mt-7">
                 <h2 className="mb-3 font-display font-semibold text-navy">Required Documents</h2>
                 <ul className="space-y-2">
                   {service.requiredDocuments.map((doc) => (
@@ -206,11 +206,11 @@ export default function ServiceDetail() {
                     </li>
                   ))}
                 </ul>
-              </ScrollReveal>
+              </div>
             )}
 
             {service.officialLinks.length > 0 && (
-              <ScrollReveal direction="left" className="mt-7">
+              <div className="mt-7">
                 <h2 className="mb-3 flex items-center gap-2 font-display font-semibold text-navy">
                   <Globe size={18} className="text-gold" /> Official Website
                 </h2>
@@ -252,10 +252,10 @@ export default function ServiceDetail() {
                     government body. The links above open the official government websites only.
                   </p>
                 </div>
-              </ScrollReveal>
+              </div>
             )}
 
-            <ScrollReveal direction="right" className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button
                 size="lg"
                 onClick={requestService}
@@ -272,7 +272,7 @@ export default function ServiceDetail() {
                   <MessageCircle size={16} /> Ask about this service
                 </a>
               </Button>
-            </ScrollReveal>
+            </div>
           </CardContent>
         </Card>
       </ScrollReveal>

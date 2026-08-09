@@ -29,6 +29,7 @@ function AnimatedItem({
     let raf1 = 0;
     let raf2 = 0;
     let obs: IntersectionObserver | null = null;
+    let safety = 0;
 
     const show = () => {
       if (revealed) return;
@@ -37,23 +38,33 @@ function AnimatedItem({
         raf2 = requestAnimationFrame(() => setInView(true));
       });
       obs?.disconnect();
+      if (safety) window.clearInterval(safety);
     };
 
     obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting || entry.intersectionRatio > 0) {
-          // Defer the reveal two frames so the CSS transition has a "from" state.
           show();
         }
       },
-      { threshold: [0, 0.05, 0.15], rootMargin: "40px 0px 40px 0px" }
+      { threshold: 0, rootMargin: "0px 0px -8% 0px" }
     );
     obs.observe(el);
-    // Always reveal — never leave list rows stuck hidden (one-shot, no re-hide).
-    const t = window.setTimeout(show, 1500);
+
+    // Near-viewport safety only — never leave rows stuck, never force off-screen.
+    safety = window.setInterval(() => {
+      if (revealed) {
+        window.clearInterval(safety);
+        return;
+      }
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight || 0;
+      if (r.top < vh * 0.92 && r.bottom > vh * 0.08) show();
+    }, 500);
+
     return () => {
       obs?.disconnect();
-      window.clearTimeout(t);
+      if (safety) window.clearInterval(safety);
       cancelAnimationFrame(raf1);
       cancelAnimationFrame(raf2);
     };

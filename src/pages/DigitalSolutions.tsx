@@ -60,14 +60,14 @@ export default function DigitalSolutions() {
 
           <h2 className="mt-7 mb-3 font-display text-lg font-semibold text-navy">What we build</h2>
           <ul className="space-y-2.5">
-            {ds.highlights.map((h, i) => (
-              <ScrollReveal key={h} index={i} as="li" className="flex items-start gap-2.5 text-sm text-foreground">
+            {ds.highlights.map((h) => (
+              <li key={h} className="flex items-start gap-2.5 text-sm text-foreground">
                 <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-gold" /> {h}
-              </ScrollReveal>
+              </li>
             ))}
           </ul>
 
-          <ScrollReveal direction="right" className="mt-8 rounded-lg border-l-2 border-gold bg-secondary/60 p-5">
+          <div className="mt-8 rounded-lg border-l-2 border-gold bg-secondary/60 p-5">
             <p className="font-display text-base font-semibold text-navy">Want to build a website or app?</p>
             <p className="mt-1 text-sm text-muted-foreground">
               Chat with us on WhatsApp and tell us about your project, we'll guide you from idea to launch.
@@ -77,7 +77,7 @@ export default function DigitalSolutions() {
                 <MessageCircle size={18} className="mr-1.5" /> Chat on WhatsApp
               </a>
             </Button>
-          </ScrollReveal>
+          </div>
         </div>
       </ScrollReveal>
     </div>

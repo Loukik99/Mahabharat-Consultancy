@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { FileText, FileUp, Cog, Download, type LucideIcon } from "lucide-react";
 import { SectionHeader } from "@/components/SectionHeader";
+import { ScrollReveal } from "@/components/ScrollReveal";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,13 +22,9 @@ const JOURNEY_STEPS: JourneyStep[] = [
 
 /**
  * Compact "How it works" timeline: one straight vertical line runs down
- * the left edge connecting four step cards stacked on a single side, in
- * place of the old long curved, alternating-side route. The line's fill
- * is scrubbed to scroll position (measured once from the real badge
- * positions, so it always starts/ends exactly at the first/last badge),
- * and each card does a single understated fade + slide-up as it enters
- * view, tracked as a high-water mark so scrolling back up never
- * un-reveals a step.
+ * the left edge connecting four step cards. The line's fill is scrubbed
+ * to scroll position with a high-water mark so scrolling up never reverses
+ * progress. Card entrance uses one-shot ScrollReveal (never hides again).
  */
 export function JourneyTimeline() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -66,7 +63,6 @@ export function JourneyTimeline() {
       applyProgress(1);
     };
 
-    // Reduced motion / no-JS-friendly: show every step immediately.
     if (reduceMotion) {
       const centers = badgeRefs.current.map((el) => {
         if (!el) return 0;
@@ -122,6 +118,7 @@ export function JourneyTimeline() {
       start: "top 90%",
       end: "bottom 50%",
       onUpdate: (self) => {
+        // High-water mark: never reverse when scrolling up.
         if (self.progress > maxProgressRef.current) {
           maxProgressRef.current = self.progress;
           applyProgress(maxProgressRef.current);
@@ -135,9 +132,6 @@ export function JourneyTimeline() {
       },
     });
 
-    // Safety net: never leave journey cards stuck at opacity 0.
-    const fallback = window.setTimeout(revealAll, 1200);
-
     window.addEventListener("resize", onResize);
     const observer = new ResizeObserver(onResize);
     observer.observe(wrap);
@@ -146,7 +140,6 @@ export function JourneyTimeline() {
       window.removeEventListener("resize", onResize);
       observer.disconnect();
       cancelAnimationFrame(resizeFrame);
-      window.clearTimeout(fallback);
       scrollTrigger?.kill();
     };
   }, []);
@@ -154,11 +147,13 @@ export function JourneyTimeline() {
   return (
     <section className="border-y border-mist bg-white py-10 sm:py-12 lg:py-14">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <SectionHeader
-          title="How it works"
-          sub="Four simple steps from request to delivery."
-          align="center"
-        />
+        <ScrollReveal direction="left">
+          <SectionHeader
+            title="How it works"
+            sub="Four simple steps from request to delivery."
+            align="center"
+          />
+        </ScrollReveal>
 
         <div ref={wrapRef} className="relative mx-auto mt-8 max-w-md sm:mt-9 sm:max-w-lg lg:max-w-xl">
           <div ref={trackRef} className="absolute left-4 w-px bg-mist sm:left-5" aria-hidden="true" />
@@ -181,20 +176,22 @@ export function JourneyTimeline() {
                   {i + 1}
                 </span>
 
-                <div
-                  ref={(el) => {
-                    cardRefs.current[i] = el;
-                  }}
-                  className="journey-card min-w-0 flex-1 rounded-2xl border border-mist bg-white p-4 sm:p-5"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy/[0.07] text-navy">
-                      <step.icon size={17} />
-                    </span>
-                    <h3 className="font-display text-[15px] font-bold text-ink sm:text-[1.05rem]">{step.title}</h3>
+                <ScrollReveal index={i} className="min-w-0 flex-1">
+                  <div
+                    ref={(el) => {
+                      cardRefs.current[i] = el;
+                    }}
+                    className="journey-card min-w-0 flex-1 rounded-2xl border border-mist bg-white p-4 sm:p-5"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-navy/[0.07] text-navy">
+                        <step.icon size={17} />
+                      </span>
+                      <h3 className="font-display text-[15px] font-bold text-ink sm:text-[1.05rem]">{step.title}</h3>
+                    </div>
+                    <p className="mt-2 text-[13px] leading-relaxed text-smoke sm:text-[13.5px]">{step.desc}</p>
                   </div>
-                  <p className="mt-2 text-[13px] leading-relaxed text-smoke sm:text-[13.5px]">{step.desc}</p>
-                </div>
+                </ScrollReveal>
               </li>
             ))}
           </ol>

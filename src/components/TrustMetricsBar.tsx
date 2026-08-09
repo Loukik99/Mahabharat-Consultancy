@@ -21,31 +21,28 @@ function prefersReducedMotion(): boolean {
 }
 
 /**
- * Premium dashboard-style statistics strip. Four facts inside a single
- * glass-on-white card (soft gradient wash, hairline border, one shared
- * shadow) instead of four loose boxes, so it reads as one component
- * between Services and How it works. Reveals with a gentle staggered
- * entrance the first time it scrolls into view; each cell gets a quiet
- * hover lift and its icon a subtle scale/rotate.
+ * Premium dashboard-style statistics strip. Reveals once on enter;
+ * never hides again when scrolling up.
  */
 export function TrustMetricsBar() {
   const wrapRef = useRef<HTMLDivElement>(null);
+  const doneRef = useRef(false);
   const [inView, setInView] = useState(false);
 
   useEffect(() => {
     const el = wrapRef.current;
-    if (!el) return;
+    if (!el || doneRef.current) return;
 
     if (prefersReducedMotion()) {
+      doneRef.current = true;
       setInView(true);
       return;
     }
 
-    let delivered = false;
     let observer: IntersectionObserver | null = null;
     const show = () => {
-      if (delivered) return;
-      delivered = true;
+      if (doneRef.current) return;
+      doneRef.current = true;
       setInView(true);
       observer?.disconnect();
     };
@@ -56,15 +53,29 @@ export function TrustMetricsBar() {
           show();
         }
       },
-      { threshold: [0, 0.05, 0.15], rootMargin: "60px 0px 60px 0px" }
+      { threshold: 0, rootMargin: "0px 0px -8% 0px" }
     );
     observer.observe(el);
 
-    // Always reveal — never leave metrics stuck at opacity 0.
-    const fallback = window.setTimeout(show, 1200);
+    // Near-viewport safety only — never leave metrics stuck at opacity 0.
+    const rect = el.getBoundingClientRect();
+    const vh = window.innerHeight || 0;
+    if (rect.top < vh * 0.92 && rect.bottom > vh * 0.08) {
+      show();
+    }
+
+    const safety = window.setInterval(() => {
+      if (doneRef.current) {
+        window.clearInterval(safety);
+        return;
+      }
+      const r = el.getBoundingClientRect();
+      if (r.top < vh * 0.92 && r.bottom > vh * 0.08) show();
+    }, 500);
+
     return () => {
       observer?.disconnect();
-      window.clearTimeout(fallback);
+      window.clearInterval(safety);
     };
   }, []);
 

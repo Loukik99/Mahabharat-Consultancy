@@ -67,6 +67,12 @@
   }
   html {
     overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
   h1, h2, h3, h4, h5, h6, .font-display {
     font-family: 'Manrope', system-ui, sans-serif;
@@ -152,10 +158,9 @@
   }
 
   /* Journey timeline (How it works) — compact vertical line + step
-     activation. A single class toggle per element drives every visual
-     change, so the scroll handler only ever needs to add/remove
-     "is-active". Kept understated: a short fade + 24px slide-up per
-     card, no bounce or scale. */
+     activation. Badge/line are scrubbed by scroll; card entrance is
+     handled by ScrollReveal (one-shot, never reverse). is-active only
+     drives the quiet border/shadow emphasis. */
   .journey-badge {
     transition: background-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   }
@@ -165,22 +170,11 @@
     color: hsl(var(--gold-foreground));
   }
   .journey-card {
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1), transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
   }
   .journey-card.is-active {
-    opacity: 1;
-    transform: translateY(0);
     box-shadow: 0 20px 40px -22px rgba(15, 23, 42, 0.12);
     border-color: hsl(var(--gold) / 0.3);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .journey-card {
-      opacity: 1 !important;
-      transform: none !important;
-      transition: none !important;
-    }
   }
 
   /* FAQ accordion — grid-rows trick expands/collapses smoothly no matter
@@ -228,30 +222,30 @@
 
 /* Scroll reveal — left/right fade-in (driven by ScrollReveal.tsx).
    Visible by default (no-JS / pre-mount). Hidden start state only applies
-   after JS arms `.scroll-reveal--ready`. Modest translate avoids overflow. */
+   after JS arms `.scroll-reveal--pending`. Once `.scroll-reveal--shown`
+   is applied it never returns to hidden. */
 .scroll-reveal {
-  --scroll-reveal-distance: 28px;
+  --scroll-reveal-distance: 40px;
   --scroll-reveal-duration: 700ms;
   --scroll-reveal-delay: 0ms;
-  will-change: auto;
 }
-@media (max-width: 1023px) {
+@media (max-width: 767px) {
   .scroll-reveal {
     /* Shorter travel on small screens avoids temporary horizontal overflow */
-    --scroll-reveal-distance: 14px;
+    --scroll-reveal-distance: 28px;
   }
 }
-.scroll-reveal--ready {
+.scroll-reveal--pending {
   opacity: 0;
   transition: none;
 }
-.scroll-reveal--ready.scroll-reveal--from-left {
+.scroll-reveal--pending.scroll-reveal--from-left {
   transform: translate3d(calc(var(--scroll-reveal-distance) * -1), 0, 0);
 }
-.scroll-reveal--ready.scroll-reveal--from-right {
+.scroll-reveal--pending.scroll-reveal--from-right {
   transform: translate3d(var(--scroll-reveal-distance), 0, 0);
 }
-.scroll-reveal--visible {
+.scroll-reveal--shown {
   opacity: 1;
   transform: translate3d(0, 0, 0);
   transition:
@@ -260,8 +254,8 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .scroll-reveal,
-  .scroll-reveal--ready,
-  .scroll-reveal--visible {
+  .scroll-reveal--pending,
+  .scroll-reveal--shown {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
