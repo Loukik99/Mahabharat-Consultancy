@@ -24,14 +24,17 @@ import {
   ShieldAlert, QrCode, Send, Pencil, XCircle, Lightbulb, Wallet,
 } from "lucide-react";
 
+// Must match server/src/middleware/upload.js + fileMagic ALLOWED_CANONICAL (no GIF).
 const ACCEPTED = [
-  "image/jpeg", "image/png", "image/webp", "image/gif",
+  "image/jpeg", "image/png", "image/webp",
   "application/pdf",
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   "application/vnd.ms-excel",
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "video/mp4", "video/webm", "video/quicktime",
 ];
+const ACCEPT_ATTR = ".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.mp4,.webm,.mov";
 const MAX_BYTES = 5 * 1024 * 1024;
 
 const PAYMENT_STAGE: RequestStatus[] = ["waiting_payment", "completed", "delivered"];
@@ -132,7 +135,7 @@ export default function RequestDetail() {
     e.target.value = "";
     if (!file) return;
     if (!ACCEPTED.includes(file.type)) {
-      toast.error("Unsupported file type. Use images, PDF, Word or Excel.");
+      toast.error("Unsupported file type. Use JPEG/PNG/WebP, PDF, Word, Excel or MP4/WebM/MOV.");
       return;
     }
     if (file.size > MAX_BYTES) {
@@ -222,6 +225,14 @@ export default function RequestDetail() {
     }
   };
 
+  const handleDownloadDocument = async (docId: string, fileName: string) => {
+    try {
+      await Req.downloadDocument(r.id, docId, fileName);
+    } catch (err) {
+      toast.error((err as Error).message);
+    }
+  };
+
   const handleDownload = async (delId: string, fileName: string) => {
     try {
       await Req.downloadDeliverable(r.id, delId, fileName);
@@ -276,6 +287,15 @@ export default function RequestDetail() {
                         </p>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => handleDownloadDocument(d.id, d.fileName)}
+                          className="border-navy/20 text-navy hover:text-navy h-8 px-2"
+                          title="Download your uploaded file"
+                        >
+                          <FileDown size={14} className="mr-1" /> Download
+                        </Button>
                         {editable && (
                           <button onClick={() => handleRemoveDoc(d.id)} className="text-destructive hover:text-destructive/80" title="Remove">
                             <Trash2 size={15} />
@@ -314,13 +334,13 @@ export default function RequestDetail() {
                     ref={fileInputRef}
                     type="file"
                     className="hidden"
-                    accept="image/*,.pdf,.doc,.docx,.xls,.xlsx"
+                    accept={ACCEPT_ATTR}
                     onChange={handleFile}
                   />
                   <Button type="button" size="sm" variant="outline" onClick={onPickFile} disabled={uploading} className="border-navy/20 text-navy hover:text-navy">
                     <Upload size={14} className="mr-1.5" /> {uploading ? "Uploading..." : "Choose file & upload"}
                   </Button>
-                  <p className="text-[11px] text-muted-foreground">Images, PDF, Word or Excel up to 5 MB.</p>
+                  <p className="text-[11px] text-muted-foreground">JPEG/PNG/WebP, PDF, Word, Excel or MP4/WebM/MOV up to 5 MB. GIF not supported.</p>
                 </div>
               ) : (
                 <div className="rounded border-l-2 border-navy bg-secondary/60 p-3 text-xs text-muted-foreground flex items-start gap-2">

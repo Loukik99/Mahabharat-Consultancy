@@ -4,6 +4,7 @@ import { useAuth } from "@/context/AuthContext";
 import { LogOut, ArrowRight, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import logoImg from "@/assets/logo.png";
+import { NotificationBell } from "@/components/NotificationBell";
 
 // Desktop-only navbar (mobile uses the StaggeredMenu in App.tsx). A single
 // floating, pill-shaped container sits just off the top of the page at all
@@ -96,6 +97,7 @@ export function Navbar({ variant = "default" }: { variant?: "default" | "auth" }
           <div className="flex shrink-0 items-center gap-2">
             {user ? (
               <>
+                <NotificationBell />
                 <div className="hidden items-center gap-2 rounded-full bg-ink/[0.04] py-1.5 pl-1.5 pr-3 sm:flex">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-navy text-[11px] font-bold text-gold">
                     {user.name[0]}

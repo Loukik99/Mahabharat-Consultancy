@@ -7,6 +7,7 @@ import { WhatsAppButton } from "@/components/WhatsAppButton";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { Seo } from "@/components/Seo";
 import StaggeredMenu from "@/components/StaggeredMenu";
+import { NotificationBell } from "@/components/NotificationBell";
 import { site, waLink } from "@/config/site";
 import { pageSeo } from "@/config/seo";
 import logoImg from "@/assets/logo.png";
@@ -142,6 +143,11 @@ export default function App() {
 
       {/* Mobile-only Staggered Menu (creative nav) */}
       <div className="lg:hidden">
+        {user && !isAuthPage && (
+          <div className="fixed left-3 top-3 z-[60]">
+            <NotificationBell />
+          </div>
+        )}
         <StaggeredMenu
           isFixed
           position="right"

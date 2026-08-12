@@ -66,6 +66,10 @@ const commentSchema = new mongoose.Schema(
   { timestamps: { createdAt: "at", updatedAt: false } }
 );
 
+// Applicant identity fields are intentionally optional for every catalog service.
+// Required inputs are enforced via service.requiredDocuments (file checklist),
+// not via these form fields — agents collect missing identity details in-shop
+// or via notes when a specific service needs them.
 const applicantDetailsSchema = new mongoose.Schema(
   {
     fullName: String,

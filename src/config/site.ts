@@ -14,8 +14,8 @@ export const site = {
   whatsapp: "918970934940", // digits only, country code first — used in wa.me links
   email: "info.mahabharatgroup@gmail.com",
   workingHours: "Mon–Sat, 9:00 AM – 8:00 PM",
-  // Replace the q= value with the real shop address for an accurate pin.
-  mapEmbedUrl: "https://www.google.com/maps?q=G.I.T+College+Road,+Udyambag,+Belagavi,+Karnataka+590008&output=embed",
+  // Official Maps embed URL (no API key). Update the address segment for a new pin.
+  mapEmbedUrl: "https://www.google.com/maps/embed?pb=!1m2!2m1!1sG.I.T+College+Road,+Udyambag,+Belagavi,+Karnataka+590008",
   // Full Google Maps page (not the embed), used for "View on Google Maps" links/buttons.
   googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=G.I.T+College+Road,+Udyambag,+Belagavi,+Karnataka+590008",
   // UPI payment details (from the shop's GPay/ICICI QR).

@@ -1,3 +1,4 @@
+const mongoose = require("mongoose");
 const { ServiceRequest, Service } = require("../models");
 const { ApiError, asyncHandler } = require("../utils/apiError");
 const { serializeRequest } = require("../utils/serializers");
@@ -37,6 +38,38 @@ function authorize(user, r) {
   throw new ApiError(403, "You do not have access to this request");
 }
 
+/** Resolve service by Mongo ObjectId or catalog slug (same approach as serviceController.get). */
+async function resolveService(serviceId) {
+  if (!serviceId || typeof serviceId !== "string") return null;
+  const id = String(serviceId).trim();
+  if (!id) return null;
+  if (mongoose.isValidObjectId(id)) {
+    return Service.findById(id);
+  }
+  return Service.findOne({ slug: id.slice(0, 120) });
+}
+
+/** Required checklist labels from the service catalog that are not yet uploaded. */
+function missingRequiredDocuments(service, documents) {
+  const required = (service && Array.isArray(service.requiredDocuments) ? service.requiredDocuments : [])
+    .map((d) => String(d || "").trim())
+    .filter(Boolean);
+  if (!required.length) return [];
+  const uploaded = new Set(
+    (documents || []).map((d) => String(d.label || "").trim().toLowerCase()).filter(Boolean)
+  );
+  return required.filter((label) => !uploaded.has(label.toLowerCase()));
+}
+
+async function assertRequiredDocumentsPresent(r) {
+  const serviceId = r.service?._id || r.service;
+  const service = await Service.findById(serviceId).select("requiredDocuments name");
+  const missing = missingRequiredDocuments(service, r.documents);
+  if (missing.length) {
+    throw new ApiError(400, `Missing required documents: ${missing.join(", ")}`);
+  }
+}
+
 exports.list = asyncHandler(async (req, res) => {
   const q = {};
   if (req.user.role === "customer") q.customer = req.user.id;
@@ -61,7 +94,8 @@ exports.get = asyncHandler(async (req, res) => {
 
 exports.create = asyncHandler(async (req, res) => {
   const { serviceId, applicantDetails, notes } = req.body;
-  const service = await Service.findById(serviceId);
+  if (!serviceId) throw new ApiError(400, "serviceId is required");
+  const service = await resolveService(String(serviceId));
   if (!service || !service.isActive) throw new ApiError(400, "Invalid service");
 
   const details = pick(applicantDetails || {}, [
@@ -230,6 +264,10 @@ exports.setStatus = asyncHandler(async (req, res) => {
   }
   // admin: any valid status (payment unlock still via markReceived for deliverables)
 
+  if (status === "waiting_payment") {
+    await assertRequiredDocumentsPresent(r);
+  }
+
   r.status = status;
   r.statusHistory.push({
     status,
@@ -257,10 +295,26 @@ exports.assignAgent = asyncHandler(async (req, res) => {
   if (!agent || agent.role !== "agent" || !agent.isActive) {
     throw new ApiError(400, "Invalid agent");
   }
+  const previousStatus = r.status;
+  const becomingInReview = previousStatus === "submitted";
   r.assignedAgent = agent._id;
-  if (r.status === "submitted") r.status = "in_review";
+  if (becomingInReview) {
+    r.status = "in_review";
+    r.statusHistory.push({
+      status: "in_review",
+      by: req.user.id,
+      byRole: req.user.role,
+      note: `Assigned to ${agent.name}`,
+    });
+  }
   await r.save();
   await audit(req.user, "assign_agent", "request", r._id, `${r.requestNumber} → agent ${agentId}`);
+  await notify(
+    agent._id,
+    `You were assigned request ${r.requestNumber}.`,
+    "action",
+    `/agent/tasks/${r._id}`
+  );
   const full = await loadRequest(r._id);
   res.json({ success: true, request: serializeRequest(full, req.user.role) });
 });
@@ -287,6 +341,7 @@ exports.markReadyForPayment = asyncHandler(async (req, res) => {
   if (r.status === "delivered" || r.status === "cancelled") {
     throw new ApiError(400, "Invalid status transition");
   }
+  await assertRequiredDocumentsPresent(r);
 
   r.statusHistory.push({ status: "completed", by: req.user.id, byRole: req.user.role });
   r.status = "waiting_payment";

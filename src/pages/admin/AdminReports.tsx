@@ -11,6 +11,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Download, Printer } from "lucide-react";
 
+function displayServiceName(r: { serviceName?: string; serviceId: string }) {
+  return r.serviceName || serviceById(r.serviceId)?.name || r.serviceId;
+}
+
 const ADMIN_LINKS = [
   { to: "/admin", label: "Dashboard" }, { to: "/admin/requests", label: "Requests" },
   { to: "/admin/customers", label: "Customers" }, { to: "/admin/agents", label: "Agents" },
@@ -96,7 +100,7 @@ export default function AdminReports() {
     requests.forEach((r) => {
       const agent = r.assignedAgentId ? nameById(r.assignedAgentId) : "Unassigned";
       rows.push([
-        r.requestNumber, serviceById(r.serviceId)?.name ?? r.serviceId,
+        r.requestNumber, displayServiceName(r),
         categoryById(r.category)?.name ?? r.category,
         nameById(r.userId), agent,
         labelForStatus(r.status), r.paymentApprovedByAdmin ? "Yes" : "No",

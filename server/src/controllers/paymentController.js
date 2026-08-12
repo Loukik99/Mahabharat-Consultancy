@@ -12,7 +12,8 @@ exports.list = asyncHandler(async (_req, res) => {
   res.json({ success: true, payments: list.map(serializePayment) });
 });
 
-const PAY_METHODS = new Set(["upi", "cash", "card", "bank", "other"]);
+// Canonical methods — must match Payment schema + customer UI (UPI QR / cash / other).
+const PAY_METHODS = new Set(["upi", "cash", "other"]);
 
 // POST /api/requests/:id/pay  (customer records they have paid; stays pending)
 exports.record = asyncHandler(async (req, res) => {
@@ -21,7 +22,12 @@ exports.record = asyncHandler(async (req, res) => {
   if (String(r.customer) !== req.user.id) throw new ApiError(403, "Not your request");
   if (r.status !== "waiting_payment") throw new ApiError(400, "Payment is not due for this request yet");
 
-  const method = PAY_METHODS.has(req.body.method) ? req.body.method : "upi";
+  const rawMethod = req.body.method;
+  const method =
+    rawMethod == null || rawMethod === "" ? "upi" : String(rawMethod).trim().toLowerCase();
+  if (!PAY_METHODS.has(method)) {
+    throw new ApiError(400, "Invalid payment method. Allowed: upi, cash, other");
+  }
 
   let p = await Payment.findOne({ request: r._id });
   if (!p) {

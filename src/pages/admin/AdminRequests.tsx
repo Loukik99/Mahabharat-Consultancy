@@ -12,6 +12,10 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { toast } from "sonner";
 import { Eye, Filter, Search } from "lucide-react";
 
+function displayServiceName(r: { serviceName?: string; serviceId: string }) {
+  return r.serviceName || serviceById(r.serviceId)?.name || r.serviceId;
+}
+
 const ADMIN_LINKS = [
   { to: "/admin", label: "Dashboard" },
   { to: "/admin/requests", label: "Requests" },
@@ -129,7 +133,7 @@ export default function AdminRequests() {
                 return (
                   <tr key={r.id} className="border-b border-border/60 hover:bg-secondary/40">
                     <td className="py-2.5 pr-3 font-medium text-navy">{r.requestNumber}</td>
-                    <td className="py-2.5 pr-3">{serviceById(r.serviceId)?.name ?? r.serviceId}</td>
+                    <td className="py-2.5 pr-3">{displayServiceName(r)}</td>
                     <td className="py-2.5 pr-3">{nameById[r.userId] ?? "—"}</td>
                     <td className="py-2.5 pr-3">{agentName ? agentName : <span className="text-muted-foreground">Unassigned</span>}</td>
                     <td className="py-2.5 pr-3"><StatusBadge status={r.status} /></td>
