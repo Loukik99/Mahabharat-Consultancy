@@ -191,17 +191,15 @@
     overflow: hidden;
   }
 
-  /* Dark, moody authentication canvas (deliberately its own visual moment) */
+  /* Authentication page surface — flat white, continuous with the navbar.
+     No hero gradients, grid texture, or section washes. */
   .auth-canvas {
-    background-color: #07070b;
-    background-image:
-      radial-gradient(480px 320px at 50% -8%, hsl(var(--gold) / 0.28), transparent 65%),
-      radial-gradient(520px 360px at 15% 108%, hsl(var(--emerald) / 0.30), transparent 60%),
-      radial-gradient(420px 300px at 100% 100%, hsl(var(--navy) / 0.35), transparent 60%);
+    background-color: hsl(var(--paper));
   }
+  /* Soft lift so the white auth card reads against the light canvas —
+     same footprint; only contrast/shadow adjusted for visibility. */
   .auth-card-glow {
-    background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
-    box-shadow: 0 1px 0 rgba(255,255,255,0.08) inset, 0 40px 80px -32px rgba(0,0,0,0.6);
+    box-shadow: 0 1px 0 hsl(var(--mist)) inset, 0 24px 48px -28px rgba(15, 23, 42, 0.18);
   }
 }
 

@@ -12,11 +12,16 @@ exports.list = asyncHandler(async (_req, res) => {
   res.json({ success: true, payments: list.map(serializePayment) });
 });
 
+const PAY_METHODS = new Set(["upi", "cash", "card", "bank", "other"]);
+
 // POST /api/requests/:id/pay  (customer records they have paid; stays pending)
 exports.record = asyncHandler(async (req, res) => {
   const r = await ServiceRequest.findById(req.params.id);
   if (!r) throw new ApiError(404, "Request not found");
   if (String(r.customer) !== req.user.id) throw new ApiError(403, "Not your request");
+  if (r.status !== "waiting_payment") throw new ApiError(400, "Payment is not due for this request yet");
+
+  const method = PAY_METHODS.has(req.body.method) ? req.body.method : "upi";
 
   let p = await Payment.findOne({ request: r._id });
   if (!p) {
@@ -24,13 +29,14 @@ exports.record = asyncHandler(async (req, res) => {
       request: r._id,
       customer: r.customer,
       amountLabel: r.priceLabel,
-      method: req.body.method || "upi",
+      method,
       status: "pending",
     });
     r.payment = p._id;
     await r.save();
   } else {
-    p.method = req.body.method || p.method;
+    if (p.status === "received") throw new ApiError(400, "Payment already confirmed");
+    p.method = method;
     await p.save();
   }
   await audit(req.user, "payment_recorded", "payment", p._id, r.requestNumber);

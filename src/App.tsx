@@ -103,12 +103,18 @@ function NotFoundPage() {
 }
 
 export default function App() {
+  const { user } = useAuth();
+  const location = useLocation();
+
   // Maintenance mode — set VITE_MAINTENANCE=true (in Vercel env) and redeploy
   // to show the "under maintenance" page across the whole site.
   if (import.meta.env.VITE_MAINTENANCE === "true") return <Maintenance />;
 
-  const { user } = useAuth();
   const dash = user?.role === "admin" ? "/admin" : user?.role === "agent" ? "/agent" : "/dashboard";
+
+  // Customer + staff auth screens share one continuous light page surface
+  // (no hero, no footer section break). Normal pages keep full site chrome.
+  const isAuthPage = ["/login", "/signup", "/staff"].includes(location.pathname);
 
   // Mobile-only creative nav (Staggered Menu)
   const mobileItems = [
@@ -131,7 +137,7 @@ export default function App() {
 
       {/* Desktop navbar */}
       <div className="hidden lg:block">
-        <Navbar />
+        <Navbar variant={isAuthPage ? "auth" : "default"} />
       </div>
 
       {/* Mobile-only Staggered Menu (creative nav) */}
@@ -148,10 +154,17 @@ export default function App() {
           accentColor="#c2a14d"
           menuButtonColor="#0b1f3a"
           openMenuButtonColor="#0b1f3a"
+          hideHeaderBorder={isAuthPage}
         />
       </div>
 
-      <main className="flex-1 pt-[64px] lg:pt-0">
+      <main
+        className={
+          isAuthPage
+            ? "flex flex-1 flex-col bg-white pt-[60px] lg:pt-0"
+            : "flex-1 bg-white pt-[64px] lg:pt-0"
+        }
+      >
         <Suspense fallback={<Loader />}>
           <Routes>
             {/* Public */}
@@ -190,8 +203,9 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
-      <Footer />
-      <WhatsAppButton />
+      {/* Auth pages stay a single light surface — no footer section break */}
+      {!isAuthPage && <Footer />}
+      {!isAuthPage && <WhatsAppButton />}
     </div>
   );
 }

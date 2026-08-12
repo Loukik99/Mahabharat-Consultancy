@@ -38,6 +38,9 @@
   pointer-events: none;
   z-index: 20;
 }
+.staggered-menu-header--flush {
+  border-bottom: none;
+}
 .staggered-menu-header > * { pointer-events: auto; }
 
 .sm-brand {

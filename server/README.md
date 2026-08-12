@@ -1,93 +1,70 @@
 # Mahabharat Consultancy — Backend API
 
-Express + Mongoose REST API for the internet-café / online-services center.
-Roles: **customer**, **agent**, **admin**. JWT auth with role-based access control,
-file uploads, payment-gated downloads, audit logging, and a secure masked
-OTP-call flow.
-
-## Tech
-- Node.js + Express
-- MongoDB + Mongoose
-- JWT (`jsonwebtoken`) + `bcryptjs`
-- `multer` for uploads, `express-validator`, `helmet`, `cors`, `morgan`
+Express + Mongoose REST API. Roles: **customer**, **agent**, **admin**.
+HttpOnly cookie JWT sessions, RBAC from the database, payment-gated downloads,
+audit logging, and hardened uploads.
 
 ## Setup
 
 ```bash
 cd server
 npm install
-cp .env.example .env        # then edit .env
-npm run dev                 # nodemon, auto-reload
-# or
-npm start
+cp .env.example .env        # then edit .env — set a strong JWT_SECRET
+npm run dev
 ```
 
 ### Database
-- **Local dev (zero setup):** leave `MONGODB_URI` blank in `.env`. The server
-  starts an **in-memory MongoDB** automatically and seeds demo data on boot.
-  (Data is ephemeral — it resets each restart.)
-- **Persistent / production:** set `MONGODB_URI` to your MongoDB Atlas
-  connection string, then run `npm run seed` once to load the catalog + demo users.
+- **Local dev (zero setup):** leave `MONGODB_URI` blank. In-memory MongoDB + auto-seed.
+- **Persistent / production:** set `MONGODB_URI`. Create an admin with `npm run create-admin`.
+  Do **not** run `npm run seed` against production.
 
-### Environment variables (`.env`)
+### Critical environment variables
 | Var | Purpose |
 |-----|---------|
-| `PORT` | API port (default 5000) |
-| `CLIENT_URL` | Allowed CORS origin (the frontend) |
-| `MONGODB_URI` | Mongo connection string; blank = in-memory dev DB |
-| `JWT_SECRET` / `JWT_EXPIRES_IN` | Token signing |
-| `MAX_UPLOAD_MB` | Per-file upload limit (default 5) |
-| `CALL_PROVIDER` | `stub` (default) or a masked-calling provider later |
+| `JWT_SECRET` | **Required in production** (≥32 random chars). Server **fails closed** if missing/weak. |
+| `JWT_SECRET_ROTATED` | Set `true` after rotating away from any previously exposed secret. |
+| `CLIENT_URL` | **Required in production** — comma-separated trusted frontend origins. |
+| `VERCEL_PREVIEW_ORIGINS` | Optional exact preview origins (no `*.vercel.app` wildcard). |
+| `MONGODB_URI` | Required in production. |
+| `NODE_ENV` | Set `production` in production. |
 
-## Demo accounts (after seed)
-| Role | Login | Password |
-|------|-------|----------|
-| Admin | admin@mahabharat.com | admin123 |
-| Agent | rajesh@mahabharat.com | agent123 |
-| Customer | amit@example.com | customer123 |
+## Seed (destructive — development only)
 
-## Seed
 ```bash
-npm run seed     # wipes + reloads catalog, demo users and sample requests
+# PowerShell
+$env:CONFIRM_SEED="YES"; npm run seed
+
+# bash
+CONFIRM_SEED=YES npm run seed
 ```
 
-## API overview
-Base path: `/api`
+Blocked when `NODE_ENV=production`. Remote URIs also require `SEED_ALLOW_REMOTE=YES`.
 
-| Area | Endpoints |
-|------|-----------|
-| Auth | `POST /auth/register`, `POST /auth/login`, `GET /auth/me` |
-| Services | `GET /services`, `GET /services/categories`, `GET /services/:id`, admin `POST/PATCH /services` |
-| Jobs | `GET /jobs` (FreeJobAlert-style, read-only) |
-| Requests | `GET/POST /requests`, `GET/PATCH /requests/:id`, `PATCH /requests/:id/status`, `/assign`, `/ready`, `POST /requests/:id/comments` |
-| Documents | `POST /requests/:id/documents` (upload), `DELETE …/:docId`, `GET …/:docId/download` |
-| Deliverables | `POST /requests/:id/deliverables` (agent/admin), `GET …/:delId/download` (**payment-gated**) |
-| Payments | `POST /requests/:id/pay` (customer), `PATCH /requests/:id/payment/received` (**admin only**), `GET /payments` |
-| OTP call | `POST /requests/:id/call` (agent, masked), `GET /requests/:id/calls` |
-| Users | admin: `GET /users/customers`, `GET/POST /users/agents`, `PATCH /users/:id`, `/active`, `DELETE /users/:id` |
-| Stats | admin: `GET /stats/admin`, `GET /stats/agents` |
-| Audit | admin: `GET /audit` |
-| Notifications | `GET /notifications`, `PATCH /notifications/:id/read`, `/read-all` |
+### Local demo accounts (after confirmed seed only)
+| Role | Login | Password |
+|------|-------|----------|
+| Admin | admin@mahabharat.local | DevAdmin!234 |
+| Agent | rajesh@mahabharat.local | DevAgent!234 |
+| Customer | amit@example.local | DevCust!2345 |
 
-## Security model
-- **RBAC** on every protected route (`requireAuth` + `requireRole`).
-- Customers see only their own requests; agents see only assigned tasks; admins see all.
-- **Downloads of final deliverables are blocked for customers until an admin marks the payment received.**
-- Agents never receive a customer's full phone number; the masked OTP-call flow
-  connects via a provider (stubbed) without exposing the number.
-- All sensitive actions (status changes, file downloads, payment approval,
-  agent actions) are written to the `AuditLog`.
-- Passwords are bcrypt-hashed and never returned in responses.
+Never use these in production. Prefer `npm run create-admin` for real admins.
 
-## Data models
-`User`, `CustomerProfile`, `AgentProfile`, `ServiceCategory`, `Service`,
-`ServiceRequest` (embeds `RequestDocument`, `FinalDeliverable`,
-`RequestStatusHistory`, `RequestComment`), `Payment`, `AuditLog`,
-`Notification`, `CallLog`. Official-service links are embedded on `Service`;
-agent performance is derived at query time.
+## Security tests
 
-## Deployment (Render / Railway)
-- Set `MONGODB_URI` (MongoDB Atlas), `JWT_SECRET`, `CLIENT_URL`, `NODE_ENV=production`.
-- Build/start command: `npm install && npm start`.
-- Note: uploaded files are stored on local disk (`uploads/`). For a platform with
-  an ephemeral filesystem, move uploads to S3/Cloudinary (a later phase).
+```bash
+npm run test:security
+```
+
+## Security model (summary)
+- Fail-closed JWT secret + `CLIENT_URL` in production; `MONGODB_URI` required in production
+- HttpOnly + Secure + SameSite auth cookies; JWT **not** returned in JSON (XSS)
+- Double-submit CSRF (`mc_csrf` + `X-CSRF-Token`) for cookie-authenticated mutations
+- Bearer still accepted for API/tools (skips CSRF — token is not auto-attached by browsers)
+- `tokenVersion` invalidates sessions after password reset, logout, and deactivation
+- Strong password policy; bcrypt cost 12; account lockout after failed logins
+- Per-route rate limits (login, signup, reset, uploads) + global API brake
+- Role + ownership checks on every request/resource (DB role, never client role)
+- Agent status allowlist (cannot mark delivered / skip payment)
+- Magic-byte upload validation; path traversal guards; sanitized downloads
+- Mongo operator stripping; allowlisted mass-assignment
+- Tight CORS (no `*.vercel.app`); SPA security headers via `vercel.json`

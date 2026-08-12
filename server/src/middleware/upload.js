@@ -1,9 +1,9 @@
 const multer = require("multer");
+const path = require("path");
 const env = require("../config/env");
 const { ApiError } = require("../utils/apiError");
 
-// In-memory storage so the buffer can be sent to Cloudinary (or written to
-// disk by the storage layer). Keeps the storage backend swappable.
+// Client-declared MIME is only a first filter; magic-byte checks run after.
 const ALLOWED = new Set([
   "image/jpeg",
   "image/png",
@@ -13,21 +13,41 @@ const ALLOWED = new Set([
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   "application/vnd.ms-excel",
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-  // video (note: large videos may exceed MAX_UPLOAD_MB — raise it if needed)
   "video/mp4",
   "video/webm",
   "video/quicktime",
 ]);
 
+const ALLOWED_EXT = new Set([
+  ".jpg",
+  ".jpeg",
+  ".png",
+  ".webp",
+  ".pdf",
+  ".doc",
+  ".docx",
+  ".xls",
+  ".xlsx",
+  ".mp4",
+  ".webm",
+  ".mov",
+]);
+
 const fileFilter = (_req, file, cb) => {
-  if (ALLOWED.has(file.mimetype)) return cb(null, true);
-  cb(new ApiError(400, "Unsupported file type. Allowed: images, PDF, Word, Excel."));
+  const ext = path.extname(file.originalname || "").toLowerCase();
+  if (!ALLOWED_EXT.has(ext)) {
+    return cb(new ApiError(400, "Unsupported file extension"));
+  }
+  if (!ALLOWED.has(file.mimetype)) {
+    return cb(new ApiError(400, "Unsupported file type. Allowed: images, PDF, Word, Excel, video."));
+  }
+  cb(null, true);
 };
 
 const upload = multer({
   storage: multer.memoryStorage(),
   fileFilter,
-  limits: { fileSize: env.maxUploadBytes },
+  limits: { fileSize: env.maxUploadBytes, files: 1 },
 });
 
 module.exports = { upload };

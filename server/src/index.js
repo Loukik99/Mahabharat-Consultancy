@@ -6,14 +6,13 @@ const { connectDB } = require("./config/db");
   try {
     await connectDB();
 
-    // Zero-setup dev convenience: an in-memory DB starts empty, so seed it
-    // automatically. With a real MONGODB_URI, use `npm run seed` instead.
-    if (!env.mongoUri) {
+    // Zero-setup dev convenience: in-memory DB only (never production / never remote URI).
+    if (!env.mongoUri && !env.isProd) {
+      process.env.CONFIRM_SEED = "YES";
       const { seedDatabase } = require("./seed");
       await seedDatabase();
     }
 
-    // Ensure Cloudinary type subfolders exist (so they're visible when empty).
     const { ensureFolders } = require("./utils/storage");
     ensureFolders().catch(() => {});
 

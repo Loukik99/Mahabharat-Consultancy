@@ -9,18 +9,11 @@
  *   $env:ADMIN_NAME="Owner Full Name"; $env:ADMIN_EMAIL="owner@example.com"; `
  *   $env:ADMIN_PHONE="9XXXXXXXXX"; $env:ADMIN_PASSWORD="a-strong-password"; `
  *   npm run create-admin
- *
- * Usage (bash):
- *   cd server
- *   ADMIN_NAME="Owner Full Name" ADMIN_EMAIL="owner@example.com" \
- *   ADMIN_PHONE="9XXXXXXXXX" ADMIN_PASSWORD="a-strong-password" npm run create-admin
- *
- * If an account with that email already exists, it is promoted to admin and its
- * password/name/phone are updated. Otherwise a new admin is created.
  */
 require("dotenv").config();
 const { connectDB, disconnectDB } = require("./config/db");
 const { User } = require("./models");
+const { validatePassword } = require("./utils/passwordPolicy");
 
 async function main() {
   const name = process.env.ADMIN_NAME;
@@ -34,8 +27,10 @@ async function main() {
     );
     process.exit(1);
   }
-  if (password.length < 8) {
-    console.error("❌ Please use a password of at least 8 characters for an admin account.");
+  try {
+    validatePassword(password, { label: "ADMIN_PASSWORD" });
+  } catch (e) {
+    console.error("❌", e.message);
     process.exit(1);
   }
 
@@ -47,7 +42,7 @@ async function main() {
     user.phone = phone;
     user.role = "admin";
     user.isActive = true;
-    user.password = password; // re-hashed by the model on save
+    user.password = password; // re-hashed; also bumps tokenVersion
     await user.save();
     console.log(`✅ Updated existing account → admin: ${email}`);
   } else {
@@ -63,6 +58,10 @@ async function main() {
 
 main().catch(async (e) => {
   console.error("❌ Failed:", e.message);
-  try { await disconnectDB(); } catch { /* ignore */ }
+  try {
+    await disconnectDB();
+  } catch {
+    /* ignore */
+  }
   process.exit(1);
 });

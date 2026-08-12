@@ -18,6 +18,12 @@ export default defineConfig({
       "/api": {
         target: process.env.VITE_PROXY_TARGET || "http://localhost:5000",
         changeOrigin: true,
+        // Forward auth cookies for HttpOnly session support in local dev.
+        configure: (proxy) => {
+          proxy.on("proxyReq", (proxyReq, req) => {
+            if (req.headers.cookie) proxyReq.setHeader("cookie", req.headers.cookie);
+          });
+        },
       },
     },
   },

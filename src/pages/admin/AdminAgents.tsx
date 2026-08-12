@@ -11,6 +11,7 @@ import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { Plus, Trash2, Download } from "lucide-react";
+import { validatePasswordClient, PASSWORD_HINT } from "@/lib/passwordPolicy";
 
 const ADMIN_LINKS = [
   { to: "/admin", label: "Dashboard" }, { to: "/admin/requests", label: "Requests" },
@@ -84,6 +85,8 @@ export default function AdminAgents() {
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
+    const pwErr = validatePasswordClient(form.password);
+    if (pwErr) return toast.error(pwErr);
     try {
       await createAgent({ name: form.name, email: form.email, phone: form.phone, password: form.password });
       toast.success("Agent added");
@@ -182,7 +185,7 @@ export default function AdminAgents() {
             <div><Label>Name *</Label><Input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
             <div><Label>Email *</Label><Input type="email" required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></div>
             <div><Label>Phone *</Label><Input required value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} /></div>
-            <div><Label>Password *</Label><Input type="password" required value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} /></div>
+            <div><Label>Password *</Label><Input type="password" required minLength={10} placeholder={PASSWORD_HINT} value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} /></div>
             <div className="flex gap-2 pt-1">
               <Button type="submit" className="flex-1">Create Agent</Button>
               <Button type="button" variant="outline" onClick={() => setOpen(false)}>Cancel</Button>

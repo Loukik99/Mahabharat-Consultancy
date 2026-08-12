@@ -241,8 +241,11 @@ Enforced by [middleware/auth.js](server/src/middleware/auth.js) (`requireAuth`, 
 | `NODE_ENV` | `development` / `production` |
 | `CLIENT_URL` | Frontend origin allowed by CORS |
 | `MONGODB_URI` | MongoDB Atlas connection string (blank = in-memory dev DB) |
-| `JWT_SECRET` | Secret for signing JWTs (use a long random string) |
-| `JWT_EXPIRES_IN` | Token lifetime, e.g. `7d` |
+| `JWT_SECRET` | **Required in production** (≥32 random chars). Server fails closed if missing/weak. |
+| `JWT_SECRET_ROTATED` | Set `true` after rotating JWT_SECRET away from any previously exposed value |
+| `JWT_EXPIRES_IN` | Token lifetime (default `8h` in production) |
+| `CLIENT_URL` | **Required in production** — trusted frontend origin(s), comma-separated |
+| `VERCEL_PREVIEW_ORIGINS` | Optional exact preview origins (no `*.vercel.app` wildcard) |
 | `MAX_UPLOAD_MB` | Max upload size |
 | `UPLOAD_DIR` | Local fallback folder for uploads |
 | `CLOUDINARY_CLOUD_NAME` / `CLOUDINARY_API_KEY` / `CLOUDINARY_API_SECRET` | Cloudinary credentials (file storage) |
@@ -260,7 +263,10 @@ Enforced by [middleware/auth.js](server/src/middleware/auth.js) (`requireAuth`, 
 cd server
 cp .env.example .env        # then fill in values (or leave MONGODB_URI blank)
 npm install
-npm run seed                # optional: load starter services/users
+# Destructive seed is DEV ONLY and requires confirmation:
+#   PowerShell: $env:CONFIRM_SEED="YES"; npm run seed
+#   bash:       CONFIRM_SEED=YES npm run seed
+# Prefer create-admin for real privileged accounts (never seed production).
 npm run dev                 # starts API on http://localhost:5000
 
 # 2) Frontend (in a second terminal, from the project root)
@@ -281,7 +287,9 @@ Open **http://localhost:5173/Mahabharat-Consultancy/**
 |---|---|
 | `npm run dev` | Start API with auto-reload (nodemon) |
 | `npm start` | Start API (plain node) |
-| `npm run seed` | Seed the database |
+| `npm run seed` | Destructive demo seed — **dev only**, requires `CONFIRM_SEED=YES` |
+| `npm run create-admin` | Create/update a real admin (safe for production) |
+| `npm run test:security` | Security regression suite |
 
 ---
 

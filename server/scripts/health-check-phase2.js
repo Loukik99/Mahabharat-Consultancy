@@ -93,6 +93,18 @@ const TINY_PNG = Buffer.from(
   "base64"
 );
 
+
+function tokenFromResponse(res) {
+  if (res.json && res.json.token) return res.json.token;
+  const setCookie = res.headers && res.headers["set-cookie"];
+  const list = Array.isArray(setCookie) ? setCookie : setCookie ? [setCookie] : [];
+  for (const c of list) {
+    const m = String(c).match(/^mc_auth=([^;]+)/);
+    if (m) return decodeURIComponent(m[1]);
+  }
+  return null;
+}
+
 async function main() {
   console.log(`\n=== Phase-2 Admin/Agent API Health Check (${TAG}) ===\n`);
   const { connectDB, disconnectDB } = require("../src/config/db");
@@ -105,7 +117,7 @@ async function main() {
   const adminEmail = `${TAG.toLowerCase()}_admin@example.com`;
   const adminPhone = `7${String(Date.now()).slice(-9)}`;
   const admin = new User({ name: `${TAG} Admin`, email: adminEmail, phone: adminPhone, role: "admin", isActive: true });
-  admin.password = "temptestadmin9";
+  admin.password = "TempTestAdmin9!";
   await admin.save();
   console.log(`Created TEMP admin id=${admin.id}`);
 
@@ -113,7 +125,7 @@ async function main() {
   const agentEmail = `${TAG.toLowerCase()}_agent@example.com`;
   const agentPhone = `6${String(Date.now()).slice(-9)}`;
   const agent = new User({ name: `${TAG} Agent`, email: agentEmail, phone: agentPhone, role: "agent", isActive: true });
-  agent.password = "temptestagent9";
+  agent.password = "TempTestAgent9!";
   await agent.save();
   await AgentProfile.create({ user: agent._id });
   console.log(`Created TEMP agent id=${agent.id}`);
@@ -122,7 +134,7 @@ async function main() {
   const custEmail = `${TAG.toLowerCase()}_cust@example.com`;
   const custPhone = `5${String(Date.now()).slice(-9)}`;
   const cust = new User({ name: `${TAG} Customer`, email: custEmail, phone: custPhone, role: "customer", isActive: true });
-  cust.password = "temptestcust9";
+  cust.password = "TempTestCust9!";
   await cust.save();
   await CustomerProfile.create({ user: cust._id });
   console.log(`Created TEMP customer id=${cust.id}`);
@@ -130,17 +142,17 @@ async function main() {
   await disconnectDB();
 
   // Login
-  let res = await request("POST", "/auth/login", { body: { emailOrPhone: adminEmail, password: "temptestadmin9" } });
-  expect("/auth/login (temp admin)", "POST", res, [200], (r) => !!r.json?.token);
-  const adminToken = res.json?.token;
+  let res = await request("POST", "/auth/login", { body: { emailOrPhone: adminEmail, password: "TempTestAdmin9!" } });
+  expect("/auth/login (temp admin)", "POST", res, [200], (r) => !!tokenFromResponse(r));
+  const adminToken = tokenFromResponse(res);
 
-  res = await request("POST", "/auth/login", { body: { emailOrPhone: agentEmail, password: "temptestagent9" } });
-  expect("/auth/login (temp agent)", "POST", res, [200], (r) => !!r.json?.token);
-  const agentToken = res.json?.token;
+  res = await request("POST", "/auth/login", { body: { emailOrPhone: agentEmail, password: "TempTestAgent9!" } });
+  expect("/auth/login (temp agent)", "POST", res, [200], (r) => !!tokenFromResponse(r));
+  const agentToken = tokenFromResponse(res);
 
-  res = await request("POST", "/auth/login", { body: { emailOrPhone: custEmail, password: "temptestcust9" } });
-  expect("/auth/login (temp cust)", "POST", res, [200], (r) => !!r.json?.token);
-  const custToken = res.json?.token;
+  res = await request("POST", "/auth/login", { body: { emailOrPhone: custEmail, password: "TempTestCust9!" } });
+  expect("/auth/login (temp cust)", "POST", res, [200], (r) => !!tokenFromResponse(r));
+  const custToken = tokenFromResponse(res);
 
   // Admin reads
   res = await request("GET", "/users/customers", { token: adminToken });
@@ -195,7 +207,7 @@ async function main() {
   const agent2Phone = `4${String(Date.now()).slice(-9)}`;
   res = await request("POST", "/users/agents", {
     token: adminToken,
-    body: { name: `${TAG} Agent2`, email: agent2Email, phone: agent2Phone, password: "agent2pass99" },
+    body: { name: `${TAG} Agent2`, email: agent2Email, phone: agent2Phone, password: "Agent2Pass99!" },
   });
   expect("/users/agents", "POST", res, [201], (r) => !!r.json?.agent?.id);
   const agent2Id = res.json?.agent?.id;
@@ -305,10 +317,10 @@ async function main() {
   const throwEmail = `${TAG.toLowerCase()}_del@example.com`;
   const throwPhone = `3${String(Date.now()).slice(-9)}`;
   res = await request("POST", "/auth/register", {
-    body: { name: `${TAG} DeleteMe`, email: throwEmail, phone: throwPhone, password: "deleteme99" },
+    body: { name: `${TAG} DeleteMe`, email: throwEmail, phone: throwPhone, password: "DeleteMe99x!" },
   });
   expect("/auth/register (delete-me)", "POST", res, [201]);
-  const delToken = res.json?.token;
+  const delToken = tokenFromResponse(res);
   res = await request("DELETE", "/account", { token: delToken });
   expect("/account", "DELETE", res, [200]);
 
