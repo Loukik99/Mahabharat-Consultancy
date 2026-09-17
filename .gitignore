@@ -24,3 +24,9 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Screenshots (OS-captured files; do not commit)
+Screenshot *.png
+Screenshot *.jpg
+Screenshot *.jpeg
+Screenshot *.webp
