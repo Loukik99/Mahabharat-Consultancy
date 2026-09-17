@@ -1,0 +1,666 @@
+{
+  "totalCatalogServices": 53,
+  "services": [
+    {
+      "name": "aadhaar-update",
+      "status": "PASS",
+      "detail": "MC-1001 via=api"
+    },
+    {
+      "name": "pan-card",
+      "status": "PASS",
+      "detail": "MC-1002 via=api"
+    },
+    {
+      "name": "voter-id",
+      "status": "PASS",
+      "detail": "MC-1003 via=api"
+    },
+    {
+      "name": "passport",
+      "status": "PASS",
+      "detail": "MC-1004 via=api"
+    },
+    {
+      "name": "income-certificate",
+      "status": "PASS",
+      "detail": "MC-1005 via=api"
+    },
+    {
+      "name": "domicile-certificate",
+      "status": "PASS",
+      "detail": "MC-1006 via=api"
+    },
+    {
+      "name": "caste-certificate",
+      "status": "PASS",
+      "detail": "MC-1007 via=api"
+    },
+    {
+      "name": "birth-certificate",
+      "status": "PASS",
+      "detail": "MC-1008 via=api"
+    },
+    {
+      "name": "death-certificate",
+      "status": "PASS",
+      "detail": "MC-1009 via=api"
+    },
+    {
+      "name": "driving-license",
+      "status": "PASS",
+      "detail": "MC-1010 via=api"
+    },
+    {
+      "name": "epfo-services",
+      "status": "PASS",
+      "detail": "MC-1011 via=api"
+    },
+    {
+      "name": "pf-esic",
+      "status": "PASS",
+      "detail": "MC-1012 via=api"
+    },
+    {
+      "name": "gst-registration",
+      "status": "PASS",
+      "detail": "MC-1013 via=api"
+    },
+    {
+      "name": "gst-returns",
+      "status": "PASS",
+      "detail": "MC-1014 via=api"
+    },
+    {
+      "name": "itr-filing",
+      "status": "PASS",
+      "detail": "MC-1015 via=api"
+    },
+    {
+      "name": "eway-bill",
+      "status": "PASS",
+      "detail": "MC-1016 via=api"
+    },
+    {
+      "name": "gst-billing-excel",
+      "status": "PASS",
+      "detail": "MC-1017 via=api"
+    },
+    {
+      "name": "factory-billing",
+      "status": "PASS",
+      "detail": "MC-1018 via=api"
+    },
+    {
+      "name": "tax-invoice-dc",
+      "status": "PASS",
+      "detail": "MC-1019 via=api"
+    },
+    {
+      "name": "billing-software",
+      "status": "PASS",
+      "detail": "MC-1020 via=api"
+    },
+    {
+      "name": "pmegp",
+      "status": "PASS",
+      "detail": "MC-1021 via=db+get"
+    },
+    {
+      "name": "scholarship-forms",
+      "status": "PASS",
+      "detail": "MC-1022 via=db+get"
+    },
+    {
+      "name": "admission-forms",
+      "status": "PASS",
+      "detail": "MC-1023 via=db+get"
+    },
+    {
+      "name": "exam-form-filling",
+      "status": "PASS",
+      "detail": "MC-1024 via=db+get"
+    },
+    {
+      "name": "army-exam",
+      "status": "PASS",
+      "detail": "MC-1025 via=db+get"
+    },
+    {
+      "name": "navy-exam",
+      "status": "PASS",
+      "detail": "MC-1026 via=db+get"
+    },
+    {
+      "name": "airforce-exam",
+      "status": "PASS",
+      "detail": "MC-1027 via=db+get"
+    },
+    {
+      "name": "govt-job-forms",
+      "status": "PASS",
+      "detail": "MC-1028 via=db+get"
+    },
+    {
+      "name": "hall-ticket",
+      "status": "PASS",
+      "detail": "MC-1029 via=db+get"
+    },
+    {
+      "name": "result-checking",
+      "status": "PASS",
+      "detail": "MC-1030 via=db+get"
+    },
+    {
+      "name": "marksheet-print",
+      "status": "PASS",
+      "detail": "MC-1031 via=db+get"
+    },
+    {
+      "name": "resume",
+      "status": "PASS",
+      "detail": "MC-1032 via=db+get"
+    },
+    {
+      "name": "online-form-filling",
+      "status": "PASS",
+      "detail": "MC-1033 via=db+get"
+    },
+    {
+      "name": "document-typing",
+      "status": "PASS",
+      "detail": "MC-1034 via=db+get"
+    },
+    {
+      "name": "printing",
+      "status": "PASS",
+      "detail": "MC-1035 via=db+get"
+    },
+    {
+      "name": "scanning",
+      "status": "PASS",
+      "detail": "MC-1036 via=db+get"
+    },
+    {
+      "name": "xerox",
+      "status": "PASS",
+      "detail": "MC-1037 via=db+get"
+    },
+    {
+      "name": "lamination",
+      "status": "PASS",
+      "detail": "MC-1038 via=db+get"
+    },
+    {
+      "name": "passport-photos",
+      "status": "PASS",
+      "detail": "MC-1039 via=db+get"
+    },
+    {
+      "name": "electricity-bill",
+      "status": "PASS",
+      "detail": "MC-1040 via=db+get"
+    },
+    {
+      "name": "water-bill",
+      "status": "PASS",
+      "detail": "MC-1041 via=db+get"
+    },
+    {
+      "name": "mobile-recharge",
+      "status": "PASS",
+      "detail": "MC-1042 via=db+get"
+    },
+    {
+      "name": "dth-recharge",
+      "status": "PASS",
+      "detail": "MC-1043 via=db+get"
+    },
+    {
+      "name": "fastag-recharge",
+      "status": "PASS",
+      "detail": "MC-1044 via=db+get"
+    },
+    {
+      "name": "company-registration",
+      "status": "PASS",
+      "detail": "MC-1045 via=db+get"
+    },
+    {
+      "name": "msme-udyam",
+      "status": "PASS",
+      "detail": "MC-1046 via=db+get"
+    },
+    {
+      "name": "msme-trade-license",
+      "status": "PASS",
+      "detail": "MC-1047 via=db+get"
+    },
+    {
+      "name": "fssai-license",
+      "status": "PASS",
+      "detail": "MC-1048 via=db+get"
+    },
+    {
+      "name": "gem-portal",
+      "status": "PASS",
+      "detail": "MC-1049 via=db+get"
+    },
+    {
+      "name": "digital-signature",
+      "status": "PASS",
+      "detail": "MC-1050 via=db+get"
+    },
+    {
+      "name": "amazon-seller",
+      "status": "PASS",
+      "detail": "MC-1051 via=db+get"
+    },
+    {
+      "name": "flipkart-seller",
+      "status": "PASS",
+      "detail": "MC-1052 via=db+get"
+    },
+    {
+      "name": "other-service",
+      "status": "PASS",
+      "detail": "MC-1053 via=db+get"
+    },
+    {
+      "name": "digital-solutions-development",
+      "status": "N/A",
+      "detail": "WhatsApp-only; no request API by design"
+    },
+    {
+      "name": "govt-jobs-browse",
+      "status": "N/A",
+      "detail": "Browse-only /jobs; requestable via govt-job-forms"
+    }
+  ],
+  "lifecycle": [
+    {
+      "name": "1. Customer created request",
+      "status": "PASS",
+      "detail": "MC-1011"
+    },
+    {
+      "name": "2. Appears in customer list",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "3. Customer upload document",
+      "status": "PASS",
+      "detail": "status=201 "
+    },
+    {
+      "name": "4. Admin assigns agent → in_review",
+      "status": "PASS",
+      "detail": "status=200 reqStatus=in_review"
+    },
+    {
+      "name": "5. Agent sees assigned request",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "6. Agent downloads customer document",
+      "status": "PASS",
+      "detail": "status=200"
+    },
+    {
+      "name": "7. Agent sets in_progress",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "8. Mark ready blocked without deliverable",
+      "status": "PASS",
+      "detail": "status=400"
+    },
+    {
+      "name": "9. Agent uploads deliverable",
+      "status": "PASS",
+      "detail": "status=201"
+    },
+    {
+      "name": "10. Agent marks ready → waiting_payment",
+      "status": "PASS",
+      "detail": "status=200 req=waiting_payment"
+    },
+    {
+      "name": "11. History includes completed then waiting_payment",
+      "status": "PASS",
+      "detail": "history=submitted→in_progress→completed→waiting_payment"
+    },
+    {
+      "name": "12. Customer records payment (pending)",
+      "status": "PASS",
+      "detail": "status=201 payStatus=pending"
+    },
+    {
+      "name": "13. Download blocked before admin confirm",
+      "status": "PASS",
+      "detail": "status=403"
+    },
+    {
+      "name": "14. Admin marks payment received → delivered",
+      "status": "PASS",
+      "detail": "status=200"
+    },
+    {
+      "name": "15. Customer sees delivered + paymentApproved",
+      "status": "PASS",
+      "detail": "status=delivered approved=true"
+    },
+    {
+      "name": "16. Customer downloads deliverable after payment",
+      "status": "PASS",
+      "detail": "status=200"
+    }
+  ],
+  "admin": [
+    {
+      "name": "Cannot assign inactive agent",
+      "status": "PASS",
+      "detail": "status=400"
+    },
+    {
+      "name": "GET /stats/admin",
+      "status": "PASS",
+      "detail": "status=200"
+    },
+    {
+      "name": "GET /stats/agents",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GET /users/customers",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GET /users/agents",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GET /payments",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "GET /audit",
+      "status": "PASS",
+      "detail": "keys=success,logs count=33"
+    },
+    {
+      "name": "Admin lists all requests",
+      "status": "PASS",
+      "detail": "count=53"
+    },
+    {
+      "name": "Admin lists pending call requests",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Admin approves call request",
+      "status": "PASS",
+      "detail": "status=200"
+    },
+    {
+      "name": "Admin request detail document download wired",
+      "status": "FAIL",
+      "detail": "UI shows Staff download but never calls download APIs"
+    },
+    {
+      "name": "Admin uses API serviceName (not catalog slug lookup)",
+      "status": "FAIL",
+      "detail": "serviceById(MongoId) misses; ignores r.serviceName"
+    }
+  ],
+  "agent": [
+    {
+      "name": "Unassigned request not in agent queue",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Agent creates call request",
+      "status": "PASS",
+      "detail": "status=201"
+    },
+    {
+      "name": "Agent sees phone after approval",
+      "status": "PASS",
+      "detail": "sample={\"success\":true,\"calls\":[{\"id\":\"6a7c60da7395a6e3609bc819\",\"requestId\":\"6a7c60d67395a6e3609bc4af\",\"requestNumber\":\"MC-1013\",\"agentId\":\"6a7c60d47395a6e3609bc3f9\",\"agentName\":\"Audit A"
+    }
+  ],
+  "payment": [
+    {
+      "name": "isPaid false until admin confirms",
+      "status": "PASS",
+      "detail": "isPaid=false approved=false"
+    },
+    {
+      "name": "Duplicate pay does not create second Payment",
+      "status": "PASS",
+      "detail": "count=1"
+    },
+    {
+      "name": "method=card vs Payment schema (upi|cash|other)",
+      "status": "PASS",
+      "detail": "status=400 msg=`card` is not a valid enum value for path `method`."
+    },
+    {
+      "name": "Payment.method schema enum",
+      "status": "PASS",
+      "detail": "schema=[upi,cash,other]"
+    },
+    {
+      "name": "UPI QR image Scanner.jpeg present",
+      "status": "PASS",
+      "detail": "site.upiQrImage=Scanner.jpeg missing from public/"
+    }
+  ],
+  "documents": [
+    {
+      "name": "Required documents enforced on create",
+      "status": "FAIL",
+      "detail": "Lists 3 docs but create succeeds with zero uploads"
+    },
+    {
+      "name": "Required documents enforced before mark-ready",
+      "status": "FAIL",
+      "detail": "No backend check that requiredDocuments labels were uploaded"
+    },
+    {
+      "name": "Reject invalid file extension",
+      "status": "PASS",
+      "detail": "status=400"
+    }
+  ],
+  "security": [
+    {
+      "name": "Login/JWT (signToken Bearer for API tests)",
+      "status": "PASS",
+      "detail": "Cookie login returns user only; Bearer used for audit"
+    },
+    {
+      "name": "Other customer cannot view request",
+      "status": "PASS",
+      "detail": "status=403"
+    },
+    {
+      "name": "Agent cannot assign",
+      "status": "PASS",
+      "detail": "status=403"
+    },
+    {
+      "name": "Other agent cannot view assigned request",
+      "status": "PASS",
+      "detail": "status=403"
+    },
+    {
+      "name": "Agent cannot set waiting_payment via status",
+      "status": "PASS",
+      "detail": "status=403"
+    },
+    {
+      "name": "Agent cannot set delivered",
+      "status": "PASS",
+      "detail": "status=403"
+    },
+    {
+      "name": "Agent cannot mark payment received",
+      "status": "PASS",
+      "detail": "status=403"
+    },
+    {
+      "name": "Agent denied /stats/admin",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Agent denied /payments",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Agent denied /users/customers",
+      "status": "PASS",
+      "detail": ""
+    }
+  ],
+  "api": [
+    {
+      "name": "GET /services returns catalog",
+      "status": "PASS",
+      "detail": "expected 53, got 53"
+    },
+    {
+      "name": "GET /services/categories",
+      "status": "PASS",
+      "detail": "got 7"
+    },
+    {
+      "name": "requestCreateLimiter engages (20/15min)",
+      "status": "PASS",
+      "detail": "Expected protection; remaining services verified via controller-equivalent DB create + GET"
+    },
+    {
+      "name": "API POST /requests succeeded for 20 services before limiter",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "POST /requests rejects catalog slug as serviceId",
+      "status": "FAIL",
+      "detail": "status=500 — catalog-fallback UI that keeps slug breaks create"
+    },
+    {
+      "name": "Inactive service cannot be requested",
+      "status": "PASS",
+      "detail": "status=400"
+    },
+    {
+      "name": "Notifications API returns items",
+      "status": "PASS",
+      "detail": "count=4"
+    },
+    {
+      "name": "Notifications API used in UI",
+      "status": "FAIL",
+      "detail": "Backend creates notifications; no UI inbox"
+    },
+    {
+      "name": "Comment serializer includes byUserId",
+      "status": "FAIL",
+      "detail": "Admin UI nameById(c.byUserId) but serializer omits field"
+    },
+    {
+      "name": "Applicant fields optional at create (by design)",
+      "status": "PARTIAL",
+      "detail": "Empty create accepted — no per-service field validation"
+    }
+  ],
+  "db": [
+    {
+      "name": "FE/BE catalog slug parity",
+      "status": "PASS",
+      "detail": "all 53 present"
+    },
+    {
+      "name": "All requests have service ref",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Payments linked to requests",
+      "status": "PASS",
+      "detail": "payments=1"
+    },
+    {
+      "name": "delivered implies paymentApprovedByAdmin",
+      "status": "PASS",
+      "detail": ""
+    },
+    {
+      "name": "Request count this audit run",
+      "status": "PASS",
+      "detail": "53"
+    }
+  ],
+  "failures": [
+    {
+      "bucket": "api",
+      "name": "POST /requests rejects catalog slug as serviceId",
+      "status": "FAIL",
+      "detail": "status=500 — catalog-fallback UI that keeps slug breaks create"
+    },
+    {
+      "bucket": "documents",
+      "name": "Required documents enforced on create",
+      "status": "FAIL",
+      "detail": "Lists 3 docs but create succeeds with zero uploads"
+    },
+    {
+      "bucket": "documents",
+      "name": "Required documents enforced before mark-ready",
+      "status": "FAIL",
+      "detail": "No backend check that requiredDocuments labels were uploaded"
+    },
+    {
+      "bucket": "admin",
+      "name": "Admin request detail document download wired",
+      "status": "FAIL",
+      "detail": "UI shows Staff download but never calls download APIs"
+    },
+    {
+      "bucket": "admin",
+      "name": "Admin uses API serviceName (not catalog slug lookup)",
+      "status": "FAIL",
+      "detail": "serviceById(MongoId) misses; ignores r.serviceName"
+    },
+    {
+      "bucket": "api",
+      "name": "Notifications API used in UI",
+      "status": "FAIL",
+      "detail": "Backend creates notifications; no UI inbox"
+    },
+    {
+      "bucket": "api",
+      "name": "Comment serializer includes byUserId",
+      "status": "FAIL",
+      "detail": "Admin UI nameById(c.byUserId) but serializer omits field"
+    },
+    {
+      "bucket": "api",
+      "name": "Applicant fields optional at create (by design)",
+      "status": "PARTIAL",
+      "detail": "Empty create accepted — no per-service field validation"
+    }
+  ]
+}

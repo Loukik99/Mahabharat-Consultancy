@@ -1,11 +1,9 @@
 const env = require("../config/env");
 
-// 404 for unmatched API routes.
 function notFound(req, res, _next) {
-  res.status(404).json({ success: false, message: `Not found: ${req.method} ${req.originalUrl}` });
+  res.status(404).json({ success: false, message: "Not found" });
 }
 
-// Central error handler.
 // eslint-disable-next-line no-unused-vars
 function errorHandler(err, req, res, _next) {
   let status = err.statusCode || 500;
@@ -13,14 +11,25 @@ function errorHandler(err, req, res, _next) {
 
   if (err.name === "ValidationError") {
     status = 400;
-    message = Object.values(err.errors).map((e) => e.message).join(", ");
+    message = Object.values(err.errors)
+      .map((e) => e.message)
+      .join(", ");
   }
   if (err.code === 11000) {
     status = 409;
-    message = `Duplicate value for: ${Object.keys(err.keyValue || {}).join(", ")}`;
+    message = "Duplicate value";
+  }
+  if (err.name === "MulterError") {
+    status = 400;
+    if (err.code === "LIMIT_FILE_SIZE") message = "File too large";
+    else message = "Upload failed";
   }
 
-  if (status >= 500) console.error("ERROR:", err);
+  // Never leak internals in production.
+  if (status >= 500) {
+    console.error("ERROR:", env.isProd ? err.message : err);
+    if (env.isProd) message = "Internal Server Error";
+  }
 
   res.status(status).json({
     success: false,

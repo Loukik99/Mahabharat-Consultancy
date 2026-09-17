@@ -11,7 +11,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import AnimatedList from "@/components/AnimatedList";
 import type { ServiceCategory, Service } from "@/types";
-import { ChevronLeft, CheckCircle2, Info, FileText, ArrowRight } from "lucide-react";
+import { ChevronLeft, Info, FileText, ArrowRight, Upload } from "lucide-react";
+
+// Must match server upload + magic-byte policy (no GIF).
+const ACCEPTED = [
+  "image/jpeg", "image/png", "image/webp",
+  "application/pdf",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "video/mp4", "video/webm", "video/quicktime",
+];
+const ACCEPT_ATTR = ".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.mp4,.webm,.mov";
+const MAX_BYTES = 5 * 1024 * 1024;
 
 export default function NewRequest() {
   const { serviceId } = useParams();
@@ -36,6 +49,7 @@ export default function NewRequest() {
     additionalInfo: "",
   });
   const [notes, setNotes] = useState("");
+  const [requiredFiles, setRequiredFiles] = useState<Record<string, File | null>>({});
 
   // Initial load: categories, plus preselected service when serviceId is present.
   useEffect(() => {
@@ -49,6 +63,7 @@ export default function NewRequest() {
             setService(svc);
             setCategory(svc.category);
             setPreselected(true);
+            setRequiredFiles(Object.fromEntries((svc.requiredDocuments || []).map((d) => [d, null])));
           } else if (active) {
             const cats = await getCategories();
             if (active) setCategories(cats);
@@ -88,11 +103,37 @@ export default function NewRequest() {
     };
   }, [category, preselected]);
 
+  const selectService = (s: Service) => {
+    setService(s);
+    setRequiredFiles(Object.fromEntries((s.requiredDocuments || []).map((d) => [d, null])));
+  };
+
   const step = service ? 2 : 1;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!service || submitting) return;
+
+    const required = service.requiredDocuments || [];
+    const missing = required.filter((label) => !requiredFiles[label]);
+    if (missing.length) {
+      toast.error(`Missing required documents: ${missing.join(", ")}`);
+      return;
+    }
+
+    for (const label of required) {
+      const file = requiredFiles[label];
+      if (!file) continue;
+      if (!ACCEPTED.includes(file.type)) {
+        toast.error(`"${label}": unsupported file type. Use JPEG/PNG/WebP, PDF, Word, Excel or MP4/WebM/MOV.`);
+        return;
+      }
+      if (file.size > MAX_BYTES) {
+        toast.error(`"${label}": file too large. Maximum size is 5 MB.`);
+        return;
+      }
+    }
+
     const applicantDetails = {
       fullName: applicant.fullName.trim() || undefined,
       fatherName: applicant.fatherName.trim() || undefined,
@@ -107,7 +148,11 @@ export default function NewRequest() {
         applicantDetails,
         notes: notes.trim(),
       });
-      toast.success("Request created! Now upload your documents.");
+      for (const label of required) {
+        const file = requiredFiles[label];
+        if (file) await Req.uploadDocument(created.id, file, label);
+      }
+      toast.success(required.length ? "Request created with required documents." : "Request created!");
       navigate(`/requests/${created.id}`);
     } catch (e) {
       toast.error((e as Error).message);
@@ -118,6 +163,7 @@ export default function NewRequest() {
   const back = () => {
     if (service && !preselected) {
       setService(null);
+      setRequiredFiles({});
     } else if (category && !preselected) {
       setCategory(null);
     } else {
@@ -181,7 +227,7 @@ export default function NewRequest() {
                         <button
                           key={s.id}
                           type="button"
-                          onClick={() => setService(s)}
+                          onClick={() => selectService(s)}
                           className="w-full text-left rounded border border-border p-3 hover:border-gold transition-colors flex items-center justify-between gap-3"
                         >
                           <span className="min-w-0">
@@ -221,27 +267,47 @@ export default function NewRequest() {
               </Card>
 
               {service.requiredDocuments.length > 0 && (
-                <div className="p-3 rounded border border-amber-200 bg-amber-50/60 text-sm">
-                  <p className="font-semibold text-xs text-amber-800 mb-2 flex items-center gap-1.5"><FileText size={13} /> Documents you'll need to upload:</p>
+                <div className="p-3 rounded border border-amber-200 bg-amber-50/60 text-sm space-y-3">
+                  <p className="font-semibold text-xs text-amber-800 flex items-center gap-1.5">
+                    <FileText size={13} /> Required documents (mandatory before create)
+                  </p>
                   <AnimatedList
                     enableArrowNavigation={false}
                     displayScrollbar
-                    items={service.requiredDocuments.map((d, i) => (
-                      <span key={i} className="flex items-center gap-2 text-xs text-foreground">
-                        <CheckCircle2 size={14} className="text-gold shrink-0" /> {d}
-                      </span>
+                    items={service.requiredDocuments.map((d) => (
+                      <div key={d} className="space-y-1.5 py-1">
+                        <Label className="text-xs text-foreground flex items-center gap-1.5">
+                          <Upload size={12} className="text-gold shrink-0" /> {d}
+                        </Label>
+                        <Input
+                          type="file"
+                          accept={ACCEPT_ATTR}
+                          onChange={(e) => {
+                            const file = e.target.files?.[0] ?? null;
+                            setRequiredFiles((prev) => ({ ...prev, [d]: file }));
+                          }}
+                          className="text-xs"
+                        />
+                        {requiredFiles[d] && (
+                          <p className="text-[11px] text-muted-foreground">{requiredFiles[d]?.name}</p>
+                        )}
+                      </div>
                     ))}
                   />
-                  <p className="text-[11px] text-muted-foreground mt-2">You can upload these on the next screen after creating the request.</p>
+                  <p className="text-[11px] text-muted-foreground">
+                    Upload every listed document to create this request. Services with no required documents can be created without uploads.
+                  </p>
                 </div>
               )}
 
+              {/* Applicant fields stay optional by design: catalog services enforce
+                  requiredDocuments (files), not identity form fields. */}
               <Card className="rounded border border-border">
                 <CardHeader className="pb-2"><CardTitle className="font-display text-base text-navy">Applicant Details (optional)</CardTitle></CardHeader>
                 <CardContent className="space-y-3">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div><Label htmlFor="fullName">Full Name</Label><Input id="fullName" value={applicant.fullName} onChange={(e) => setApplicant({ ...applicant, fullName: e.target.value })} /></div>
-                    <div><Label htmlFor="fatherName">Father's Name</Label><Input id="fatherName" value={applicant.fatherName} onChange={(e) => setApplicant({ ...applicant, fatherName: e.target.value })} /></div>
+                    <div><Label htmlFor="fatherName">Father&apos;s Name</Label><Input id="fatherName" value={applicant.fatherName} onChange={(e) => setApplicant({ ...applicant, fatherName: e.target.value })} /></div>
                     <div><Label htmlFor="dob">Date of Birth</Label><Input id="dob" type="date" value={applicant.dob} onChange={(e) => setApplicant({ ...applicant, dob: e.target.value })} /></div>
                     <div><Label htmlFor="ref">Reference Number</Label><Input id="ref" placeholder="Aadhaar / PAN / Roll No. etc." value={applicant.referenceNumber} onChange={(e) => setApplicant({ ...applicant, referenceNumber: e.target.value })} /></div>
                   </div>

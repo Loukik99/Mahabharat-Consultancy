@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import type { ServiceRequest, User, Payment } from "@/types";
 import {
   getRequest, assignAgent, setStatus, addComment,
+  downloadDocument, downloadDeliverable,
 } from "@/api/requests.api";
 import { getAgents } from "@/api/users.api";
 import { getPayments, markPaymentReceived } from "@/api/payments.api";
@@ -22,6 +23,10 @@ import {
   FileDown, User as UserIcon, CheckCircle, XCircle,
   Wallet, MessageSquare, ShieldAlert, Lock,
 } from "lucide-react";
+
+function displayServiceName(r: { serviceName?: string; serviceId: string }) {
+  return r.serviceName || serviceById(r.serviceId)?.name || r.serviceId;
+}
 
 export default function AdminRequestDetail() {
   const { id } = useParams();
@@ -90,8 +95,6 @@ export default function AdminRequestDetail() {
     );
   }
 
-  const service = r ? serviceById(r.serviceId) : null;
-
   if (!r) return <p className="text-center py-20 text-muted-foreground">Request not found</p>;
   if (!user) return <p className="text-center py-20 text-muted-foreground">Not authorized</p>;
 
@@ -144,8 +147,24 @@ export default function AdminRequestDetail() {
     }
   };
 
-  const serviceName = service?.name ?? r.serviceId;
+  const serviceName = displayServiceName(r);
   const showPaymentAction = !r.paymentApprovedByAdmin && (r.status === "waiting_payment" || !!payment);
+
+  const handleDownloadDocument = async (docId: string, fileName: string) => {
+    try {
+      await downloadDocument(r.id, docId, fileName);
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  };
+
+  const handleDownloadDeliverable = async (delId: string, fileName: string) => {
+    try {
+      await downloadDeliverable(r.id, delId, fileName);
+    } catch (e) {
+      toast.error((e as Error).message);
+    }
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -191,7 +210,13 @@ export default function AdminRequestDetail() {
             {r.documents.map((d) => (
               <div key={d.id} className="flex items-center justify-between bg-secondary/40 p-2 rounded mb-1 text-xs">
                 <span>{d.label}, {d.fileName} <span className="text-muted-foreground">({d.uploadedByRole})</span></span>
-                <span className="flex items-center gap-1 text-muted-foreground"><FileDown size={12} /> Staff download</span>
+                <button
+                  type="button"
+                  onClick={() => handleDownloadDocument(d.id, d.fileName)}
+                  className="flex items-center gap-1 text-navy hover:text-gold"
+                >
+                  <FileDown size={12} /> Staff download
+                </button>
               </div>
             ))}
           </div>
@@ -203,7 +228,13 @@ export default function AdminRequestDetail() {
             {r.deliverables.map((d) => (
               <div key={d.id} className="flex items-center justify-between bg-emerald-50 p-2 rounded mb-1 text-xs">
                 <span>{d.fileName} <span className="text-muted-foreground">· {new Date(d.uploadedAt).toLocaleDateString("en-IN")}</span></span>
-                <span className="flex items-center gap-1 text-muted-foreground"><FileDown size={12} /> Staff download</span>
+                <button
+                  type="button"
+                  onClick={() => handleDownloadDeliverable(d.id, d.fileName)}
+                  className="flex items-center gap-1 text-navy hover:text-gold"
+                >
+                  <FileDown size={12} /> Staff download
+                </button>
               </div>
             ))}
           </div>

@@ -32,6 +32,8 @@ interface StaggeredMenuProps {
   changeMenuColorOnOpen?: boolean;
   isFixed?: boolean;
   closeOnClickAway?: boolean;
+  /** Auth pages: drop the header bottom border so nav blends into the canvas. */
+  hideHeaderBorder?: boolean;
   onMenuOpen?: () => void;
   onMenuClose?: () => void;
 }
@@ -51,6 +53,7 @@ export default function StaggeredMenu({
   changeMenuColorOnOpen = true,
   isFixed = false,
   closeOnClickAway = true,
+  hideHeaderBorder = false,
   onMenuOpen,
   onMenuClose,
 }: StaggeredMenuProps) {
@@ -272,7 +275,10 @@ export default function StaggeredMenu({
           <div key={i} className="sm-prelayer" style={{ background: c }} />
         ))}
       </div>
-      <header className="staggered-menu-header" aria-label="Main navigation header">
+      <header
+        className={"staggered-menu-header" + (hideHeaderBorder ? " staggered-menu-header--flush" : "")}
+        aria-label="Main navigation header"
+      >
         <Link to="/" className="sm-brand" aria-label={`${site.name} home`} onClick={closeMenu}>
           <span className="sm-logo" aria-hidden="true">
             {logoUrl && (

@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { toast } from "sonner";
 import { ShieldCheck, UserCog } from "lucide-react";
 import ForgotPasswordDialog from "@/components/ForgotPasswordDialog";
+import { AuthShell } from "@/components/AuthCard";
 import { Seo } from "@/components/Seo";
 import { pageSeo } from "@/config/seo";
 import logoImg from "@/assets/logo.png";
@@ -51,9 +52,9 @@ export default function StaffLoginPage() {
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4 py-8">
+    <AuthShell>
       <Seo {...pageSeo.staff} />
-      <div className="w-full max-w-sm">
+      <div className="mx-auto w-full max-w-sm">
         <Card className="rounded border-border border-t-2 border-t-navy">
           <CardHeader className="text-center pb-4">
             <img
@@ -127,6 +128,6 @@ export default function StaffLoginPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </AuthShell>
   );
 }

@@ -9,6 +9,7 @@ import ForgotPasswordDialog from "@/components/ForgotPasswordDialog";
 import { AuthShell, AuthCard, authInputClass, authLabelClass } from "@/components/AuthCard";
 import { Seo } from "@/components/Seo";
 import { pageSeo } from "@/config/seo";
+import { validatePasswordClient, PASSWORD_HINT } from "@/lib/passwordPolicy";
 
 export default function SignupPage() {
   const [form, setForm] = useState({ name: "", email: "", phone: "", password: "", confirm: "" });
@@ -23,7 +24,8 @@ export default function SignupPage() {
     e.preventDefault();
     const phone = form.phone.trim();
     if (!/^[6-9][0-9]{9}$/.test(phone)) return toast.error("Enter a valid 10-digit mobile number");
-    if (form.password.length < 6) return toast.error("Password must be at least 6 characters");
+    const pwErr = validatePasswordClient(form.password);
+    if (pwErr) return toast.error(pwErr);
     if (form.password !== form.confirm) return toast.error("Passwords do not match");
 
     try {
@@ -66,7 +68,7 @@ export default function SignupPage() {
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="password" className={authLabelClass}>Password</Label>
-            <Input id="password" type="password" required minLength={6} value={form.password} onChange={update("password")} placeholder="At least 6 characters" className={authInputClass} />
+            <Input id="password" type="password" required minLength={10} value={form.password} onChange={update("password")} placeholder={PASSWORD_HINT} className={authInputClass} />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="confirm" className={authLabelClass}>Confirm password</Label>

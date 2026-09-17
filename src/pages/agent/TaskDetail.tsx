@@ -32,13 +32,16 @@ type AgentRequest = ServiceRequest & {
   assignedAgentName?: string;
 };
 
+// Must match server upload + magic-byte policy (no GIF).
 const ACCEPTED = [
-  "image/jpeg", "image/png", "image/jpg", "image/webp", "application/pdf",
+  "image/jpeg", "image/png", "image/webp", "application/pdf",
   "application/msword",
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
   "application/vnd.ms-excel",
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "video/mp4", "video/webm", "video/quicktime",
 ];
+const ACCEPT_ATTR = ".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx,.mp4,.webm,.mov";
 const MAX_SIZE = 5 * 1024 * 1024;
 
 export default function TaskDetail() {
@@ -207,7 +210,7 @@ export default function TaskDetail() {
     try {
       for (const file of files) {
         if (!ACCEPTED.includes(file.type)) {
-          toast.error(`"${file.name}": unsupported file type. Use image, PDF, DOC or XLSX.`);
+          toast.error(`"${file.name}": unsupported file type. Use JPEG/PNG/WebP, PDF, Word, Excel or MP4/WebM/MOV.`);
           continue;
         }
         if (file.size > MAX_SIZE) {
@@ -228,6 +231,10 @@ export default function TaskDetail() {
   const handleMarkReady = async () => {
     if (r.deliverables.length === 0) {
       toast.error("Upload the completed file(s) before marking ready for payment.");
+      return;
+    }
+    if (missingDocs.length > 0) {
+      toast.error(`Missing required documents: ${missingDocs.join(", ")}`);
       return;
     }
     setReadyBusy(true);
@@ -509,13 +516,13 @@ export default function TaskDetail() {
                 className="flex flex-col items-center justify-center gap-2 border-2 border-dashed border-border rounded p-4 cursor-pointer hover:border-gold hover:bg-secondary/40 transition-all text-center"
               >
                 <Upload size={20} className="text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">Click to upload completed file(s), image, PDF, DOC or XLSX, max 5MB</span>
+                <span className="text-xs text-muted-foreground">Click to upload completed file(s) — JPEG/PNG/WebP, PDF, Word, Excel or MP4/WebM/MOV, max 5MB</span>
                 <input
                   id="deliverableFile"
                   type="file"
                   multiple
                   disabled={uploadBusy}
-                  accept=".jpg,.jpeg,.png,.webp,.pdf,.doc,.docx,.xls,.xlsx"
+                  accept={ACCEPT_ATTR}
                   className="hidden"
                   onChange={handleDeliverableUpload}
                 />
@@ -545,7 +552,7 @@ export default function TaskDetail() {
               <Button
                 className="w-full bg-gold font-semibold text-gold-foreground hover:bg-gold/90"
                 onClick={handleMarkReady}
-                disabled={readyBusy || r.deliverables.length === 0}
+                disabled={readyBusy || r.deliverables.length === 0 || missingDocs.length > 0}
               >
                 <Wallet size={15} className="mr-1.5" /> Mark Ready for Payment
               </Button>

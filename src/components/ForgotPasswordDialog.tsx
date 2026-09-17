@@ -12,6 +12,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
+import { validatePasswordClient, PASSWORD_HINT } from "@/lib/passwordPolicy";
 
 /**
  * "Forgot password?" link + dialog. Works for customers and agents.
@@ -61,7 +62,8 @@ export default function ForgotPasswordDialog({
 
   const doReset = async () => {
     if (otp.trim().length < 6) return toast.error("Enter the 6-digit code from your email");
-    if (password.length < 6) return toast.error("Password must be at least 6 characters");
+    const pwErr = validatePasswordClient(password);
+    if (pwErr) return toast.error(pwErr);
     if (password !== confirm) return toast.error("Passwords do not match");
     setBusy(true);
     try {
@@ -128,7 +130,7 @@ export default function ForgotPasswordDialog({
                 <Input
                   id="fp-pw"
                   type="password"
-                  placeholder="At least 6 characters"
+                  placeholder={PASSWORD_HINT}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />

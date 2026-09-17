@@ -77,6 +77,18 @@ function request(method, urlPath, { body, token, headers = {}, formData, raw } =
   });
 }
 
+
+function tokenFromResponse(res) {
+  if (res.json && res.json.token) return res.json.token;
+  const setCookie = res.headers && res.headers["set-cookie"];
+  const list = Array.isArray(setCookie) ? setCookie : setCookie ? [setCookie] : [];
+  for (const c of list) {
+    const m = String(c).match(/^mc_auth=([^;]+)/);
+    if (m) return decodeURIComponent(m[1]);
+  }
+  return null;
+}
+
 function expect(api, method, res, okStatuses, extraOk = () => true) {
   const ok = okStatuses.includes(res.status) && extraOk(res);
   record(
@@ -179,23 +191,23 @@ async function main() {
   const custEmail = `${TAG.toLowerCase()}_cust@example.com`;
   const custPhone = `9${String(Date.now()).slice(-9)}`;
   res = await request("POST", "/auth/register", {
-    body: { name: `${TAG} Customer`, email: custEmail, phone: custPhone, password: "testpass123" },
+    body: { name: `${TAG} Customer`, email: custEmail, phone: custPhone, password: "TestPass123!" },
   });
-  const custRegOk = expect("/auth/register", "POST", res, [201], (r) => r.json?.token && r.json?.user?.role === "customer");
-  let custToken = res.json?.token;
+  const custRegOk = expect("/auth/register", "POST", res, [201], (r) => (tokenFromResponse(r) || r.json?.user) && r.json?.user?.role === "customer");
+  let custToken = tokenFromResponse(res);
   let custId = res.json?.user?.id;
   if (custId) cleanup.users.push(custId);
 
   // Duplicate register
   res = await request("POST", "/auth/register", {
-    body: { name: `${TAG} Customer`, email: custEmail, phone: custPhone, password: "testpass123" },
+    body: { name: `${TAG} Customer`, email: custEmail, phone: custPhone, password: "TestPass123!" },
   });
   expect("/auth/register (dup)", "POST", res, [409]);
 
   // Login customer
-  res = await request("POST", "/auth/login", { body: { emailOrPhone: custEmail, password: "testpass123" } });
-  expect("/auth/login", "POST", res, [200], (r) => !!r.json?.token);
-  custToken = res.json?.token || custToken;
+  res = await request("POST", "/auth/login", { body: { emailOrPhone: custEmail, password: "TestPass123!" } });
+  expect("/auth/login", "POST", res, [200], (r) => !!tokenFromResponse(r));
+  custToken = tokenFromResponse(res) || custToken;
 
   res = await request("GET", "/auth/me", { token: custToken });
   expect("/auth/me", "GET", res, [200], (r) => r.json?.user?.email === custEmail);
@@ -208,7 +220,7 @@ async function main() {
   expect("/auth/forgot-password (missing)", "POST", res, [400]);
 
   res = await request("POST", "/auth/reset-password", {
-    body: { emailOrPhone: custEmail, otp: "000000", password: "newpass123" },
+    body: { emailOrPhone: custEmail, otp: "000000", password: "NewPass1234!" },
   });
   expect("/auth/reset-password (bad otp)", "POST", res, [400]);
 
@@ -221,9 +233,9 @@ async function main() {
   let bootstrappedAdminId = null;
   let bootstrappedAgentId = null;
 
-  res = await request("POST", "/auth/login", { body: { emailOrPhone: "admin@mahabharat.com", password: "admin123" } });
-  if (res.status === 200 && res.json?.token) {
-    adminToken = res.json.token;
+  res = await request("POST", "/auth/login", { body: { emailOrPhone: "admin@mahabharat.local", password: "DevAdmin!234" } });
+  if (res.status === 200 && tokenFromResponse(res)) {
+    adminToken = tokenFromResponse(res);
     record("/auth/login (admin seed)", "POST", 200, "PASS");
   } else {
     record("/auth/login (admin seed)", "POST", res.status, "NOT TESTED", "seed admin not in DB — bootstrapping temp admin");
@@ -240,17 +252,17 @@ async function main() {
         role: "admin",
         isActive: true,
       });
-      admin.password = "temptestadmin9";
+      admin.password = "TempTestAdmin9!";
       await admin.save();
       bootstrappedAdminId = String(admin._id);
       cleanup.users.push(bootstrappedAdminId);
       await disconnectDB();
 
       res = await request("POST", "/auth/login", {
-        body: { emailOrPhone: adminEmail, password: "temptestadmin9" },
+        body: { emailOrPhone: adminEmail, password: "TempTestAdmin9!" },
       });
-      if (res.status === 200 && res.json?.token) {
-        adminToken = res.json.token;
+      if (res.status === 200 && tokenFromResponse(res)) {
+        adminToken = tokenFromResponse(res);
         record("/auth/login (temp admin)", "POST", 200, "PASS");
       } else {
         record("/auth/login (temp admin)", "POST", res.status || "ERR", "FAIL", res.error || res.json?.message || "temp admin login failed");
@@ -262,9 +274,9 @@ async function main() {
     }
   }
 
-  res = await request("POST", "/auth/login", { body: { emailOrPhone: "rajesh@mahabharat.com", password: "agent123" } });
-  if (res.status === 200 && res.json?.token) {
-    agentToken = res.json.token;
+  res = await request("POST", "/auth/login", { body: { emailOrPhone: "rajesh@mahabharat.local", password: "DevAgent!234" } });
+  if (res.status === 200 && tokenFromResponse(res)) {
+    agentToken = tokenFromResponse(res);
     agentId = res.json.user?.id;
     record("/auth/login (agent seed)", "POST", 200, "PASS");
   } else {
@@ -282,7 +294,7 @@ async function main() {
         role: "agent",
         isActive: true,
       });
-      agent.password = "temptestagent9";
+      agent.password = "TempTestAgent9!";
       await agent.save();
       await AgentProfile.create({ user: agent._id });
       bootstrappedAgentId = String(agent._id);
@@ -291,10 +303,10 @@ async function main() {
       await disconnectDB();
 
       res = await request("POST", "/auth/login", {
-        body: { emailOrPhone: agentEmail, password: "temptestagent9" },
+        body: { emailOrPhone: agentEmail, password: "TempTestAgent9!" },
       });
-      if (res.status === 200 && res.json?.token) {
-        agentToken = res.json.token;
+      if (res.status === 200 && tokenFromResponse(res)) {
+        agentToken = tokenFromResponse(res);
         record("/auth/login (temp agent bootstrap)", "POST", 200, "PASS");
       } else {
         record("/auth/login (temp agent bootstrap)", "POST", res.status || "ERR", "FAIL", res.error || res.json?.message || "temp agent login failed");
@@ -479,7 +491,7 @@ async function main() {
     const agentPhone = `8${String(Date.now()).slice(-9)}`;
     res = await request("POST", "/users/agents", {
       token: adminToken,
-      body: { name: `${TAG} Agent API`, email: agentEmail, phone: agentPhone, password: "agenttest123" },
+      body: { name: `${TAG} Agent API`, email: agentEmail, phone: agentPhone, password: "AgentTest123!" },
     });
     expect("/users/agents", "POST", res, [201], (r) => !!r.json?.agent?.id);
     tempAgentId = res.json?.agent?.id;
@@ -505,9 +517,9 @@ async function main() {
       expect("/users/:id/active (re-enable)", "PATCH", res, [200]);
 
       // Login as temp agent
-      res = await request("POST", "/auth/login", { body: { emailOrPhone: agentEmail, password: "agenttest123" } });
+      res = await request("POST", "/auth/login", { body: { emailOrPhone: agentEmail, password: "AgentTest123!" } });
       if (res.status === 200) {
-        agentToken = res.json.token;
+        agentToken = tokenFromResponse(res);
         agentId = tempAgentId;
         record("/auth/login (temp agent)", "POST", 200, "PASS");
       }

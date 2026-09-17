@@ -1,17 +1,17 @@
 import type { User } from "@/types";
 import { api, tokenStore } from "@/lib/apiClient";
 
-interface AuthResult { token: string; user: User; }
+interface AuthResult { token?: string; user: User; }
 
 export async function login(emailOrPhone: string, password: string): Promise<User> {
-  const { data } = await api.post<{ token: string; user: User }>("/auth/login", { emailOrPhone, password });
-  tokenStore.set(data.token);
+  const { data } = await api.post<AuthResult>("/auth/login", { emailOrPhone, password });
+  tokenStore.set(); // session flag only — JWT lives in HttpOnly cookie
   return data.user;
 }
 
 export async function register(input: { name: string; email: string; phone: string; password: string }): Promise<User> {
   const { data } = await api.post<AuthResult>("/auth/register", input);
-  tokenStore.set(data.token);
+  tokenStore.set();
   return data.user;
 }
 
@@ -20,7 +20,12 @@ export async function fetchMe(): Promise<User> {
   return data.user;
 }
 
-export function logout(): void {
+export async function logout(): Promise<void> {
+  try {
+    await api.post("/auth/logout");
+  } catch {
+    /* still clear client session */
+  }
   tokenStore.clear();
 }
 
@@ -33,6 +38,7 @@ export async function requestPasswordReset(emailOrPhone: string): Promise<string
 /** Step 2 — verify the OTP and set a new password. User then signs in fresh. */
 export async function resetPassword(emailOrPhone: string, otp: string, password: string): Promise<void> {
   await api.post("/auth/reset-password", { emailOrPhone, otp, password });
+  tokenStore.clear();
 }
 
 /** Permanently delete the signed-in user's own account (customers & agents). */

@@ -5,10 +5,10 @@ import { tokenStore } from "@/lib/apiClient";
 
 interface AuthContextType {
   user: User | null;
-  loading: boolean; // true while restoring the session on first load
+  loading: boolean;
   login: (emailOrPhone: string, password: string) => Promise<User>;
   register: (data: { name: string; email: string; phone: string; password: string }) => Promise<User>;
-  logout: () => void;
+  logout: () => Promise<void>;
   deleteAccount: () => Promise<void>;
 }
 
@@ -18,16 +18,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Restore session from a stored token.
+  // Restore session via HttpOnly cookie (/auth/me). Session flag is a UX hint only.
   useEffect(() => {
     let active = true;
     (async () => {
-      if (!tokenStore.get()) { setLoading(false); return; }
       try {
         const me = await fetchMe();
-        if (active) setUser(me);
+        if (active) {
+          setUser(me);
+          tokenStore.set();
+        }
       } catch {
         tokenStore.clear();
+        if (active) setUser(null);
       } finally {
         if (active) setLoading(false);
       }
@@ -47,8 +50,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return u;
   };
 
-  const logout = () => {
-    apiLogout();
+  const logout = async () => {
+    await apiLogout();
     setUser(null);
   };
 

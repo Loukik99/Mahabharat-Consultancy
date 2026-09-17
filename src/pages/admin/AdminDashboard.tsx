@@ -13,6 +13,10 @@ import {
   BarChart3, ScrollText, Eye, IndianRupee,
 } from "lucide-react";
 
+function displayServiceName(r: { serviceName?: string; serviceId: string }) {
+  return r.serviceName || serviceById(r.serviceId)?.name || r.serviceId;
+}
+
 // ── Shared admin nav (inlined in every admin page) ─────────────────
 const ADMIN_LINKS = [
   { to: "/admin", label: "Dashboard" },
@@ -154,7 +158,7 @@ export default function AdminDashboard() {
                 {recent.map((r) => (
                   <tr key={r.id} className="border-b border-border/60 hover:bg-secondary/40">
                     <td className="py-2.5 pr-3 font-medium text-navy">{r.requestNumber}</td>
-                    <td className="py-2.5 pr-3">{serviceById(r.serviceId)?.name ?? r.serviceId}</td>
+                    <td className="py-2.5 pr-3">{displayServiceName(r)}</td>
                     <td className="py-2.5 pr-3">{nameById[r.userId] ?? "—"}</td>
                     <td className="py-2.5 pr-3"><StatusBadge status={r.status} /></td>
                     <td className="py-2.5"><Link to={`/admin/requests/${r.id}`} className="text-navy hover:text-gold"><Eye size={15} /></Link></td>

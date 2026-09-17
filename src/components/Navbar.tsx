@@ -4,16 +4,21 @@ import { useAuth } from "@/context/AuthContext";
 import { LogOut, ArrowRight, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import logoImg from "@/assets/logo.png";
+import { NotificationBell } from "@/components/NotificationBell";
 
 // Desktop-only navbar (mobile uses the StaggeredMenu in App.tsx). A single
 // floating, pill-shaped container sits just off the top of the page at all
 // times: logo, links and auth actions all live inside one rounded bar,
 // gaining a slightly firmer shadow once the page scrolls underneath it.
-export function Navbar() {
+//
+// variant="auth" keeps the same chrome but removes any bottom edge so the
+// bar blends into the continuous auth page surface (no hero divider).
+export function Navbar({ variant = "default" }: { variant?: "default" | "auth" }) {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
+  const isAuth = variant === "auth";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -42,7 +47,13 @@ export function Navbar() {
   return (
     // Full-bleed pure white strip so the navbar and page share one surface.
     // No cream/gray side regions; only the floating pill has a hairline border.
-    <div className="sticky top-0 z-50 w-full bg-white px-4 pt-4 sm:pt-5">
+    // Auth: no bottom border/divider — strip continues into the auth canvas.
+    <div
+      className={cn(
+        "sticky top-0 z-50 w-full bg-white px-4 pt-4 sm:pt-5",
+        isAuth ? "border-b-0 pb-1" : undefined
+      )}
+    >
       <nav
         className={cn(
           "mx-auto flex w-full max-w-6xl items-center justify-between rounded-full border bg-white transition-shadow duration-300",
@@ -86,6 +97,7 @@ export function Navbar() {
           <div className="flex shrink-0 items-center gap-2">
             {user ? (
               <>
+                <NotificationBell />
                 <div className="hidden items-center gap-2 rounded-full bg-ink/[0.04] py-1.5 pl-1.5 pr-3 sm:flex">
                   <div className="flex h-6 w-6 items-center justify-center rounded-full bg-navy text-[11px] font-bold text-gold">
                     {user.name[0]}

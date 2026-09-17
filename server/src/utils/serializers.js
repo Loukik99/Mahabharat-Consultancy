@@ -86,6 +86,7 @@ function serializeRequest(r, viewerRole = "customer") {
       .filter((c) => viewerRole !== "customer" || !c.internal)
       .map((c) => ({
         id: String(c._id),
+        byUserId: idOf(c.by),
         byRole: c.byRole,
         message: c.message,
         internal: c.internal,
