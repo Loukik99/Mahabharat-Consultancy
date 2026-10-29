@@ -1,7 +1,16 @@
 const { maskPhone } = require("./helpers");
+const { redactIdentityNumbers } = require("./identity");
 
 const idOf = (ref) => (ref && ref._id ? String(ref._id) : ref ? String(ref) : undefined);
 const nameOf = (ref) => (ref && ref.name ? ref.name : undefined);
+
+/** Same keys as stored; any full Aadhaar/PAN (e.g. legacy records) is masked on the way out. */
+function redactApplicantDetails(a) {
+  if (!a) return a;
+  const plain = typeof a.toObject === "function" ? a.toObject() : { ...a };
+  for (const k of Object.keys(plain)) plain[k] = redactIdentityNumbers(plain[k]);
+  return plain;
+}
 
 function serializeUser(u, viewerRole = "admin") {
   if (!u) return null;
@@ -57,7 +66,7 @@ function serializeRequest(r, viewerRole = "customer") {
     serviceName: nameOf(r.service),
     category: r.category,
     status: r.status,
-    applicantDetails: r.applicantDetails,
+    applicantDetails: redactApplicantDetails(r.applicantDetails),
     notes: r.notes,
     adminNotes: viewerRole === "customer" ? undefined : r.adminNotes,
     assignedAgentId: idOf(r.assignedAgent),

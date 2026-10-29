@@ -424,7 +424,7 @@ export default function RequestDetail() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
                   <div className="rounded border border-gold/40 bg-card p-4 flex flex-col items-center gap-2.5">
                     <p className="text-xs font-semibold text-navy flex items-center gap-1.5"><QrCode size={14} className="text-gold" /> Scan to Pay (GPay/UPI)</p>
-                    <img src="Scanner.jpeg" alt="Scan to pay via UPI" className="h-52 w-52 object-contain rounded" />
+                    <img src={`/${site.upiQrImage}`} alt="Scan to pay via UPI" className="h-52 w-52 object-contain rounded" />
                     <div className="text-center">
                       <p className="font-mono text-sm font-semibold text-navy">{site.upiId}</p>
                       <p className="text-xs text-muted-foreground">{site.upiPayeeName} · {site.upiBank}</p>

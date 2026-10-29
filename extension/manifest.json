@@ -1,0 +1,62 @@
+{
+  "manifest_version": 3,
+  "name": "Mahabharat Consultancy Assistant",
+  "version": "0.1.0",
+  "description": "Connects to your Mahabharat Consultancy account. Government form filling is not available yet.",
+  "minimum_chrome_version": "102",
+  "action": {
+    "default_title": "Mahabharat Consultancy",
+    "default_popup": "src/popup.html"
+  },
+  "permissions": [],
+  "host_permissions": [
+    "https://www.mahabharat.net.in/*",
+    "http://localhost:5173/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.mahabharat.net.in/*",
+        "http://localhost:5173/*"
+      ],
+      "js": ["src/content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    },
+    {
+      "matches": ["https://pmegp.msme.gov.in/Home/HomePage*"],
+      "js": [
+        "src/engine/core.js",
+        "src/engine/registry.js",
+        "src/engine/adapters.js",
+        "src/engine/classify.js",
+        "src/engine/values.js",
+        "src/engine/preview.js",
+        "src/engine/protocol.js",
+        "src/engine/dom.js",
+        "src/portal-content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    },
+    {
+      "matches": ["https://reg.gst.gov.in/registration*"],
+      "js": [
+        "src/engine/core.js",
+        "src/engine/registry.js",
+        "src/engine/adapters.js",
+        "src/engine/classify.js",
+        "src/engine/values.js",
+        "src/engine/preview.js",
+        "src/engine/protocol.js",
+        "src/engine/dom.js",
+        "src/portal-content.js"
+      ],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'; connect-src https://www.mahabharat.net.in http://localhost:5173"
+  }
+}

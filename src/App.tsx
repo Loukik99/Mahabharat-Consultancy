@@ -26,6 +26,7 @@ const Signup = lazy(() => import("@/pages/Signup"));
 // Customer
 const Dashboard = lazy(() => import("@/pages/customer/Dashboard"));
 const NewRequest = lazy(() => import("@/pages/customer/NewRequest"));
+const Profile = lazy(() => import("@/pages/customer/Profile"));
 const RequestDetail = lazy(() => import("@/pages/customer/RequestDetail"));
 
 // Agent
@@ -188,6 +189,7 @@ export default function App() {
             <Route path="/new-request" element={<Protected roles={["customer"]}><NewRequest /></Protected>} />
             <Route path="/new-request/:serviceId" element={<Protected roles={["customer"]}><NewRequest /></Protected>} />
             <Route path="/requests/:id" element={<Protected roles={["customer"]}><RequestDetail /></Protected>} />
+            <Route path="/profile" element={<Protected roles={["customer"]}><Profile /></Protected>} />
 
             {/* Agent */}
             <Route path="/agent" element={<Protected roles={["agent"]}><AgentDashboard /></Protected>} />

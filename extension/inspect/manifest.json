@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "Mahabharat Form Structure Inspector (local only)",
+  "version": "0.1.0",
+  "description": "After you sign in yourself, saves form labels and control types. Does not read what you typed, and does not fill or submit.",
+  "minimum_chrome_version": "102",
+  "action": {
+    "default_title": "Capture form structure",
+    "default_popup": "popup.html"
+  },
+  "permissions": [],
+  "host_permissions": [],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://joinindianarmy.nic.in/*",
+        "https://www.joinindianarmy.nic.in/*",
+        "https://gdsrect.indiapost.gov.in/*",
+        "https://www.joinindiannavy.gov.in/*",
+        "https://iafrecruitment.edcil.co.in/*",
+        "https://pmegp.msme.gov.in/Home/HomePage*",
+        "https://reg.gst.gov.in/registration*"
+      ],
+      "js": ["origins.js", "capture.js", "content.js"],
+      "run_at": "document_idle",
+      "all_frames": false
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; base-uri 'none'"
+  }
+}

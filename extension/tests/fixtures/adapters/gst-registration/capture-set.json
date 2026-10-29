@@ -1,0 +1,12 @@
+{
+  "kind": "capture-set",
+  "version": 1,
+  "scaffoldId": "gst-registration",
+  "steps": [
+    {
+      "id": "part-a",
+      "name": "New registration, part A",
+      "captures": [{ "file": "01-part-a-public.json", "state": "public page before Proceed, nothing entered", "gate": "before" }]
+    }
+  ]
+}

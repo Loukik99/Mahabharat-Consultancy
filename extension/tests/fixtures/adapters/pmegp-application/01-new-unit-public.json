@@ -1,0 +1,5631 @@
+{
+  "kind": "form-structure",
+  "version": 3,
+  "capturedOn": "2026-10-28",
+  "origin": "https://pmegp.msme.gov.in",
+  "path": "/Home/HomePage",
+  "title": "PMEGP Home",
+  "settled": true,
+  "waitedMs": 510,
+  "forms": [
+    {
+      "index": 0,
+      "selector": "",
+      "id": "",
+      "name": "",
+      "method": "post",
+      "actionPath": "/Home/HomePage"
+    },
+    {
+      "index": 1,
+      "selector": "form#OfflinePdfForm",
+      "id": "OfflinePdfForm",
+      "name": "",
+      "method": "get",
+      "actionPath": "/Home/HomePage"
+    }
+  ],
+  "fields": [
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_aadhar_no",
+      "name": "",
+      "selector": "#ux_aadhar_no",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Aadhaar Card No / आधार नंबर",
+      "labelSource": "label",
+      "section": "Basic Information",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_communication_panNo",
+      "name": "",
+      "selector": "#ux_communication_panNo",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "PAN NO / पैन नंबर (Permanent Account Number) : Enter your PAN as printed on your card / पैन नंबर (स्थायी खाता संख्या) :",
+      "labelSource": "aria-label",
+      "section": "Basic Information",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_applicant_title",
+      "name": "",
+      "selector": "#ux_applicant_title",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "",
+      "labelSource": null,
+      "section": "Basic Information",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 4,
+      "options": [
+        {
+          "value": "--Select Salutation--",
+          "text": "--Select Salutation--"
+        },
+        {
+          "value": "0",
+          "text": "Shri"
+        },
+        {
+          "value": "1",
+          "text": "Smt."
+        },
+        {
+          "value": "2",
+          "text": "Kum."
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_applicant_name",
+      "name": "",
+      "selector": "#ux_applicant_name",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Name of Applicant / आवेदक का नाम",
+      "labelSource": "label",
+      "section": "Basic Information",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_DateOfBirth",
+      "name": "",
+      "selector": "#ux_DateOfBirth",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "DOB",
+      "labelSource": "placeholder",
+      "section": "Basic Information",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "DOB",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_age",
+      "name": "",
+      "selector": "#ux_age",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Age",
+      "labelSource": "placeholder",
+      "section": "Basic Information",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": true,
+      "readOnly": true,
+      "filtered": null,
+      "placeholder": "Age",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_Gender",
+      "name": "",
+      "selector": "#ux_Gender",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "",
+      "labelSource": null,
+      "section": "Basic Information",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 4,
+      "optionsOmitted": "disabled"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_legal_type",
+      "name": "",
+      "selector": "#ux_legal_type",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Legal Type / कानूनी प्रकार",
+      "labelSource": "label",
+      "section": "Basic Information",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_social_category",
+      "name": "",
+      "selector": "#ux_social_category",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Social Category / सामाजिक श्रेणी",
+      "labelSource": "label",
+      "section": "Basic Information",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 6,
+      "options": [
+        {
+          "value": "--Select Social Category--",
+          "text": "--Select Social Category--"
+        },
+        {
+          "value": "GEN",
+          "text": "General"
+        },
+        {
+          "value": "OBC",
+          "text": "Other Backward Caste"
+        },
+        {
+          "value": "SC",
+          "text": "Scheduled Caste"
+        },
+        {
+          "value": "ST",
+          "text": "Scheduled Tribe"
+        },
+        {
+          "value": "MT",
+          "text": "Minority"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_SpecialCategory",
+      "name": "",
+      "selector": "#ux_SpecialCategory",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Special Category (if any) / विशेष श्रेणी (यदि कोई हो)",
+      "labelSource": "label",
+      "section": "Basic Information",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 6,
+      "options": [
+        {
+          "value": "--Select Special Category--",
+          "text": "--Select Special Category--"
+        },
+        {
+          "value": "NA",
+          "text": "Not Applicable"
+        },
+        {
+          "value": "EX",
+          "text": "Ex-Serviceman"
+        },
+        {
+          "value": "PC",
+          "text": "Physically Challanged"
+        },
+        {
+          "value": "HB",
+          "text": "Hill Border Region"
+        },
+        {
+          "value": "NE",
+          "text": "North East Region"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_Qualification",
+      "name": "",
+      "selector": "#ux_Qualification",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Qualification / शैक्षणिक योग्यता",
+      "labelSource": "label",
+      "section": "Basic Information",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 9,
+      "options": [
+        {
+          "value": "--Select Qualification--",
+          "text": "--Select Qualification--"
+        },
+        {
+          "value": "U8TH",
+          "text": "Under 8th Pass"
+        },
+        {
+          "value": "8TH",
+          "text": "8th Pass"
+        },
+        {
+          "value": "SSC",
+          "text": "SSC"
+        },
+        {
+          "value": "HSC",
+          "text": "HSC"
+        },
+        {
+          "value": "DIP",
+          "text": "Diploma"
+        },
+        {
+          "value": "GRAD",
+          "text": "Graduate"
+        },
+        {
+          "value": "PG",
+          "text": "Post Graduate"
+        },
+        {
+          "value": "PHD",
+          "text": "PHD"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_communication_address",
+      "name": "",
+      "selector": "#ux_communication_address",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Communication Address / पत्राचार हेतु पता",
+      "labelSource": "label",
+      "section": "Communication Address",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_AadharState",
+      "name": "",
+      "selector": "#ux_AadharState",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "State / राज्य",
+      "labelSource": "label",
+      "section": "Communication Address",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "identity",
+      "optionCount": 39
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_communication_District",
+      "name": "",
+      "selector": "#ux_communication_District",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Aadhaar Card No",
+      "labelSource": "placeholder",
+      "section": "Communication Address",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_communication_taluk_block",
+      "name": "",
+      "selector": "#ux_communication_taluk_block",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Taluka / Block / तालुका / ब्लॉक",
+      "labelSource": "label",
+      "section": "Communication Address",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Taluka / Block",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 20
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_communication_pin",
+      "name": "",
+      "selector": "#ux_communication_pin",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Pin Code / पिन कोड",
+      "labelSource": "label",
+      "section": "Communication Address",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Pin Code",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 6
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_communication_mobileNo",
+      "name": "",
+      "selector": "#ux_communication_mobileNo",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Primary Mobile No / मोबाइल नंबर",
+      "labelSource": "label",
+      "section": "Communication Address",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Mobile Number",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 10
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_communication_secondary_mobileNo",
+      "name": "",
+      "selector": "#ux_communication_secondary_mobileNo",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Secondary Mobile No / मोबाइल नंबर",
+      "labelSource": "label",
+      "section": "Communication Address",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Secondary Mobile Number",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 10
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "email",
+      "id": "ux_communication_emailId",
+      "name": "",
+      "selector": "#ux_communication_emailId",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "eMail / ई-मेल",
+      "labelSource": "label",
+      "section": "Communication Address",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Email ID",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 50
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "checkbox",
+      "id": "ux_SameAddressCheck",
+      "name": "",
+      "selector": "#ux_SameAddressCheck",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Unit Location / इकाई का स्थान same as Communication Address",
+      "labelSource": "label",
+      "section": "Unit Address",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_State",
+      "name": "",
+      "selector": "#ux_State",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "",
+      "labelSource": null,
+      "section": "Unit Address",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 39,
+      "options": [
+        {
+          "value": "--Select State--",
+          "text": "--Select State--"
+        },
+        {
+          "value": "35",
+          "text": "ANDAMAN & NICOBAR ISLANDS"
+        },
+        {
+          "value": "28",
+          "text": "ANDHRA PRADESH"
+        },
+        {
+          "value": "12",
+          "text": "ARUNACHAL PRADESH"
+        },
+        {
+          "value": "18",
+          "text": "ASSAM"
+        },
+        {
+          "value": "10",
+          "text": "BIHAR"
+        },
+        {
+          "value": "4",
+          "text": "CHANDIGARH"
+        },
+        {
+          "value": "22",
+          "text": "CHHATTISGARH"
+        },
+        {
+          "value": "26",
+          "text": "DADRA & NAGAR HAVELI"
+        },
+        {
+          "value": "25",
+          "text": "DAMAN AND DIU"
+        },
+        {
+          "value": "7",
+          "text": "DELHI"
+        },
+        {
+          "value": "30",
+          "text": "GOA"
+        },
+        {
+          "value": "24",
+          "text": "GUJARAT"
+        },
+        {
+          "value": "6",
+          "text": "HARYANA"
+        },
+        {
+          "value": "2",
+          "text": "HIMACHAL PRADESH"
+        },
+        {
+          "value": "1",
+          "text": "JAMMU AND KASHMIR"
+        },
+        {
+          "value": "20",
+          "text": "JHARKHAND"
+        },
+        {
+          "value": "29",
+          "text": "KARNATAKA"
+        },
+        {
+          "value": "32",
+          "text": "KERALA"
+        },
+        {
+          "value": "37",
+          "text": "LADAKH"
+        },
+        {
+          "value": "38",
+          "text": "LADAKH"
+        },
+        {
+          "value": "31",
+          "text": "LAKSHADWEEP"
+        },
+        {
+          "value": "23",
+          "text": "MADHYA PRADESH"
+        },
+        {
+          "value": "27",
+          "text": "MAHARASHTRA"
+        },
+        {
+          "value": "14",
+          "text": "MANIPUR"
+        },
+        {
+          "value": "17",
+          "text": "MEGHALAYA"
+        },
+        {
+          "value": "15",
+          "text": "MIZORAM"
+        },
+        {
+          "value": "13",
+          "text": "NAGALAND"
+        },
+        {
+          "value": "21",
+          "text": "ODISHA"
+        },
+        {
+          "value": "34",
+          "text": "PUDUCHERRY"
+        },
+        {
+          "value": "3",
+          "text": "PUNJAB"
+        },
+        {
+          "value": "8",
+          "text": "RAJASTHAN"
+        },
+        {
+          "value": "11",
+          "text": "SIKKIM"
+        },
+        {
+          "value": "33",
+          "text": "TAMIL NADU"
+        },
+        {
+          "value": "36",
+          "text": "TELANGANA"
+        },
+        {
+          "value": "16",
+          "text": "TRIPURA"
+        },
+        {
+          "value": "9",
+          "text": "UTTAR PRADESH"
+        },
+        {
+          "value": "5",
+          "text": "UTTARAKHAND"
+        },
+        {
+          "value": "19",
+          "text": "WEST BENGAL"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_District",
+      "name": "",
+      "selector": "#ux_District",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "",
+      "labelSource": null,
+      "section": "Unit Address",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 1,
+      "options": [
+        {
+          "value": "--Select District--",
+          "text": "--Select District--"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_UnitAddress_subdistrict",
+      "name": "",
+      "selector": "#ux_UnitAddress_subdistrict",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Sub District / Municipal Body / उप जिला / नगर निकाय",
+      "labelSource": "label",
+      "section": "Unit Address",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 1,
+      "options": [
+        {
+          "value": "--Select Sub District--",
+          "text": "--Select Sub District--"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_UnitAddress_village",
+      "name": "",
+      "selector": "#ux_UnitAddress_village",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Village / Muncipality Name / गाँव / नगरपालिका का नाम",
+      "labelSource": "label",
+      "section": "Unit Address",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 1,
+      "options": [
+        {
+          "value": "--Select Village--",
+          "text": "--Select Village--"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_UnitAddress_village_text",
+      "name": "",
+      "selector": "#ux_UnitAddress_village_text",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Enter Village Manually",
+      "labelSource": "placeholder",
+      "section": "Unit Address",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Enter Village Manually",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_UnitAddress_LGDCode",
+      "name": "",
+      "selector": "#ux_UnitAddress_LGDCode",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "ux_UnitAddress_LGDCode",
+      "labelSource": "placeholder",
+      "section": "Unit Address",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "ux_UnitAddress_LGDCode",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 10
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_UnitAddress_pin",
+      "name": "",
+      "selector": "#ux_UnitAddress_pin",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Pin Code / पिन कोड",
+      "labelSource": "label",
+      "section": "Unit Address",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Pin Code",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 6
+      }
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_UnitAddress_UnitLocation",
+      "name": "",
+      "selector": "#ux_UnitAddress_UnitLocation",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Unit Location / इकाई का स्थान",
+      "labelSource": "label",
+      "section": "Unit Address",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 3,
+      "options": [
+        {
+          "value": "",
+          "text": "--Select Unit Location--"
+        },
+        {
+          "value": "Rural",
+          "text": "Rural"
+        },
+        {
+          "value": "Urban",
+          "text": "Urban"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_UnitAddress_UnitAddress",
+      "name": "",
+      "selector": "#ux_UnitAddress_UnitAddress",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Unit Address / पत्राचार हेतु पता",
+      "labelSource": "label",
+      "section": "Unit Address",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Unit Address",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 200
+      }
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_sponsoring_agency",
+      "name": "",
+      "selector": "#ux_sponsoring_agency",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Implementing Agency / कार्यान्वयन एजेंसी",
+      "labelSource": "label",
+      "section": "Implementing Agency",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 5,
+      "options": [
+        {
+          "value": "--Select Implementing Agency--",
+          "text": "--Select Implementing Agency--"
+        },
+        {
+          "value": "1",
+          "text": "KVIC ( Khadi and Village Industries Commission )"
+        },
+        {
+          "value": "2",
+          "text": "DIC ( District Industries Centre )"
+        },
+        {
+          "value": "3",
+          "text": "KVIB ( Khadi and Village Industries Board )"
+        },
+        {
+          "value": "4",
+          "text": "COIR ( Coir Board )"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "checkbox",
+      "id": "ux_SponsoringOfficeName",
+      "name": "",
+      "selector": "#ux_SponsoringOfficeName",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "",
+      "labelSource": null,
+      "section": "Sponsoring Office / प्रायोजक कार्यालय *",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_ProjectInformation_activityType",
+      "name": "",
+      "selector": "#ux_ProjectInformation_activityType",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Type of Activity / गतिविधि का प्रकार",
+      "labelSource": "label",
+      "section": "Project Information",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 3,
+      "options": [
+        {
+          "value": "--Select Activity Type--",
+          "text": "--Select Activity Type--"
+        },
+        {
+          "value": "1",
+          "text": "Manufacturing"
+        },
+        {
+          "value": "2",
+          "text": "Service"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_ProjectInformation_subscheme",
+      "name": "",
+      "selector": "#ux_ProjectInformation_subscheme",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Sub Scheme / उपयोजना",
+      "labelSource": "label",
+      "section": "Project Information",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 4,
+      "options": [
+        {
+          "value": "--Select Sub scheme--",
+          "text": "--Select Sub scheme--"
+        },
+        {
+          "value": "2",
+          "text": "Service"
+        },
+        {
+          "value": "3",
+          "text": "Trading"
+        },
+        {
+          "value": "4",
+          "text": "Transport"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_ProjectInformation_isTrainingUndergone",
+      "name": "",
+      "selector": "#ux_ProjectInformation_isTrainingUndergone",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "",
+      "labelSource": null,
+      "section": "Project Information",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 3,
+      "options": [
+        {
+          "value": "-1",
+          "text": "--Select--"
+        },
+        {
+          "value": "1",
+          "text": "Yes"
+        },
+        {
+          "value": "0",
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "radio-group",
+      "id": "",
+      "name": "trainingmode",
+      "selector": "input[type=\"radio\"][name=\"trainingmode\"]",
+      "selectorStable": true,
+      "selectorKind": "name",
+      "label": "",
+      "labelSource": null,
+      "section": "Project Information",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "choices": [
+        {
+          "value": "true",
+          "label": "Online EDP",
+          "selector": "#onlineEdp",
+          "selectorStable": true
+        },
+        {
+          "value": "false",
+          "label": "Offline EDP",
+          "selector": "#offlineEdp",
+          "selectorStable": true
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_ProjectInformation_trainingInstnName",
+      "name": "",
+      "selector": "#ux_ProjectInformation_trainingInstnName",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Age",
+      "labelSource": "placeholder",
+      "section": "Project Information",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Age",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_ProjectInformation_capitalExpenditure",
+      "name": "",
+      "selector": "#ux_ProjectInformation_capitalExpenditure",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Capital Expenditure / पूंजीगत व्यय (₹)",
+      "labelSource": "label",
+      "section": "Project Information",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Age",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 12
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_ProjectInformation_workingCapital",
+      "name": "",
+      "selector": "#ux_ProjectInformation_workingCapital",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Working Capital / कार्यशील पूंजी (₹)",
+      "labelSource": "label",
+      "section": "Project Information",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Age",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 12
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_ProjectInformation_total",
+      "name": "",
+      "selector": "#ux_ProjectInformation_total",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Total / कुल (₹)",
+      "labelSource": "label",
+      "section": "Project Information",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": false,
+      "readOnly": true,
+      "filtered": null,
+      "placeholder": "Age",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_ProjectInformation_Employment",
+      "name": "",
+      "selector": "#ux_ProjectInformation_Employment",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "No. Of Employees / रोजगारो की संख्या",
+      "labelSource": "label",
+      "section": "Project Information",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "No. Of Employees",
+      "autoComplete": "off",
+      "validation": {
+        "maxLength": 6
+      }
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_financingBank_bankName",
+      "name": "",
+      "selector": "#ux_financingBank_bankName",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "",
+      "labelSource": null,
+      "section": "Primary Financing Bank / बैंक विवरण *",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 726,
+      "options": [
+        {
+          "value": "--Select Bank Name--",
+          "text": "--Select Bank Name--"
+        },
+        {
+          "value": "2",
+          "text": "Abhyudaya Cooperative Bank Ltd"
+        },
+        {
+          "value": "3",
+          "text": "Abu Dhabi Commercial Bank"
+        },
+        {
+          "value": "786",
+          "text": "Adarsh Co-Operative Bank Ltd."
+        },
+        {
+          "value": "480",
+          "text": "Adilabad Dcc Bank Ltd."
+        },
+        {
+          "value": "759",
+          "text": "Aditya Birla Idea Payments Bank"
+        },
+        {
+          "value": "491",
+          "text": "Ahilyadevi Urban Co - Operative Bank Ltd"
+        },
+        {
+          "value": "4",
+          "text": "Ahmedabad Mercantile Cooperative Bank Ltd"
+        },
+        {
+          "value": "377",
+          "text": "Ahmedabd District Co Op Bank Ltd"
+        },
+        {
+          "value": "495",
+          "text": "Ahmednagar Merchants Co-Op Bank Ltd"
+        },
+        {
+          "value": "743",
+          "text": "Airtel Payments Bank Ltd"
+        },
+        {
+          "value": "247",
+          "text": "Ajara Urban Co Op Bank Ltd Ajara"
+        },
+        {
+          "value": "673",
+          "text": "Ajmer Central Co-Operative Bank Ltd"
+        },
+        {
+          "value": "561",
+          "text": "Akhand Anand Co Op Bank Ltd"
+        },
+        {
+          "value": "5",
+          "text": "Akola District Central Cooperative Bank"
+        },
+        {
+          "value": "6",
+          "text": "Akola Janata Commercial Cooperative Bank"
+        },
+        {
+          "value": "781",
+          "text": "Akola Urban Coop Bank"
+        },
+        {
+          "value": "8",
+          "text": "Almora Urban Cooperative Bank Ltd"
+        },
+        {
+          "value": "619",
+          "text": "Almora Zila Sahkari Bank"
+        },
+        {
+          "value": "672",
+          "text": "Alwar Central Co-Operative Bank Ltd."
+        },
+        {
+          "value": "552",
+          "text": "Ambajogai Peoples Co-Op Bank Ltd"
+        },
+        {
+          "value": "589",
+          "text": "Ambala Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "680",
+          "text": "Ambarnath Jaihind Coop Bank Ltd Ambarnath"
+        },
+        {
+          "value": "608",
+          "text": "Amreli Jilla Madhyastha Sahakari Bank Ltd"
+        },
+        {
+          "value": "738",
+          "text": "Andaman State Coop Bank Ltd"
+        },
+        {
+          "value": "10",
+          "text": "Andhra Pradesh Grameen Vikas Bank"
+        },
+        {
+          "value": "671",
+          "text": "Andhra Pradesh Grameena Bank"
+        },
+        {
+          "value": "11",
+          "text": "Andhra Pradesh Grameena Vikas Bank"
+        },
+        {
+          "value": "291",
+          "text": "Andhra Pradesh Grameena Vikas Bank"
+        },
+        {
+          "value": "12",
+          "text": "Andhra Pradesh State Cooperative Bank Ltd"
+        },
+        {
+          "value": "13",
+          "text": "Andhra Pragathi Grameena Bank"
+        },
+        {
+          "value": "14",
+          "text": "Ap Mahesh Cooperative Urban Bank Ltd"
+        },
+        {
+          "value": "15",
+          "text": "Apna Sahakari Bank Ltd"
+        },
+        {
+          "value": "327",
+          "text": "Appasaheb Birnale Sahakari Bank Ltd"
+        },
+        {
+          "value": "16",
+          "text": "Arunachal Pradesh Rural Bank"
+        },
+        {
+          "value": "503",
+          "text": "Arvind Sahakari Bank Ltd"
+        },
+        {
+          "value": "517",
+          "text": "Arvind Sahkari Bank Ltd"
+        },
+        {
+          "value": "352",
+          "text": "Assam Coop Apex Bank Ltd"
+        },
+        {
+          "value": "355",
+          "text": "Assam Gramin Bank"
+        },
+        {
+          "value": "17",
+          "text": "Assam Gramin Vikash Bank"
+        },
+        {
+          "value": "594",
+          "text": "Associate Co Op Bank Ltd"
+        },
+        {
+          "value": "504",
+          "text": "Associate Coop Bank"
+        },
+        {
+          "value": "19",
+          "text": "Australia And New Zealand Banking Group Limited"
+        },
+        {
+          "value": "20",
+          "text": "Axis Bank Ltd"
+        },
+        {
+          "value": "447",
+          "text": "Babasaheb Deshmukh Sahakari Bank Ltd"
+        },
+        {
+          "value": "476",
+          "text": "Bagalkot Cooperative Bank"
+        },
+        {
+          "value": "349",
+          "text": "Bagalkot District Central Coop Bank"
+        },
+        {
+          "value": "791",
+          "text": "Balageria Central Coop Bank Ltd"
+        },
+        {
+          "value": "701",
+          "text": "Balasore Bhadrak Ccb"
+        },
+        {
+          "value": "345",
+          "text": "Ballia Etawah Gramin Bank"
+        },
+        {
+          "value": "746",
+          "text": "Banaskantha Dist Cent Co Op Bank Ltd"
+        },
+        {
+          "value": "249",
+          "text": "Banaskantha Mercantile Cooperative Bank Ltd"
+        },
+        {
+          "value": "748",
+          "text": "Banda Urban Coop Bank"
+        },
+        {
+          "value": "21",
+          "text": "Bandhan Bank Ltd"
+        },
+        {
+          "value": "22",
+          "text": "Bangiya Gramin Vikash Bank"
+        },
+        {
+          "value": "23",
+          "text": "Bangiya Gramin Vikash Bank"
+        },
+        {
+          "value": "24",
+          "text": "Bank Internasional Indonesia"
+        },
+        {
+          "value": "25",
+          "text": "Bank Of America"
+        },
+        {
+          "value": "26",
+          "text": "Bank Of Baharain And Kuwait Bsc"
+        },
+        {
+          "value": "27",
+          "text": "Bank Of Baroda"
+        },
+        {
+          "value": "28",
+          "text": "Bank Of Ceylon"
+        },
+        {
+          "value": "29",
+          "text": "Bank Of India"
+        },
+        {
+          "value": "30",
+          "text": "Bank Of Maharashtra"
+        },
+        {
+          "value": "31",
+          "text": "Bank Of Nova Scotia"
+        },
+        {
+          "value": "32",
+          "text": "Bank Of Rajasthan Ltd"
+        },
+        {
+          "value": "33",
+          "text": "Bank Of Tokyo-mitsubishi Ufj Ltd"
+        },
+        {
+          "value": "553",
+          "text": "Bankura District Central Cooperative Bank"
+        },
+        {
+          "value": "310",
+          "text": "Banswara Central Co-Operative Bank Ltd."
+        },
+        {
+          "value": "333",
+          "text": "Bapuji Co-Operative Bank Ltd"
+        },
+        {
+          "value": "389",
+          "text": "Bapunagar Mahila Co Op Bank Limited"
+        },
+        {
+          "value": "292",
+          "text": "Baramati Sahakari Bank Ltd"
+        },
+        {
+          "value": "543",
+          "text": "Baramati Sahakari Bank Ltd"
+        },
+        {
+          "value": "601",
+          "text": "Baramulla Central Co-Operative Bank Ltd"
+        },
+        {
+          "value": "794",
+          "text": "Baran Nagrik Sahkari Bank Ltd"
+        },
+        {
+          "value": "34",
+          "text": "Barclays Bank"
+        },
+        {
+          "value": "741",
+          "text": "Barmer Central Co-Operative Bank Ltd."
+        },
+        {
+          "value": "718",
+          "text": "Baroda Central Co Op Bank Ltd"
+        },
+        {
+          "value": "600",
+          "text": "Baroda City Co Operative Bank Ltd"
+        },
+        {
+          "value": "35",
+          "text": "Baroda Gujarat Gramin Bank"
+        },
+        {
+          "value": "36",
+          "text": "Baroda Rajasthan Gramin Bank"
+        },
+        {
+          "value": "40",
+          "text": "Bassein Catholic Cooperative Bank Ltd"
+        },
+        {
+          "value": "634",
+          "text": "Belgaum Dist Central Coop Bank"
+        },
+        {
+          "value": "438",
+          "text": "Belgaum Industrial Coop Bank"
+        },
+        {
+          "value": "706",
+          "text": "Bellary District Central Co Operative Bank Ltd"
+        },
+        {
+          "value": "318",
+          "text": "Berhampur Co-Op Urban Bank Ltd"
+        },
+        {
+          "value": "733",
+          "text": "Bhadradri C U Bank"
+        },
+        {
+          "value": "754",
+          "text": "Bhadradri Coopurban Bank"
+        },
+        {
+          "value": "591",
+          "text": "Bhagalpur Central Co-Operative Bank"
+        },
+        {
+          "value": "524",
+          "text": "Bhagini Nivedita Sahakari Bank Ltd Pune"
+        },
+        {
+          "value": "391",
+          "text": "Bhandara Dccb"
+        },
+        {
+          "value": "665",
+          "text": "Bhandara Urban Coop Bnk Ltd"
+        },
+        {
+          "value": "41",
+          "text": "Bharat Cooperative Bank (mumbai) Ltd"
+        },
+        {
+          "value": "331",
+          "text": "Bharathiya Sahakara Bank Niyamitha"
+        },
+        {
+          "value": "42",
+          "text": "Bharatiya Mahila Bank Ltd"
+        },
+        {
+          "value": "381",
+          "text": "Bhavnagar Dist Co Op Bank Ltd"
+        },
+        {
+          "value": "410",
+          "text": "Bhilai Nagrik Sahakari Bank Mydt"
+        },
+        {
+          "value": "367",
+          "text": "Bhiwani Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "372",
+          "text": "Bhuj Mercantile Coop Bank Ltd"
+        },
+        {
+          "value": "63",
+          "text": "Bihar Gramin Bank"
+        },
+        {
+          "value": "547",
+          "text": "Bihar State Coop Bank"
+        },
+        {
+          "value": "641",
+          "text": "Bijapur Co-Op Central Bank Ltd"
+        },
+        {
+          "value": "562",
+          "text": "Bijapur Sahakari Bank Niyamit"
+        },
+        {
+          "value": "783",
+          "text": "Bijnor Urban Co-Operative Bank"
+        },
+        {
+          "value": "43",
+          "text": "Bnp Paribas"
+        },
+        {
+          "value": "439",
+          "text": "Bolangir Dccb"
+        },
+        {
+          "value": "442",
+          "text": "Bombay Mercantile Cooperative Bank Ltd"
+        },
+        {
+          "value": "740",
+          "text": "Bundi Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "340",
+          "text": "Burdwan Central Coop Bank Ltd"
+        },
+        {
+          "value": "44",
+          "text": "Calyon Bank"
+        },
+        {
+          "value": "45",
+          "text": "Canara Bank"
+        },
+        {
+          "value": "46",
+          "text": "Capital Local Area Bank Ltd"
+        },
+        {
+          "value": "47",
+          "text": "Capital Small Finance Bank Ltd"
+        },
+        {
+          "value": "462",
+          "text": "Cardamom Merchants Co-Opeative Bank Ltd"
+        },
+        {
+          "value": "505",
+          "text": "Cardamom Merchants Coop"
+        },
+        {
+          "value": "538",
+          "text": "Catholic Co-Operative Urban Bank Ltd"
+        },
+        {
+          "value": "651",
+          "text": "Catholic Coop Urban Bank Ltd"
+        },
+        {
+          "value": "48",
+          "text": "Catholic Syrian Bank Ltd"
+        },
+        {
+          "value": "431",
+          "text": "Cauveri Kalpataru Grameena Bank"
+        },
+        {
+          "value": "49",
+          "text": "Central Bank Of India"
+        },
+        {
+          "value": "724",
+          "text": "Central Co-Operative Bank Ltd."
+        },
+        {
+          "value": "793",
+          "text": "Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "50",
+          "text": "Chaitanya Godavari Grameena Bank"
+        },
+        {
+          "value": "729",
+          "text": "Chamoli Zila Sahkari Bank Limited"
+        },
+        {
+          "value": "379",
+          "text": "Chandigarh State Cooperative Bank Ltd"
+        },
+        {
+          "value": "727",
+          "text": "Chandrapur Dcc Bank"
+        },
+        {
+          "value": "541",
+          "text": "Chennai Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "387",
+          "text": "Chhapi Nagarik Sahakari Bank Ltd"
+        },
+        {
+          "value": "51",
+          "text": "Chhattisgarh Rajya Gramin Bank"
+        },
+        {
+          "value": "545",
+          "text": "Chhattisgarh Rajya Sahakari Bank Maryadit"
+        },
+        {
+          "value": "485",
+          "text": "Chikhli Urban Co Op Bank Ltd"
+        },
+        {
+          "value": "52",
+          "text": "Chikhli Urban Coop Bank"
+        },
+        {
+          "value": "523",
+          "text": "Chikmagalur District Coop Bank Ltd"
+        },
+        {
+          "value": "658",
+          "text": "Chikmagalur Jilla Mahila Sahakara"
+        },
+        {
+          "value": "53",
+          "text": "Chinatrust Commercial Bank"
+        },
+        {
+          "value": "400",
+          "text": "Chitradurga Central Co-Op Bank Ltd"
+        },
+        {
+          "value": "321",
+          "text": "Chittorgarh Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "744",
+          "text": "Chopda Peoples Coop Bank Ltd"
+        },
+        {
+          "value": "54",
+          "text": "Citi Bank"
+        },
+        {
+          "value": "328",
+          "text": "Citizen Co-Operative Bank Ltd."
+        },
+        {
+          "value": "55",
+          "text": "Citizen Credit Cooperative Bank Ltd"
+        },
+        {
+          "value": "689",
+          "text": "Citizens Co-Operative Bank Ltd"
+        },
+        {
+          "value": "674",
+          "text": "Citizens Coop Bank"
+        },
+        {
+          "value": "490",
+          "text": "City Co Operative Bank Ltd"
+        },
+        {
+          "value": "56",
+          "text": "City Union Bank Limited"
+        },
+        {
+          "value": "57",
+          "text": "City Union Bank Ltd"
+        },
+        {
+          "value": "630",
+          "text": "Coastal Local Area Bank"
+        },
+        {
+          "value": "507",
+          "text": "Coimbatore District Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "58",
+          "text": "Commonwealth Bank Of Australia"
+        },
+        {
+          "value": "736",
+          "text": "Coop Bank Of Rajkot"
+        },
+        {
+          "value": "761",
+          "text": "Coop. Bank Of Mehsana Ltd."
+        },
+        {
+          "value": "61",
+          "text": "Cosmos Cooperative Bank Ltd"
+        },
+        {
+          "value": "62",
+          "text": "Credit Suisse Ag"
+        },
+        {
+          "value": "339",
+          "text": "Cuddalore District Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "520",
+          "text": "Cuttack Central Co-Operative Bank"
+        },
+        {
+          "value": "578",
+          "text": "Dac Urb Coop Bank Ltd,peth Vadgaon"
+        },
+        {
+          "value": "649",
+          "text": "Dadasaheb Ramrao Patil Co Op Bank"
+        },
+        {
+          "value": "479",
+          "text": "Dahod Mercantile Co-Op Bank Ltd"
+        },
+        {
+          "value": "466",
+          "text": "Dahod Urban Co Op Bank Ltd"
+        },
+        {
+          "value": "628",
+          "text": "Dahod Urban Cooperative Bank Ltd"
+        },
+        {
+          "value": "408",
+          "text": "Dakshin Dinajpur District Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "627",
+          "text": "Darjeeling District Central Cooperative Bank"
+        },
+        {
+          "value": "714",
+          "text": "Darussalam Co-Op Urban Bank Ltd"
+        },
+        {
+          "value": "468",
+          "text": "Darussalam Coop Urban Bank Ltd"
+        },
+        {
+          "value": "516",
+          "text": "Dausa Kendriya Sahakari Bank Ltd."
+        },
+        {
+          "value": "514",
+          "text": "Davangere Harihar Urban Sahakara"
+        },
+        {
+          "value": "308",
+          "text": "Dbs Bank India Limited"
+        },
+        {
+          "value": "64",
+          "text": "Dbs Bank Ltd"
+        },
+        {
+          "value": "325",
+          "text": "Dcb Bank Limited"
+        },
+        {
+          "value": "65",
+          "text": "Dcb Bank Ltd"
+        },
+        {
+          "value": "461",
+          "text": "Dehradun Distt Coop Bank"
+        },
+        {
+          "value": "687",
+          "text": "Delhi Nagrik Seh Bank"
+        },
+        {
+          "value": "603",
+          "text": "Delhi St Coop Bank"
+        },
+        {
+          "value": "365",
+          "text": "Delhi State Cooperative Bank Limited"
+        },
+        {
+          "value": "66",
+          "text": "Delhi State Cooperative Bank Ltd"
+        },
+        {
+          "value": "629",
+          "text": "Deoghar Jamatra Central Coop Bank"
+        },
+        {
+          "value": "493",
+          "text": "Deogiri Nagari Sah Bank"
+        },
+        {
+          "value": "68",
+          "text": "Deogiri Nagari Sahakari Bank Ltd Aurangabad"
+        },
+        {
+          "value": "519",
+          "text": "Deposit Insurance And Credit Guarantee Corporation"
+        },
+        {
+          "value": "69",
+          "text": "Deutsche Bank"
+        },
+        {
+          "value": "70",
+          "text": "Deutsche Securities India Private Ltd"
+        },
+        {
+          "value": "71",
+          "text": "Dhanalakshmi Bank Ltd"
+        },
+        {
+          "value": "584",
+          "text": "Dhanera Mercantile Co. Bank Ltd"
+        },
+        {
+          "value": "621",
+          "text": "Dharmapuri District Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "581",
+          "text": "Dhule And Nandurbar District Central Co Op Bank Ltd"
+        },
+        {
+          "value": "72",
+          "text": "Dicgc"
+        },
+        {
+          "value": "780",
+          "text": "Dindigul Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "396",
+          "text": "District Coop Central Bank Ltd"
+        },
+        {
+          "value": "802",
+          "text": "DMK JAOLI BANK"
+        },
+        {
+          "value": "73",
+          "text": "Doha Bank Qsc"
+        },
+        {
+          "value": "74",
+          "text": "Dombivli Nagari Sahakari Bank Ltd"
+        },
+        {
+          "value": "403",
+          "text": "Dr Panjabrao Deshmukh Ur Co Bnk Ltd"
+        },
+        {
+          "value": "358",
+          "text": "Dungarpur Central Co-Operative Ltd."
+        },
+        {
+          "value": "75",
+          "text": "Durg Rajnandgaon Gramin Bank"
+        },
+        {
+          "value": "76",
+          "text": "Ellaquai Dehati Bank"
+        },
+        {
+          "value": "77",
+          "text": "Equitas Small Finance Bank Limited"
+        },
+        {
+          "value": "616",
+          "text": "Erode District Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "78",
+          "text": "Esaf Small Finance Bank Limited"
+        },
+        {
+          "value": "79",
+          "text": "Export Import Bank Of India"
+        },
+        {
+          "value": "422",
+          "text": "Faridabad Central Co-Operative Bank Limited"
+        },
+        {
+          "value": "688",
+          "text": "Fatehabad Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "668",
+          "text": "Fazilka Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "80",
+          "text": "Federal Bank"
+        },
+        {
+          "value": "753",
+          "text": "Fincare Small Finance Bank Ltd"
+        },
+        {
+          "value": "661",
+          "text": "Fino Payments Bank"
+        },
+        {
+          "value": "81",
+          "text": "Firstrand Bank Ltd"
+        },
+        {
+          "value": "82",
+          "text": "Gadchiroli District Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "424",
+          "text": "Gandevi Peoples Co-Op. Bank Ltd."
+        },
+        {
+          "value": "692",
+          "text": "Gandhibagh Sahakari Bank"
+        },
+        {
+          "value": "361",
+          "text": "Gandhidham Mercantile Co Op Bank"
+        },
+        {
+          "value": "773",
+          "text": "Gayatri Co Op Urban Bank Ltd"
+        },
+        {
+          "value": "588",
+          "text": "Ghatal Peoples Coop Bank Ltd"
+        },
+        {
+          "value": "469",
+          "text": "Ghoghamba Vibhag Nagrik Sahakari Bank Ltd"
+        },
+        {
+          "value": "420",
+          "text": "Godhra City Co Op Bank Ltd"
+        },
+        {
+          "value": "465",
+          "text": "Godhra Urban Co Op Bank Ltd"
+        },
+        {
+          "value": "83",
+          "text": "Gopinath Patil Parsik Janata Sahakari Bank Ltd"
+        },
+        {
+          "value": "84",
+          "text": "Gramin Bank Of Aryavart"
+        },
+        {
+          "value": "85",
+          "text": "Greater Bombay Cooperative Bank Ltd"
+        },
+        {
+          "value": "638",
+          "text": "Gujarat Gramin Bank"
+        },
+        {
+          "value": "329",
+          "text": "Gujarat Mercanctile Co Op Bank Ltd"
+        },
+        {
+          "value": "551",
+          "text": "Gujarat State Cooperative Bank Limited"
+        },
+        {
+          "value": "86",
+          "text": "Gujarat State Cooperative Bank Ltd"
+        },
+        {
+          "value": "713",
+          "text": "Gulbarga Yadagir Co-Op Bank Ltd"
+        },
+        {
+          "value": "592",
+          "text": "Gulshan Mercantile Urban Co-Operative Bank Ltd"
+        },
+        {
+          "value": "478",
+          "text": "Guntur Coop Urban Bank Ltd"
+        },
+        {
+          "value": "540",
+          "text": "Guntur Coopertive Urban Bank Ltd"
+        },
+        {
+          "value": "739",
+          "text": "Hadoti Kshetriya Gramin Bank"
+        },
+        {
+          "value": "582",
+          "text": "Hanumangarh Kendriya Sahakari Bank Ltd."
+        },
+        {
+          "value": "373",
+          "text": "Haryana Gramin Bank"
+        },
+        {
+          "value": "556",
+          "text": "Haryana State Cooperative Apex Bank Ltd"
+        },
+        {
+          "value": "87",
+          "text": "Hasti Coop Bank Ltd"
+        },
+        {
+          "value": "88",
+          "text": "Hdfc Bank"
+        },
+        {
+          "value": "89",
+          "text": "Himachal Pradesh Gramin Bank"
+        },
+        {
+          "value": "90",
+          "text": "Himachal Pradesh State Cooperative Bank Ltd"
+        },
+        {
+          "value": "343",
+          "text": "Hindustan Coop Bank"
+        },
+        {
+          "value": "407",
+          "text": "Hisar Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "406",
+          "text": "Hisar Urban Co-Operative Bank"
+        },
+        {
+          "value": "518",
+          "text": "Hooghly District Central Cooperative Bank"
+        },
+        {
+          "value": "657",
+          "text": "Hoshiarpur Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "398",
+          "text": "Howrah District Central Cooperative Bank"
+        },
+        {
+          "value": "656",
+          "text": "Hp State Co-Op Bank"
+        },
+        {
+          "value": "91",
+          "text": "Hsbc"
+        },
+        {
+          "value": "580",
+          "text": "Hyderabad District Co Operative Central Bank Ltd"
+        },
+        {
+          "value": "92",
+          "text": "Icici Bank Ltd"
+        },
+        {
+          "value": "93",
+          "text": "Idbi Bank"
+        },
+        {
+          "value": "94",
+          "text": "Idfc Bank Ltd"
+        },
+        {
+          "value": "95",
+          "text": "Idfc First Bank Ltd"
+        },
+        {
+          "value": "96",
+          "text": "Idrbt"
+        },
+        {
+          "value": "97",
+          "text": "Idukki District Cooperative Erative Bank Ltd"
+        },
+        {
+          "value": "443",
+          "text": "Ilkal Cooperative Bank Ltd"
+        },
+        {
+          "value": "659",
+          "text": "Imphal Urban Co Operative Bank"
+        },
+        {
+          "value": "334",
+          "text": "India Post Payment Bank"
+        },
+        {
+          "value": "98",
+          "text": "Indian Bank"
+        },
+        {
+          "value": "100",
+          "text": "Indian Overseas Bank"
+        },
+        {
+          "value": "101",
+          "text": "Indusind Bank"
+        },
+        {
+          "value": "102",
+          "text": "Industrial And Commercial Bank Of China Ltd"
+        },
+        {
+          "value": "103",
+          "text": "Industrial Bank Of Korea"
+        },
+        {
+          "value": "104",
+          "text": "Ing Vysya Bank"
+        },
+        {
+          "value": "565",
+          "text": "Jain Co-Operative Bank Limited"
+        },
+        {
+          "value": "105",
+          "text": "Jaipur Thar Gramin Bank"
+        },
+        {
+          "value": "509",
+          "text": "Jaisalmer Central Co-Operative Bank Ltd."
+        },
+        {
+          "value": "371",
+          "text": "Jalaun District Cooperative Bank Ltd."
+        },
+        {
+          "value": "106",
+          "text": "Jalgaon Janata Sahkari Bank Ltd"
+        },
+        {
+          "value": "107",
+          "text": "Jalgaon Peoples Cooperative Bank Ltd"
+        },
+        {
+          "value": "411",
+          "text": "Jalna Dist Central Coop Bank Ltd"
+        },
+        {
+          "value": "445",
+          "text": "Jalore Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "691",
+          "text": "Jalpaiguri Central Cooperative Bank"
+        },
+        {
+          "value": "108",
+          "text": "Jammu And Kashmir Bank Ltd"
+        },
+        {
+          "value": "109",
+          "text": "Jammu And Kashmir Gramen Bank"
+        },
+        {
+          "value": "599",
+          "text": "Jammu And Kashmir State Cooperative Bank"
+        },
+        {
+          "value": "110",
+          "text": "Jammu Central Cooperativerative Bank"
+        },
+        {
+          "value": "660",
+          "text": "Jamnagar District Central Co Op Bank Ltd"
+        },
+        {
+          "value": "590",
+          "text": "Jamnagar Mahila Sahakari Bank Ltd"
+        },
+        {
+          "value": "436",
+          "text": "Jamshedpur Urban Coop Bank Ltd"
+        },
+        {
+          "value": "437",
+          "text": "Jana Small Finance Bank Ltd"
+        },
+        {
+          "value": "111",
+          "text": "Janakalyan Sahakari Bank Ltd"
+        },
+        {
+          "value": "112",
+          "text": "Janaseva Sahakari Bank Borivli Ltd"
+        },
+        {
+          "value": "113",
+          "text": "Janaseva Sahakari Bank Ltd Pune"
+        },
+        {
+          "value": "679",
+          "text": "Janata Co Op Bank Ltd"
+        },
+        {
+          "value": "735",
+          "text": "Janata Co-Op Bank Ltd"
+        },
+        {
+          "value": "639",
+          "text": "Janata Co-Operative Bank Ltd."
+        },
+        {
+          "value": "114",
+          "text": "Janata Sahakari Bank Ltd"
+        },
+        {
+          "value": "717",
+          "text": "Jath Urban Co Op Bank Ltd"
+        },
+        {
+          "value": "710",
+          "text": "Jhajjar Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "423",
+          "text": "Jhalawar Kendriya Sahkari Bank Ltd."
+        },
+        {
+          "value": "757",
+          "text": "Jhalod Urban Cooperative Bank Ltd"
+        },
+        {
+          "value": "488",
+          "text": "Jharkhand Gramin Bank"
+        },
+        {
+          "value": "115",
+          "text": "Jharkhand Rajya Gramin Bank"
+        },
+        {
+          "value": "117",
+          "text": "Jharkhand State Cooperative Bank Limited"
+        },
+        {
+          "value": "750",
+          "text": "Jhunjhunu Kendriya Sahakari Bank Ltd."
+        },
+        {
+          "value": "652",
+          "text": "Jijau Commercial Co-Op Bank Ltd"
+        },
+        {
+          "value": "648",
+          "text": "Jijau Commercial Coop Bank"
+        },
+        {
+          "value": "346",
+          "text": "Jijau Commerical Co-Operative Bank Ltd"
+        },
+        {
+          "value": "625",
+          "text": "Jila Sahakari Kendriya Bank Ltd"
+        },
+        {
+          "value": "386",
+          "text": "Jila Sahakari Kendriya Bank Maryadit Raipur"
+        },
+        {
+          "value": "426",
+          "text": "Jila Sahkari Kendriya Bank Maryadit"
+        },
+        {
+          "value": "459",
+          "text": "Jind Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "767",
+          "text": "Jogindra Central Coop Bank"
+        },
+        {
+          "value": "118",
+          "text": "Jp Morgan Bank"
+        },
+        {
+          "value": "397",
+          "text": "Kaira District Central Coop Bank"
+        },
+        {
+          "value": "570",
+          "text": "Kalinga Gramya Bank"
+        }
+      ],
+      "optionsTruncated": true
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_financingBank_ifsCode",
+      "name": "",
+      "selector": "#ux_financingBank_ifsCode",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "IFSC/Bank Code",
+      "labelSource": "placeholder",
+      "section": "Primary Financing Bank / बैंक विवरण *",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_financingBank_branchName",
+      "name": "",
+      "selector": "#ux_financingBank_branchName",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Branch Name",
+      "labelSource": "placeholder",
+      "section": "Primary Financing Bank / बैंक विवरण *",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Branch Name",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_financingBank_address",
+      "name": "",
+      "selector": "#ux_financingBank_address",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Aadhaar Card No",
+      "labelSource": "placeholder",
+      "section": "Primary Financing Bank / बैंक विवरण *",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_financingBank_district",
+      "name": "",
+      "selector": "#ux_financingBank_district",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Aadhaar Card No",
+      "labelSource": "placeholder",
+      "section": "Primary Financing Bank / बैंक विवरण *",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_alternateFinancingBank_bankName",
+      "name": "",
+      "selector": "#ux_alternateFinancingBank_bankName",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "",
+      "labelSource": null,
+      "section": "Alternate Financing Bank / दूसरा फ़ाइनेंशियल बैंक",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 726,
+      "options": [
+        {
+          "value": "--Select Bank Name--",
+          "text": "--Select Bank Name--"
+        },
+        {
+          "value": "2",
+          "text": "Abhyudaya Cooperative Bank Ltd"
+        },
+        {
+          "value": "3",
+          "text": "Abu Dhabi Commercial Bank"
+        },
+        {
+          "value": "786",
+          "text": "Adarsh Co-Operative Bank Ltd."
+        },
+        {
+          "value": "480",
+          "text": "Adilabad Dcc Bank Ltd."
+        },
+        {
+          "value": "759",
+          "text": "Aditya Birla Idea Payments Bank"
+        },
+        {
+          "value": "491",
+          "text": "Ahilyadevi Urban Co - Operative Bank Ltd"
+        },
+        {
+          "value": "4",
+          "text": "Ahmedabad Mercantile Cooperative Bank Ltd"
+        },
+        {
+          "value": "377",
+          "text": "Ahmedabd District Co Op Bank Ltd"
+        },
+        {
+          "value": "495",
+          "text": "Ahmednagar Merchants Co-Op Bank Ltd"
+        },
+        {
+          "value": "743",
+          "text": "Airtel Payments Bank Ltd"
+        },
+        {
+          "value": "247",
+          "text": "Ajara Urban Co Op Bank Ltd Ajara"
+        },
+        {
+          "value": "673",
+          "text": "Ajmer Central Co-Operative Bank Ltd"
+        },
+        {
+          "value": "561",
+          "text": "Akhand Anand Co Op Bank Ltd"
+        },
+        {
+          "value": "5",
+          "text": "Akola District Central Cooperative Bank"
+        },
+        {
+          "value": "6",
+          "text": "Akola Janata Commercial Cooperative Bank"
+        },
+        {
+          "value": "781",
+          "text": "Akola Urban Coop Bank"
+        },
+        {
+          "value": "8",
+          "text": "Almora Urban Cooperative Bank Ltd"
+        },
+        {
+          "value": "619",
+          "text": "Almora Zila Sahkari Bank"
+        },
+        {
+          "value": "672",
+          "text": "Alwar Central Co-Operative Bank Ltd."
+        },
+        {
+          "value": "552",
+          "text": "Ambajogai Peoples Co-Op Bank Ltd"
+        },
+        {
+          "value": "589",
+          "text": "Ambala Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "680",
+          "text": "Ambarnath Jaihind Coop Bank Ltd Ambarnath"
+        },
+        {
+          "value": "608",
+          "text": "Amreli Jilla Madhyastha Sahakari Bank Ltd"
+        },
+        {
+          "value": "738",
+          "text": "Andaman State Coop Bank Ltd"
+        },
+        {
+          "value": "10",
+          "text": "Andhra Pradesh Grameen Vikas Bank"
+        },
+        {
+          "value": "671",
+          "text": "Andhra Pradesh Grameena Bank"
+        },
+        {
+          "value": "11",
+          "text": "Andhra Pradesh Grameena Vikas Bank"
+        },
+        {
+          "value": "291",
+          "text": "Andhra Pradesh Grameena Vikas Bank"
+        },
+        {
+          "value": "12",
+          "text": "Andhra Pradesh State Cooperative Bank Ltd"
+        },
+        {
+          "value": "13",
+          "text": "Andhra Pragathi Grameena Bank"
+        },
+        {
+          "value": "14",
+          "text": "Ap Mahesh Cooperative Urban Bank Ltd"
+        },
+        {
+          "value": "15",
+          "text": "Apna Sahakari Bank Ltd"
+        },
+        {
+          "value": "327",
+          "text": "Appasaheb Birnale Sahakari Bank Ltd"
+        },
+        {
+          "value": "16",
+          "text": "Arunachal Pradesh Rural Bank"
+        },
+        {
+          "value": "503",
+          "text": "Arvind Sahakari Bank Ltd"
+        },
+        {
+          "value": "517",
+          "text": "Arvind Sahkari Bank Ltd"
+        },
+        {
+          "value": "352",
+          "text": "Assam Coop Apex Bank Ltd"
+        },
+        {
+          "value": "355",
+          "text": "Assam Gramin Bank"
+        },
+        {
+          "value": "17",
+          "text": "Assam Gramin Vikash Bank"
+        },
+        {
+          "value": "594",
+          "text": "Associate Co Op Bank Ltd"
+        },
+        {
+          "value": "504",
+          "text": "Associate Coop Bank"
+        },
+        {
+          "value": "19",
+          "text": "Australia And New Zealand Banking Group Limited"
+        },
+        {
+          "value": "20",
+          "text": "Axis Bank Ltd"
+        },
+        {
+          "value": "447",
+          "text": "Babasaheb Deshmukh Sahakari Bank Ltd"
+        },
+        {
+          "value": "476",
+          "text": "Bagalkot Cooperative Bank"
+        },
+        {
+          "value": "349",
+          "text": "Bagalkot District Central Coop Bank"
+        },
+        {
+          "value": "791",
+          "text": "Balageria Central Coop Bank Ltd"
+        },
+        {
+          "value": "701",
+          "text": "Balasore Bhadrak Ccb"
+        },
+        {
+          "value": "345",
+          "text": "Ballia Etawah Gramin Bank"
+        },
+        {
+          "value": "746",
+          "text": "Banaskantha Dist Cent Co Op Bank Ltd"
+        },
+        {
+          "value": "249",
+          "text": "Banaskantha Mercantile Cooperative Bank Ltd"
+        },
+        {
+          "value": "748",
+          "text": "Banda Urban Coop Bank"
+        },
+        {
+          "value": "21",
+          "text": "Bandhan Bank Ltd"
+        },
+        {
+          "value": "22",
+          "text": "Bangiya Gramin Vikash Bank"
+        },
+        {
+          "value": "23",
+          "text": "Bangiya Gramin Vikash Bank"
+        },
+        {
+          "value": "24",
+          "text": "Bank Internasional Indonesia"
+        },
+        {
+          "value": "25",
+          "text": "Bank Of America"
+        },
+        {
+          "value": "26",
+          "text": "Bank Of Baharain And Kuwait Bsc"
+        },
+        {
+          "value": "27",
+          "text": "Bank Of Baroda"
+        },
+        {
+          "value": "28",
+          "text": "Bank Of Ceylon"
+        },
+        {
+          "value": "29",
+          "text": "Bank Of India"
+        },
+        {
+          "value": "30",
+          "text": "Bank Of Maharashtra"
+        },
+        {
+          "value": "31",
+          "text": "Bank Of Nova Scotia"
+        },
+        {
+          "value": "32",
+          "text": "Bank Of Rajasthan Ltd"
+        },
+        {
+          "value": "33",
+          "text": "Bank Of Tokyo-mitsubishi Ufj Ltd"
+        },
+        {
+          "value": "553",
+          "text": "Bankura District Central Cooperative Bank"
+        },
+        {
+          "value": "310",
+          "text": "Banswara Central Co-Operative Bank Ltd."
+        },
+        {
+          "value": "333",
+          "text": "Bapuji Co-Operative Bank Ltd"
+        },
+        {
+          "value": "389",
+          "text": "Bapunagar Mahila Co Op Bank Limited"
+        },
+        {
+          "value": "292",
+          "text": "Baramati Sahakari Bank Ltd"
+        },
+        {
+          "value": "543",
+          "text": "Baramati Sahakari Bank Ltd"
+        },
+        {
+          "value": "601",
+          "text": "Baramulla Central Co-Operative Bank Ltd"
+        },
+        {
+          "value": "794",
+          "text": "Baran Nagrik Sahkari Bank Ltd"
+        },
+        {
+          "value": "34",
+          "text": "Barclays Bank"
+        },
+        {
+          "value": "741",
+          "text": "Barmer Central Co-Operative Bank Ltd."
+        },
+        {
+          "value": "718",
+          "text": "Baroda Central Co Op Bank Ltd"
+        },
+        {
+          "value": "600",
+          "text": "Baroda City Co Operative Bank Ltd"
+        },
+        {
+          "value": "35",
+          "text": "Baroda Gujarat Gramin Bank"
+        },
+        {
+          "value": "36",
+          "text": "Baroda Rajasthan Gramin Bank"
+        },
+        {
+          "value": "40",
+          "text": "Bassein Catholic Cooperative Bank Ltd"
+        },
+        {
+          "value": "634",
+          "text": "Belgaum Dist Central Coop Bank"
+        },
+        {
+          "value": "438",
+          "text": "Belgaum Industrial Coop Bank"
+        },
+        {
+          "value": "706",
+          "text": "Bellary District Central Co Operative Bank Ltd"
+        },
+        {
+          "value": "318",
+          "text": "Berhampur Co-Op Urban Bank Ltd"
+        },
+        {
+          "value": "733",
+          "text": "Bhadradri C U Bank"
+        },
+        {
+          "value": "754",
+          "text": "Bhadradri Coopurban Bank"
+        },
+        {
+          "value": "591",
+          "text": "Bhagalpur Central Co-Operative Bank"
+        },
+        {
+          "value": "524",
+          "text": "Bhagini Nivedita Sahakari Bank Ltd Pune"
+        },
+        {
+          "value": "391",
+          "text": "Bhandara Dccb"
+        },
+        {
+          "value": "665",
+          "text": "Bhandara Urban Coop Bnk Ltd"
+        },
+        {
+          "value": "41",
+          "text": "Bharat Cooperative Bank (mumbai) Ltd"
+        },
+        {
+          "value": "331",
+          "text": "Bharathiya Sahakara Bank Niyamitha"
+        },
+        {
+          "value": "42",
+          "text": "Bharatiya Mahila Bank Ltd"
+        },
+        {
+          "value": "381",
+          "text": "Bhavnagar Dist Co Op Bank Ltd"
+        },
+        {
+          "value": "410",
+          "text": "Bhilai Nagrik Sahakari Bank Mydt"
+        },
+        {
+          "value": "367",
+          "text": "Bhiwani Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "372",
+          "text": "Bhuj Mercantile Coop Bank Ltd"
+        },
+        {
+          "value": "63",
+          "text": "Bihar Gramin Bank"
+        },
+        {
+          "value": "547",
+          "text": "Bihar State Coop Bank"
+        },
+        {
+          "value": "641",
+          "text": "Bijapur Co-Op Central Bank Ltd"
+        },
+        {
+          "value": "562",
+          "text": "Bijapur Sahakari Bank Niyamit"
+        },
+        {
+          "value": "783",
+          "text": "Bijnor Urban Co-Operative Bank"
+        },
+        {
+          "value": "43",
+          "text": "Bnp Paribas"
+        },
+        {
+          "value": "439",
+          "text": "Bolangir Dccb"
+        },
+        {
+          "value": "442",
+          "text": "Bombay Mercantile Cooperative Bank Ltd"
+        },
+        {
+          "value": "740",
+          "text": "Bundi Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "340",
+          "text": "Burdwan Central Coop Bank Ltd"
+        },
+        {
+          "value": "44",
+          "text": "Calyon Bank"
+        },
+        {
+          "value": "45",
+          "text": "Canara Bank"
+        },
+        {
+          "value": "46",
+          "text": "Capital Local Area Bank Ltd"
+        },
+        {
+          "value": "47",
+          "text": "Capital Small Finance Bank Ltd"
+        },
+        {
+          "value": "462",
+          "text": "Cardamom Merchants Co-Opeative Bank Ltd"
+        },
+        {
+          "value": "505",
+          "text": "Cardamom Merchants Coop"
+        },
+        {
+          "value": "538",
+          "text": "Catholic Co-Operative Urban Bank Ltd"
+        },
+        {
+          "value": "651",
+          "text": "Catholic Coop Urban Bank Ltd"
+        },
+        {
+          "value": "48",
+          "text": "Catholic Syrian Bank Ltd"
+        },
+        {
+          "value": "431",
+          "text": "Cauveri Kalpataru Grameena Bank"
+        },
+        {
+          "value": "49",
+          "text": "Central Bank Of India"
+        },
+        {
+          "value": "724",
+          "text": "Central Co-Operative Bank Ltd."
+        },
+        {
+          "value": "793",
+          "text": "Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "50",
+          "text": "Chaitanya Godavari Grameena Bank"
+        },
+        {
+          "value": "729",
+          "text": "Chamoli Zila Sahkari Bank Limited"
+        },
+        {
+          "value": "379",
+          "text": "Chandigarh State Cooperative Bank Ltd"
+        },
+        {
+          "value": "727",
+          "text": "Chandrapur Dcc Bank"
+        },
+        {
+          "value": "541",
+          "text": "Chennai Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "387",
+          "text": "Chhapi Nagarik Sahakari Bank Ltd"
+        },
+        {
+          "value": "51",
+          "text": "Chhattisgarh Rajya Gramin Bank"
+        },
+        {
+          "value": "545",
+          "text": "Chhattisgarh Rajya Sahakari Bank Maryadit"
+        },
+        {
+          "value": "485",
+          "text": "Chikhli Urban Co Op Bank Ltd"
+        },
+        {
+          "value": "52",
+          "text": "Chikhli Urban Coop Bank"
+        },
+        {
+          "value": "523",
+          "text": "Chikmagalur District Coop Bank Ltd"
+        },
+        {
+          "value": "658",
+          "text": "Chikmagalur Jilla Mahila Sahakara"
+        },
+        {
+          "value": "53",
+          "text": "Chinatrust Commercial Bank"
+        },
+        {
+          "value": "400",
+          "text": "Chitradurga Central Co-Op Bank Ltd"
+        },
+        {
+          "value": "321",
+          "text": "Chittorgarh Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "744",
+          "text": "Chopda Peoples Coop Bank Ltd"
+        },
+        {
+          "value": "54",
+          "text": "Citi Bank"
+        },
+        {
+          "value": "328",
+          "text": "Citizen Co-Operative Bank Ltd."
+        },
+        {
+          "value": "55",
+          "text": "Citizen Credit Cooperative Bank Ltd"
+        },
+        {
+          "value": "689",
+          "text": "Citizens Co-Operative Bank Ltd"
+        },
+        {
+          "value": "674",
+          "text": "Citizens Coop Bank"
+        },
+        {
+          "value": "490",
+          "text": "City Co Operative Bank Ltd"
+        },
+        {
+          "value": "56",
+          "text": "City Union Bank Limited"
+        },
+        {
+          "value": "57",
+          "text": "City Union Bank Ltd"
+        },
+        {
+          "value": "630",
+          "text": "Coastal Local Area Bank"
+        },
+        {
+          "value": "507",
+          "text": "Coimbatore District Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "58",
+          "text": "Commonwealth Bank Of Australia"
+        },
+        {
+          "value": "736",
+          "text": "Coop Bank Of Rajkot"
+        },
+        {
+          "value": "761",
+          "text": "Coop. Bank Of Mehsana Ltd."
+        },
+        {
+          "value": "61",
+          "text": "Cosmos Cooperative Bank Ltd"
+        },
+        {
+          "value": "62",
+          "text": "Credit Suisse Ag"
+        },
+        {
+          "value": "339",
+          "text": "Cuddalore District Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "520",
+          "text": "Cuttack Central Co-Operative Bank"
+        },
+        {
+          "value": "578",
+          "text": "Dac Urb Coop Bank Ltd,peth Vadgaon"
+        },
+        {
+          "value": "649",
+          "text": "Dadasaheb Ramrao Patil Co Op Bank"
+        },
+        {
+          "value": "479",
+          "text": "Dahod Mercantile Co-Op Bank Ltd"
+        },
+        {
+          "value": "466",
+          "text": "Dahod Urban Co Op Bank Ltd"
+        },
+        {
+          "value": "628",
+          "text": "Dahod Urban Cooperative Bank Ltd"
+        },
+        {
+          "value": "408",
+          "text": "Dakshin Dinajpur District Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "627",
+          "text": "Darjeeling District Central Cooperative Bank"
+        },
+        {
+          "value": "714",
+          "text": "Darussalam Co-Op Urban Bank Ltd"
+        },
+        {
+          "value": "468",
+          "text": "Darussalam Coop Urban Bank Ltd"
+        },
+        {
+          "value": "516",
+          "text": "Dausa Kendriya Sahakari Bank Ltd."
+        },
+        {
+          "value": "514",
+          "text": "Davangere Harihar Urban Sahakara"
+        },
+        {
+          "value": "308",
+          "text": "Dbs Bank India Limited"
+        },
+        {
+          "value": "64",
+          "text": "Dbs Bank Ltd"
+        },
+        {
+          "value": "325",
+          "text": "Dcb Bank Limited"
+        },
+        {
+          "value": "65",
+          "text": "Dcb Bank Ltd"
+        },
+        {
+          "value": "461",
+          "text": "Dehradun Distt Coop Bank"
+        },
+        {
+          "value": "687",
+          "text": "Delhi Nagrik Seh Bank"
+        },
+        {
+          "value": "603",
+          "text": "Delhi St Coop Bank"
+        },
+        {
+          "value": "365",
+          "text": "Delhi State Cooperative Bank Limited"
+        },
+        {
+          "value": "66",
+          "text": "Delhi State Cooperative Bank Ltd"
+        },
+        {
+          "value": "629",
+          "text": "Deoghar Jamatra Central Coop Bank"
+        },
+        {
+          "value": "493",
+          "text": "Deogiri Nagari Sah Bank"
+        },
+        {
+          "value": "68",
+          "text": "Deogiri Nagari Sahakari Bank Ltd Aurangabad"
+        },
+        {
+          "value": "519",
+          "text": "Deposit Insurance And Credit Guarantee Corporation"
+        },
+        {
+          "value": "69",
+          "text": "Deutsche Bank"
+        },
+        {
+          "value": "70",
+          "text": "Deutsche Securities India Private Ltd"
+        },
+        {
+          "value": "71",
+          "text": "Dhanalakshmi Bank Ltd"
+        },
+        {
+          "value": "584",
+          "text": "Dhanera Mercantile Co. Bank Ltd"
+        },
+        {
+          "value": "621",
+          "text": "Dharmapuri District Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "581",
+          "text": "Dhule And Nandurbar District Central Co Op Bank Ltd"
+        },
+        {
+          "value": "72",
+          "text": "Dicgc"
+        },
+        {
+          "value": "780",
+          "text": "Dindigul Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "396",
+          "text": "District Coop Central Bank Ltd"
+        },
+        {
+          "value": "802",
+          "text": "DMK JAOLI BANK"
+        },
+        {
+          "value": "73",
+          "text": "Doha Bank Qsc"
+        },
+        {
+          "value": "74",
+          "text": "Dombivli Nagari Sahakari Bank Ltd"
+        },
+        {
+          "value": "403",
+          "text": "Dr Panjabrao Deshmukh Ur Co Bnk Ltd"
+        },
+        {
+          "value": "358",
+          "text": "Dungarpur Central Co-Operative Ltd."
+        },
+        {
+          "value": "75",
+          "text": "Durg Rajnandgaon Gramin Bank"
+        },
+        {
+          "value": "76",
+          "text": "Ellaquai Dehati Bank"
+        },
+        {
+          "value": "77",
+          "text": "Equitas Small Finance Bank Limited"
+        },
+        {
+          "value": "616",
+          "text": "Erode District Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "78",
+          "text": "Esaf Small Finance Bank Limited"
+        },
+        {
+          "value": "79",
+          "text": "Export Import Bank Of India"
+        },
+        {
+          "value": "422",
+          "text": "Faridabad Central Co-Operative Bank Limited"
+        },
+        {
+          "value": "688",
+          "text": "Fatehabad Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "668",
+          "text": "Fazilka Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "80",
+          "text": "Federal Bank"
+        },
+        {
+          "value": "753",
+          "text": "Fincare Small Finance Bank Ltd"
+        },
+        {
+          "value": "661",
+          "text": "Fino Payments Bank"
+        },
+        {
+          "value": "81",
+          "text": "Firstrand Bank Ltd"
+        },
+        {
+          "value": "82",
+          "text": "Gadchiroli District Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "424",
+          "text": "Gandevi Peoples Co-Op. Bank Ltd."
+        },
+        {
+          "value": "692",
+          "text": "Gandhibagh Sahakari Bank"
+        },
+        {
+          "value": "361",
+          "text": "Gandhidham Mercantile Co Op Bank"
+        },
+        {
+          "value": "773",
+          "text": "Gayatri Co Op Urban Bank Ltd"
+        },
+        {
+          "value": "588",
+          "text": "Ghatal Peoples Coop Bank Ltd"
+        },
+        {
+          "value": "469",
+          "text": "Ghoghamba Vibhag Nagrik Sahakari Bank Ltd"
+        },
+        {
+          "value": "420",
+          "text": "Godhra City Co Op Bank Ltd"
+        },
+        {
+          "value": "465",
+          "text": "Godhra Urban Co Op Bank Ltd"
+        },
+        {
+          "value": "83",
+          "text": "Gopinath Patil Parsik Janata Sahakari Bank Ltd"
+        },
+        {
+          "value": "84",
+          "text": "Gramin Bank Of Aryavart"
+        },
+        {
+          "value": "85",
+          "text": "Greater Bombay Cooperative Bank Ltd"
+        },
+        {
+          "value": "638",
+          "text": "Gujarat Gramin Bank"
+        },
+        {
+          "value": "329",
+          "text": "Gujarat Mercanctile Co Op Bank Ltd"
+        },
+        {
+          "value": "551",
+          "text": "Gujarat State Cooperative Bank Limited"
+        },
+        {
+          "value": "86",
+          "text": "Gujarat State Cooperative Bank Ltd"
+        },
+        {
+          "value": "713",
+          "text": "Gulbarga Yadagir Co-Op Bank Ltd"
+        },
+        {
+          "value": "592",
+          "text": "Gulshan Mercantile Urban Co-Operative Bank Ltd"
+        },
+        {
+          "value": "478",
+          "text": "Guntur Coop Urban Bank Ltd"
+        },
+        {
+          "value": "540",
+          "text": "Guntur Coopertive Urban Bank Ltd"
+        },
+        {
+          "value": "739",
+          "text": "Hadoti Kshetriya Gramin Bank"
+        },
+        {
+          "value": "582",
+          "text": "Hanumangarh Kendriya Sahakari Bank Ltd."
+        },
+        {
+          "value": "373",
+          "text": "Haryana Gramin Bank"
+        },
+        {
+          "value": "556",
+          "text": "Haryana State Cooperative Apex Bank Ltd"
+        },
+        {
+          "value": "87",
+          "text": "Hasti Coop Bank Ltd"
+        },
+        {
+          "value": "88",
+          "text": "Hdfc Bank"
+        },
+        {
+          "value": "89",
+          "text": "Himachal Pradesh Gramin Bank"
+        },
+        {
+          "value": "90",
+          "text": "Himachal Pradesh State Cooperative Bank Ltd"
+        },
+        {
+          "value": "343",
+          "text": "Hindustan Coop Bank"
+        },
+        {
+          "value": "407",
+          "text": "Hisar Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "406",
+          "text": "Hisar Urban Co-Operative Bank"
+        },
+        {
+          "value": "518",
+          "text": "Hooghly District Central Cooperative Bank"
+        },
+        {
+          "value": "657",
+          "text": "Hoshiarpur Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "398",
+          "text": "Howrah District Central Cooperative Bank"
+        },
+        {
+          "value": "656",
+          "text": "Hp State Co-Op Bank"
+        },
+        {
+          "value": "91",
+          "text": "Hsbc"
+        },
+        {
+          "value": "580",
+          "text": "Hyderabad District Co Operative Central Bank Ltd"
+        },
+        {
+          "value": "92",
+          "text": "Icici Bank Ltd"
+        },
+        {
+          "value": "93",
+          "text": "Idbi Bank"
+        },
+        {
+          "value": "94",
+          "text": "Idfc Bank Ltd"
+        },
+        {
+          "value": "95",
+          "text": "Idfc First Bank Ltd"
+        },
+        {
+          "value": "96",
+          "text": "Idrbt"
+        },
+        {
+          "value": "97",
+          "text": "Idukki District Cooperative Erative Bank Ltd"
+        },
+        {
+          "value": "443",
+          "text": "Ilkal Cooperative Bank Ltd"
+        },
+        {
+          "value": "659",
+          "text": "Imphal Urban Co Operative Bank"
+        },
+        {
+          "value": "334",
+          "text": "India Post Payment Bank"
+        },
+        {
+          "value": "98",
+          "text": "Indian Bank"
+        },
+        {
+          "value": "100",
+          "text": "Indian Overseas Bank"
+        },
+        {
+          "value": "101",
+          "text": "Indusind Bank"
+        },
+        {
+          "value": "102",
+          "text": "Industrial And Commercial Bank Of China Ltd"
+        },
+        {
+          "value": "103",
+          "text": "Industrial Bank Of Korea"
+        },
+        {
+          "value": "104",
+          "text": "Ing Vysya Bank"
+        },
+        {
+          "value": "565",
+          "text": "Jain Co-Operative Bank Limited"
+        },
+        {
+          "value": "105",
+          "text": "Jaipur Thar Gramin Bank"
+        },
+        {
+          "value": "509",
+          "text": "Jaisalmer Central Co-Operative Bank Ltd."
+        },
+        {
+          "value": "371",
+          "text": "Jalaun District Cooperative Bank Ltd."
+        },
+        {
+          "value": "106",
+          "text": "Jalgaon Janata Sahkari Bank Ltd"
+        },
+        {
+          "value": "107",
+          "text": "Jalgaon Peoples Cooperative Bank Ltd"
+        },
+        {
+          "value": "411",
+          "text": "Jalna Dist Central Coop Bank Ltd"
+        },
+        {
+          "value": "445",
+          "text": "Jalore Central Cooperative Bank Ltd."
+        },
+        {
+          "value": "691",
+          "text": "Jalpaiguri Central Cooperative Bank"
+        },
+        {
+          "value": "108",
+          "text": "Jammu And Kashmir Bank Ltd"
+        },
+        {
+          "value": "109",
+          "text": "Jammu And Kashmir Gramen Bank"
+        },
+        {
+          "value": "599",
+          "text": "Jammu And Kashmir State Cooperative Bank"
+        },
+        {
+          "value": "110",
+          "text": "Jammu Central Cooperativerative Bank"
+        },
+        {
+          "value": "660",
+          "text": "Jamnagar District Central Co Op Bank Ltd"
+        },
+        {
+          "value": "590",
+          "text": "Jamnagar Mahila Sahakari Bank Ltd"
+        },
+        {
+          "value": "436",
+          "text": "Jamshedpur Urban Coop Bank Ltd"
+        },
+        {
+          "value": "437",
+          "text": "Jana Small Finance Bank Ltd"
+        },
+        {
+          "value": "111",
+          "text": "Janakalyan Sahakari Bank Ltd"
+        },
+        {
+          "value": "112",
+          "text": "Janaseva Sahakari Bank Borivli Ltd"
+        },
+        {
+          "value": "113",
+          "text": "Janaseva Sahakari Bank Ltd Pune"
+        },
+        {
+          "value": "679",
+          "text": "Janata Co Op Bank Ltd"
+        },
+        {
+          "value": "735",
+          "text": "Janata Co-Op Bank Ltd"
+        },
+        {
+          "value": "639",
+          "text": "Janata Co-Operative Bank Ltd."
+        },
+        {
+          "value": "114",
+          "text": "Janata Sahakari Bank Ltd"
+        },
+        {
+          "value": "717",
+          "text": "Jath Urban Co Op Bank Ltd"
+        },
+        {
+          "value": "710",
+          "text": "Jhajjar Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "423",
+          "text": "Jhalawar Kendriya Sahkari Bank Ltd."
+        },
+        {
+          "value": "757",
+          "text": "Jhalod Urban Cooperative Bank Ltd"
+        },
+        {
+          "value": "488",
+          "text": "Jharkhand Gramin Bank"
+        },
+        {
+          "value": "115",
+          "text": "Jharkhand Rajya Gramin Bank"
+        },
+        {
+          "value": "117",
+          "text": "Jharkhand State Cooperative Bank Limited"
+        },
+        {
+          "value": "750",
+          "text": "Jhunjhunu Kendriya Sahakari Bank Ltd."
+        },
+        {
+          "value": "652",
+          "text": "Jijau Commercial Co-Op Bank Ltd"
+        },
+        {
+          "value": "648",
+          "text": "Jijau Commercial Coop Bank"
+        },
+        {
+          "value": "346",
+          "text": "Jijau Commerical Co-Operative Bank Ltd"
+        },
+        {
+          "value": "625",
+          "text": "Jila Sahakari Kendriya Bank Ltd"
+        },
+        {
+          "value": "386",
+          "text": "Jila Sahakari Kendriya Bank Maryadit Raipur"
+        },
+        {
+          "value": "426",
+          "text": "Jila Sahkari Kendriya Bank Maryadit"
+        },
+        {
+          "value": "459",
+          "text": "Jind Central Cooperative Bank Ltd"
+        },
+        {
+          "value": "767",
+          "text": "Jogindra Central Coop Bank"
+        },
+        {
+          "value": "118",
+          "text": "Jp Morgan Bank"
+        },
+        {
+          "value": "397",
+          "text": "Kaira District Central Coop Bank"
+        },
+        {
+          "value": "570",
+          "text": "Kalinga Gramya Bank"
+        }
+      ],
+      "optionsTruncated": true
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_alternateFinancingBank_ifsCode",
+      "name": "",
+      "selector": "#ux_alternateFinancingBank_ifsCode",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "IFSC/Bank Code",
+      "labelSource": "placeholder",
+      "section": "Alternate Financing Bank / दूसरा फ़ाइनेंशियल बैंक",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_alternateFinancing_bankBranch",
+      "name": "",
+      "selector": "#ux_alternateFinancing_bankBranch",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Branch Name",
+      "labelSource": "placeholder",
+      "section": "Alternate Financing Bank / दूसरा फ़ाइनेंशियल बैंक",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Branch Name",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_alternateFinancing_bankAddress",
+      "name": "",
+      "selector": "#ux_alternateFinancing_bankAddress",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Branch Name",
+      "labelSource": "placeholder",
+      "section": "Alternate Financing Bank / दूसरा फ़ाइनेंशियल बैंक",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Branch Name",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_alternateFinancing_bankDist",
+      "name": "",
+      "selector": "#ux_alternateFinancing_bankDist",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Branch Name",
+      "labelSource": "placeholder",
+      "section": "Alternate Financing Bank / दूसरा फ़ाइनेंशियल बैंक",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": true,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Branch Name",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_alternateFinancingBank_availCgtmse",
+      "name": "",
+      "selector": "#ux_alternateFinancingBank_availCgtmse",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Want To avail CGTMSE / सीजीटीएमएसई का लाभ उठाना चाहते हैं",
+      "labelSource": "label",
+      "section": "Other Information",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 3,
+      "options": [
+        {
+          "value": "-1",
+          "text": "--Select--"
+        },
+        {
+          "value": "1",
+          "text": "Yes"
+        },
+        {
+          "value": "0",
+          "text": "No"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "checkbox",
+      "id": "ux_check_availCgtmse_warning",
+      "name": "",
+      "selector": "#ux_check_availCgtmse_warning",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "",
+      "labelSource": null,
+      "section": "Other Information",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_alternateFinancingBank_hearAboutPmegp",
+      "name": "",
+      "selector": "#ux_alternateFinancingBank_hearAboutPmegp",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Where did you hear about PMEGP / आपने पीएमईजीपी के बारे में कहां सुना",
+      "labelSource": "label",
+      "section": "Other Information",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 11,
+      "options": [
+        {
+          "value": "--Select Information Source--",
+          "text": "--Select Information Source--"
+        },
+        {
+          "value": "Awareness Camp",
+          "text": "Awareness Camp"
+        },
+        {
+          "value": "Implementing Agencies(KVIC/KVIB/DIC)",
+          "text": "Implementing Agencies(KVIC/KVIB/DIC)"
+        },
+        {
+          "value": "Newspaper advertisements",
+          "text": "Newspaper advertisements"
+        },
+        {
+          "value": "Radio advertisements",
+          "text": "Radio advertisements"
+        },
+        {
+          "value": "Television advertisement",
+          "text": "Television advertisement"
+        },
+        {
+          "value": "Internet advertisement",
+          "text": "Internet advertisement"
+        },
+        {
+          "value": "Social Media (Twitter,facebook,etc)",
+          "text": "Social Media (Twitter,facebook,etc)"
+        },
+        {
+          "value": "Search Engine",
+          "text": "Search Engine"
+        },
+        {
+          "value": "Friends, Family & Acquaintances",
+          "text": "Friends, Family & Acquaintances"
+        },
+        {
+          "value": "Other",
+          "text": "Other"
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_applicantLogin_userID",
+      "name": "",
+      "selector": "#ux_applicantLogin_userID",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "User ID",
+      "labelSource": "placeholder",
+      "section": "Login Form for Registered Applicant",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "User ID",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 10
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "password",
+      "id": "ux_applicantLogin_password",
+      "name": "",
+      "selector": "#ux_applicantLogin_password",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Password",
+      "labelSource": "placeholder",
+      "section": "Login Form for Registered Applicant",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "password"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_applicantLogin_captchaInput",
+      "name": "",
+      "selector": "#ux_applicantLogin_captchaInput",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Enter Captcha",
+      "labelSource": "placeholder",
+      "section": "Login Form for Registered Applicant",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "captcha"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "radio-group",
+      "id": "",
+      "name": "verifyMethod",
+      "selector": "input[type=\"radio\"][name=\"verifyMethod\"]",
+      "selectorStable": true,
+      "selectorKind": "name",
+      "label": "",
+      "labelSource": null,
+      "section": "Choose Verification Method",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "choices": [
+        {
+          "value": "mobile",
+          "label": "",
+          "selector": "#verifyMobile",
+          "selectorStable": true
+        },
+        {
+          "value": "email",
+          "label": "",
+          "selector": "#verifyEmail",
+          "selectorStable": true
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_otpBoxesContainer > input:nth-of-type(1)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_otpBoxesContainer > input:nth-of-type(2)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_otpBoxesContainer > input:nth-of-type(3)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_otpBoxesContainer > input:nth-of-type(4)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_otpBoxesContainer > input:nth-of-type(5)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_otpBoxesContainer > input:nth-of-type(6)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": 0,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_LoanAvail_Sec",
+      "name": "",
+      "selector": "#ux_LoanAvail_Sec",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "",
+      "labelSource": null,
+      "section": "ONLINE APPLICATION FOR SECOND LOAN, SUBSIDY FOR UPGRADING OF EXISTING UNIT",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 4,
+      "options": [
+        {
+          "value": "--Select--",
+          "text": "--Select--"
+        },
+        {
+          "value": "PMEGP",
+          "text": "PMEGP"
+        },
+        {
+          "value": "MUDRA",
+          "text": "MUDRA"
+        },
+        {
+          "value": "Regp/Application Before 01-Jul-2016",
+          "text": "REGP / Application Before 01-Jul-2016"
+        }
+      ]
+    },
+    {
+      "form": 0,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_StateSec",
+      "name": "",
+      "selector": "#ux_StateSec",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "",
+      "labelSource": null,
+      "section": "ONLINE APPLICATION FOR SECOND LOAN, SUBSIDY FOR UPGRADING OF EXISTING UNIT",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 39,
+      "options": [
+        {
+          "value": "--Select State--",
+          "text": "--Select State--"
+        },
+        {
+          "value": "35",
+          "text": "ANDAMAN & NICOBAR ISLANDS"
+        },
+        {
+          "value": "28",
+          "text": "ANDHRA PRADESH"
+        },
+        {
+          "value": "12",
+          "text": "ARUNACHAL PRADESH"
+        },
+        {
+          "value": "18",
+          "text": "ASSAM"
+        },
+        {
+          "value": "10",
+          "text": "BIHAR"
+        },
+        {
+          "value": "4",
+          "text": "CHANDIGARH"
+        },
+        {
+          "value": "22",
+          "text": "CHHATTISGARH"
+        },
+        {
+          "value": "26",
+          "text": "DADRA & NAGAR HAVELI"
+        },
+        {
+          "value": "25",
+          "text": "DAMAN AND DIU"
+        },
+        {
+          "value": "7",
+          "text": "DELHI"
+        },
+        {
+          "value": "30",
+          "text": "GOA"
+        },
+        {
+          "value": "24",
+          "text": "GUJARAT"
+        },
+        {
+          "value": "6",
+          "text": "HARYANA"
+        },
+        {
+          "value": "2",
+          "text": "HIMACHAL PRADESH"
+        },
+        {
+          "value": "1",
+          "text": "JAMMU AND KASHMIR"
+        },
+        {
+          "value": "20",
+          "text": "JHARKHAND"
+        },
+        {
+          "value": "29",
+          "text": "KARNATAKA"
+        },
+        {
+          "value": "32",
+          "text": "KERALA"
+        },
+        {
+          "value": "37",
+          "text": "LADAKH"
+        },
+        {
+          "value": "38",
+          "text": "LADAKH"
+        },
+        {
+          "value": "31",
+          "text": "LAKSHADWEEP"
+        },
+        {
+          "value": "23",
+          "text": "MADHYA PRADESH"
+        },
+        {
+          "value": "27",
+          "text": "MAHARASHTRA"
+        },
+        {
+          "value": "14",
+          "text": "MANIPUR"
+        },
+        {
+          "value": "17",
+          "text": "MEGHALAYA"
+        },
+        {
+          "value": "15",
+          "text": "MIZORAM"
+        },
+        {
+          "value": "13",
+          "text": "NAGALAND"
+        },
+        {
+          "value": "21",
+          "text": "ODISHA"
+        },
+        {
+          "value": "34",
+          "text": "PUDUCHERRY"
+        },
+        {
+          "value": "3",
+          "text": "PUNJAB"
+        },
+        {
+          "value": "8",
+          "text": "RAJASTHAN"
+        },
+        {
+          "value": "11",
+          "text": "SIKKIM"
+        },
+        {
+          "value": "33",
+          "text": "TAMIL NADU"
+        },
+        {
+          "value": "36",
+          "text": "TELANGANA"
+        },
+        {
+          "value": "16",
+          "text": "TRIPURA"
+        },
+        {
+          "value": "9",
+          "text": "UTTAR PRADESH"
+        },
+        {
+          "value": "5",
+          "text": "UTTARAKHAND"
+        },
+        {
+          "value": "19",
+          "text": "WEST BENGAL"
+        }
+      ]
+    },
+    {
+      "form": 0,
+      "tag": "select",
+      "type": "select",
+      "id": "ux_DistrictSec",
+      "name": "",
+      "selector": "#ux_DistrictSec",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "",
+      "labelSource": null,
+      "section": "ONLINE APPLICATION FOR SECOND LOAN, SUBSIDY FOR UPGRADING OF EXISTING UNIT",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 1,
+      "options": [
+        {
+          "value": "",
+          "text": "--Select District--"
+        }
+      ]
+    },
+    {
+      "form": 0,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_applicationID_Sec",
+      "name": "",
+      "selector": "#ux_applicationID_Sec",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Application ID",
+      "labelSource": "placeholder",
+      "section": "ONLINE APPLICATION FOR SECOND LOAN, SUBSIDY FOR UPGRADING OF EXISTING UNIT",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Application ID",
+      "autoComplete": ""
+    },
+    {
+      "form": 0,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_UdyogAadharNo",
+      "name": "",
+      "selector": "#ux_UdyogAadharNo",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Udyam Aadhaar Registration No. / उद्यम आधार पंजीकरण संख्या",
+      "labelSource": "label",
+      "section": "ONLINE APPLICATION FOR SECOND LOAN, SUBSIDY FOR UPGRADING OF EXISTING UNIT",
+      "required": true,
+      "requiredSource": "asterisk",
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": 0,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_aadhar_No_Sec",
+      "name": "",
+      "selector": "#ux_aadhar_No_Sec",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Aadhaar Card No",
+      "labelSource": "placeholder",
+      "section": "ONLINE APPLICATION FOR SECOND LOAN, SUBSIDY FOR UPGRADING OF EXISTING UNIT",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": 0,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_communication_PanNoSec",
+      "name": "",
+      "selector": "#ux_communication_PanNoSec",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "PAN Card No / पैन कार्ड नं",
+      "labelSource": "label",
+      "section": "ONLINE APPLICATION FOR SECOND LOAN, SUBSIDY FOR UPGRADING OF EXISTING UNIT",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_SecapplicantLogin_userID",
+      "name": "",
+      "selector": "#ux_SecapplicantLogin_userID",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "User ID",
+      "labelSource": "placeholder",
+      "section": "Login Form for 2nd Registered Applicant",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "User ID",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 10
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "password",
+      "id": "ux_SecapplicantLogin_password",
+      "name": "",
+      "selector": "#ux_SecapplicantLogin_password",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Password",
+      "labelSource": "placeholder",
+      "section": "Login Form for 2nd Registered Applicant",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "password"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_SecapplicantLogin_captchaInputs",
+      "name": "",
+      "selector": "#ux_SecapplicantLogin_captchaInputs",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Enter Captcha",
+      "labelSource": "placeholder",
+      "section": "Login Form for 2nd Registered Applicant",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "captcha"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "radio-group",
+      "id": "",
+      "name": "secVerifyMethod",
+      "selector": "input[type=\"radio\"][name=\"secVerifyMethod\"]",
+      "selectorStable": true,
+      "selectorKind": "name",
+      "label": "",
+      "labelSource": null,
+      "section": "Choose Verification Method",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "choices": [
+        {
+          "value": "mobile",
+          "label": "",
+          "selector": "#secVerifyMobile",
+          "selectorStable": true
+        },
+        {
+          "value": "email",
+          "label": "",
+          "selector": "#secVerifyEmail",
+          "selectorStable": true
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_SecOtpBoxesContainer > input:nth-of-type(1)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_SecOtpBoxesContainer > input:nth-of-type(2)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_SecOtpBoxesContainer > input:nth-of-type(3)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_SecOtpBoxesContainer > input:nth-of-type(4)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_SecOtpBoxesContainer > input:nth-of-type(5)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_SecOtpBoxesContainer > input:nth-of-type(6)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "radio-group",
+      "id": "",
+      "name": "fpUniversalVerifyMethod",
+      "selector": "input[type=\"radio\"][name=\"fpUniversalVerifyMethod\"]",
+      "selectorStable": true,
+      "selectorKind": "name",
+      "label": "",
+      "labelSource": null,
+      "section": "Choose Verification Method",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "choices": [
+        {
+          "value": "mobile",
+          "label": "",
+          "selector": "#fpUniversalVerifyMobile",
+          "selectorStable": true
+        },
+        {
+          "value": "email",
+          "label": "",
+          "selector": "#fpUniversalVerifyEmail",
+          "selectorStable": true
+        }
+      ]
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_fp_universal_otpBoxes > input:nth-of-type(1)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification - Password Reset",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_fp_universal_otpBoxes > input:nth-of-type(2)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification - Password Reset",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_fp_universal_otpBoxes > input:nth-of-type(3)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification - Password Reset",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_fp_universal_otpBoxes > input:nth-of-type(4)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification - Password Reset",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_fp_universal_otpBoxes > input:nth-of-type(5)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification - Password Reset",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "",
+      "name": "",
+      "selector": "#ux_fp_universal_otpBoxes > input:nth-of-type(6)",
+      "selectorStable": false,
+      "selectorKind": "path",
+      "label": "",
+      "labelSource": null,
+      "section": "OTP Verification - Password Reset",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 1
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "password",
+      "id": "ux_fp_universal_newPassword",
+      "name": "",
+      "selector": "#ux_fp_universal_newPassword",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Enter new password",
+      "labelSource": "placeholder",
+      "section": "Set New Password",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "password"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "password",
+      "id": "ux_fp_universal_confirmPassword",
+      "name": "",
+      "selector": "#ux_fp_universal_confirmPassword",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Confirm new password",
+      "labelSource": "placeholder",
+      "section": "Set New Password",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "password"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_nodalAgencyLogin_userID",
+      "name": "",
+      "selector": "#ux_nodalAgencyLogin_userID",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "User ID",
+      "labelSource": "placeholder",
+      "section": "Official Login (KVIC/KVIB/DIC/COIR)",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "User ID",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "password",
+      "id": "ux_nodalAgencyLogin_password",
+      "name": "",
+      "selector": "#ux_nodalAgencyLogin_password",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Password",
+      "labelSource": "placeholder",
+      "section": "Official Login (KVIC/KVIB/DIC/COIR)",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "password"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_edpLogin_userID",
+      "name": "",
+      "selector": "#ux_edpLogin_userID",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "User ID",
+      "labelSource": "placeholder",
+      "section": "EDP Training Center Login",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "User ID",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 8
+      }
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "password",
+      "id": "ux_edpLogin_password",
+      "name": "",
+      "selector": "#ux_edpLogin_password",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Password",
+      "labelSource": "placeholder",
+      "section": "EDP Training Center Login",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "password"
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "text",
+      "id": "ux_bankLogin_userID",
+      "name": "",
+      "selector": "#ux_bankLogin_userID",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "User ID",
+      "labelSource": "placeholder",
+      "section": "Financing Branch Login",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "User ID",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "password",
+      "id": "ux_bankLogin_password",
+      "name": "",
+      "selector": "#ux_bankLogin_password",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Password",
+      "labelSource": "placeholder",
+      "section": "Financing Branch Login",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "password"
+    },
+    {
+      "form": null,
+      "tag": "textarea",
+      "type": "textarea",
+      "id": "",
+      "name": "",
+      "selector": "textarea[placeholder=\"Describe your issues here...\"]",
+      "selectorStable": true,
+      "selectorKind": "attribute",
+      "label": "Describe your issues here...",
+      "labelSource": "placeholder",
+      "section": "Rate this translation",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Describe your issues here...",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "input",
+      "type": "checkbox",
+      "id": "suggested-feedback-checkbox",
+      "name": "",
+      "selector": "#suggested-feedback-checkbox",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Do you like to give feedback",
+      "labelSource": "label",
+      "section": "Rate this translation",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": ""
+    },
+    {
+      "form": null,
+      "tag": "textarea",
+      "type": "textarea",
+      "id": "",
+      "name": "",
+      "selector": "textarea[placeholder=\"Suggested Feedback\"]",
+      "selectorStable": true,
+      "selectorKind": "attribute",
+      "label": "Suggested Feedback",
+      "labelSource": "placeholder",
+      "section": "Rate this translation",
+      "required": false,
+      "requiredSource": null,
+      "visible": false,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Suggested Feedback",
+      "autoComplete": ""
+    }
+  ],
+  "buttons": [
+    {
+      "form": null,
+      "type": "submit",
+      "label": "",
+      "selector": "button[aria-label=\"Language Translator\"]"
+    },
+    {
+      "form": null,
+      "type": "submit",
+      "label": "",
+      "selector": ""
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "",
+      "selector": ""
+    },
+    {
+      "form": null,
+      "type": "submit",
+      "label": "How to Apply",
+      "selector": ""
+    },
+    {
+      "form": null,
+      "type": "submit",
+      "label": "User Manual",
+      "selector": ""
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Application For New Unit",
+      "selector": "#newApplicationForm"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Registered Applicant Login",
+      "selector": "#applicantLogin"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Application For Existing Units(2nd Loan)",
+      "selector": "#\\32 ndnewApplicationForm"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Registered Applicant Login(2nd Loan)",
+      "selector": "#\\32 ndApplicantLogin"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Validate Aadhaar",
+      "selector": "#ux_btn_validateAadhar"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Change District",
+      "selector": "#ux_btn_changeAadharDistrict"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Select Industry/Activity",
+      "selector": "#ux_btn_selectIndustry"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "NIC Code List",
+      "selector": "#ux_SelectNicCodeList"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Select EDP",
+      "selector": "#ux_btn_SelectEDP"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Select Bank IFSC Code and Address",
+      "selector": "#ux_financingBank_Selectbtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "2nd Financing Branch IFSC Code / दूसरी फाइनेंसिंग ब्रांच का IFSC कोड",
+      "selector": "#ux_alternateFinancingBank_Selectbtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "🔊",
+      "selector": "#btnSpeakDeclaration"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "⛔",
+      "selector": "#btnStopSpeech"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Save as Draft",
+      "selector": "#ux_btn_draft"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "",
+      "selector": ""
+    },
+    {
+      "form": null,
+      "type": "submit",
+      "label": "Login",
+      "selector": "#ux_applicantLogin_submit"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "← Back",
+      "selector": "#ux_verifyMethodBackBtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Continue ›",
+      "selector": "#ux_verifyMethodContinueBtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "← Back",
+      "selector": "#ux_otpBackBtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "✓ Verify OTP",
+      "selector": "#ux_verifyOtpBtn"
+    },
+    {
+      "form": 0,
+      "type": "button",
+      "label": "Submit",
+      "selector": "#ux_btn_submitsec"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "",
+      "selector": ""
+    },
+    {
+      "form": null,
+      "type": "submit",
+      "label": "Login",
+      "selector": "#ux_SecapplicantLogin_submit"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "← Back",
+      "selector": "#ux_SecVerifyMethodBackBtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Continue ›",
+      "selector": "#ux_SecVerifyMethodContinueBtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "← Back",
+      "selector": "#ux_SecOtpBackBtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "✓ Verify OTP",
+      "selector": "#ux_SecVerifyOtpBtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "← Back",
+      "selector": "#ux_fp_universal_methodBackBtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Continue ›",
+      "selector": "#ux_fp_universal_continueBtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "← Back",
+      "selector": "#ux_fp_universal_otpBackBtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "✓ Verify OTP",
+      "selector": "#ux_fp_universal_verifyOtpBtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "",
+      "selector": "#ux_fp_universal_toggleNewPass"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "",
+      "selector": "#ux_fp_universal_toggleConfirmPass"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "← Back",
+      "selector": "#ux_fp_universal_backFromPassBtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Reset Password",
+      "selector": "#ux_fp_universal_submitPassBtn"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Official Nodal Agency",
+      "selector": "#nodalAgencyLogin"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "EDP Training Center",
+      "selector": "#edpLogin"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "Official Bank Login",
+      "selector": "#bankLogin"
+    },
+    {
+      "form": null,
+      "type": "submit",
+      "label": "Login",
+      "selector": "#ux_nodalAgencyLogin_submit"
+    },
+    {
+      "form": null,
+      "type": "submit",
+      "label": "Login",
+      "selector": "#ux_edpLogin_submit"
+    },
+    {
+      "form": null,
+      "type": "submit",
+      "label": "Login",
+      "selector": "#ux_bankLogin_submit"
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "",
+      "selector": ""
+    },
+    {
+      "form": null,
+      "type": "submit",
+      "label": "",
+      "selector": ""
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "",
+      "selector": ""
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "",
+      "selector": ""
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "",
+      "selector": ""
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "",
+      "selector": ""
+    },
+    {
+      "form": 1,
+      "type": "button",
+      "label": "English",
+      "selector": ""
+    },
+    {
+      "form": 1,
+      "type": "button",
+      "label": "Hindi",
+      "selector": ""
+    },
+    {
+      "form": 1,
+      "type": "button",
+      "label": "Assamese",
+      "selector": ""
+    },
+    {
+      "form": 1,
+      "type": "button",
+      "label": "Malayalam",
+      "selector": ""
+    },
+    {
+      "form": 1,
+      "type": "button",
+      "label": "Odia",
+      "selector": ""
+    },
+    {
+      "form": 1,
+      "type": "button",
+      "label": "Punjab",
+      "selector": ""
+    },
+    {
+      "form": 1,
+      "type": "button",
+      "label": "Tamil",
+      "selector": ""
+    },
+    {
+      "form": 1,
+      "type": "button",
+      "label": "Gujarati",
+      "selector": ""
+    }
+  ],
+  "frameOrigins": [
+    "inline"
+  ],
+  "filteredByKind": {
+    "password": 7,
+    "captcha": 2,
+    "otp": 0,
+    "identity": 13,
+    "payment": 0,
+    "file": 0
+  },
+  "counts": {
+    "forms": 2,
+    "fields": 98,
+    "visibleFields": 46,
+    "requiredFields": 24,
+    "filteredFields": 22,
+    "disabledOrReadOnlyFields": 17,
+    "unstableSelectors": 18,
+    "hiddenInputsOmitted": 16,
+    "redactedTexts": 0,
+    "beyondLimit": 0,
+    "frames": 3,
+    "shadowRootsWithFields": 0
+  },
+  "omitted": [
+    "typed values",
+    "values of disabled and read-only fields",
+    "selected options",
+    "checked state",
+    "file names",
+    "hidden inputs",
+    "options of disabled or read-only controls",
+    "placeholders and validation of password, CAPTCHA, OTP, identity and payment fields",
+    "greetings and account numbers shown on the page",
+    "cookies",
+    "web storage",
+    "request headers",
+    "query strings",
+    "fragments",
+    "token values",
+    "frame contents",
+    "shadow DOM contents"
+  ]
+}

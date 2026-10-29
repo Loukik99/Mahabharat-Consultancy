@@ -75,7 +75,7 @@ async function main() {
       process.execPath,
       [
         "-e",
-        `process.env.NODE_ENV='production'; delete process.env.JWT_SECRET; require(${JSON.stringify(envJs)}); console.log('STARTED');`,
+        `process.env.NODE_ENV='production'; process.env.JWT_SECRET=''; require(${JSON.stringify(envJs)}); console.log('STARTED');`,
       ],
       { encoding: "utf8" }
     );

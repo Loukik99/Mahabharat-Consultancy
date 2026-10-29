@@ -1,8 +1,8 @@
 import { useState, useEffect, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { serviceCategories, serviceCatalog, serviceById } from "@/data/catalog";
-import { getServices, getCategories } from "@/api/services.api";
-import type { Service, ServiceCategory } from "@/types";
+import { serviceCatalog, serviceById } from "@/data/catalog";
+import { getServices } from "@/api/services.api";
+import type { Service } from "@/types";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { FaqAccordion } from "@/components/FaqAccordion";
@@ -170,17 +170,16 @@ const FAQS = [
 export default function Home() {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
-  const [categories, setCategories] = useState<ServiceCategory[]>(serviceCategories);
   const [services, setServices] = useState<Service[]>(serviceCatalog);
 
   useEffect(() => {
     let active = true;
     (async () => {
       try {
-        const [cats, svcs] = await Promise.all([getCategories(), getServices()]);
-        if (active) { setCategories(cats); setServices(svcs); }
+        const svcs = await getServices();
+        if (active) setServices(svcs);
       } catch (e) {
-        if (active) { setCategories(serviceCategories); setServices(serviceCatalog); }
+        if (active) setServices(serviceCatalog);
         toast.error((e as Error).message);
       }
     })();

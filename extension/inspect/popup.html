@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Form structure inspector</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Form structure inspector</h1>
+      <div id="status" data-state="ready" role="status" aria-live="polite">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="status-text">Sign in on the portal yourself, then capture.</span>
+      </div>
+    </header>
+    <p class="hint">This is a local tool. It is not the Mahabharat assistant and it does not fill or submit anything.</p>
+    <ol class="steps">
+      <li>Open the official portal and sign in yourself in this browser.</li>
+      <li>Go to the application page and let it finish loading. Never type a password, OTP or CAPTCHA into this popup.</li>
+      <li>Capture and download. Every step or tab of the form needs its own capture. If the form changes (extra fields after a choice), capture again: the popup lists what changed since the last capture on this page, even if it was closed in between.</li>
+      <li>Open the downloaded file. If any text shows your name or a number you typed, blank that text (keep the quotes) before sharing the file.</li>
+    </ol>
+    <button id="capture" type="button">Capture form structure</button>
+    <dl id="summary" hidden></dl>
+    <p id="diff" class="diff" hidden></p>
+    <button id="download" type="button" disabled>Download capture (JSON)</button>
+    <p class="hint">The file lists labels, sections, control types, required markers, validation rules, option lists and selectors. It leaves out what you typed, hidden inputs, greetings and account numbers, cookies, storage, headers and the page query string. Frames, shadow DOM components and other websites are not read; the summary says when a page has them.</p>
+    <script src="origins.js"></script>
+    <script src="capture.js"></script>
+    <script src="popup.js"></script>
+  </body>
+</html>

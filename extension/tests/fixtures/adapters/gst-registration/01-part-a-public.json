@@ -1,0 +1,471 @@
+{
+  "kind": "form-structure",
+  "version": 3,
+  "capturedOn": "2026-10-28",
+  "origin": "https://reg.gst.gov.in",
+  "path": "/registration/",
+  "title": "Goods & Services Tax (GST) | Registration",
+  "settled": true,
+  "waitedMs": 505,
+  "forms": [
+    {
+      "index": 0,
+      "selector": "form[name=\"preg\"]",
+      "id": "",
+      "name": "preg",
+      "method": "get",
+      "actionPath": "/registration/"
+    }
+  ],
+  "fields": [
+    {
+      "form": 0,
+      "tag": "input",
+      "type": "radio-group",
+      "id": "",
+      "name": "typ",
+      "selector": "input[type=\"radio\"][name=\"typ\"]",
+      "selectorStable": true,
+      "selectorKind": "name",
+      "label": "",
+      "labelSource": null,
+      "section": "New Registration",
+      "required": false,
+      "requiredSource": null,
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "choices": [
+        {
+          "value": "N",
+          "label": "New Registration",
+          "selector": "#radionew",
+          "selectorStable": true
+        },
+        {
+          "value": "T",
+          "label": "Temporary Reference Number (TRN)",
+          "selector": "#radiotrn",
+          "selectorStable": true
+        }
+      ]
+    },
+    {
+      "form": 0,
+      "tag": "select",
+      "type": "select",
+      "id": "applnType",
+      "name": "applnType",
+      "selector": "#applnType",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "I am a",
+      "labelSource": "label",
+      "section": "New Registration",
+      "required": true,
+      "requiredSource": "attribute",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 10,
+      "options": [
+        {
+          "value": "",
+          "text": "Select"
+        },
+        {
+          "value": "APLRG",
+          "text": "Taxpayer"
+        },
+        {
+          "value": "APLTD",
+          "text": "Tax Deductor"
+        },
+        {
+          "value": "APLTC",
+          "text": "Tax Collector (e-Commerce)"
+        },
+        {
+          "value": "RTTR1",
+          "text": "GST Practitioner"
+        },
+        {
+          "value": "APLNR",
+          "text": "Non Resident Taxable Person"
+        },
+        {
+          "value": "APLUN",
+          "text": "United Nation Body"
+        },
+        {
+          "value": "APLEM",
+          "text": "Consulate or Embassy of Foreign Country"
+        },
+        {
+          "value": "APLOT",
+          "text": "Other Notified Person"
+        },
+        {
+          "value": "REGOI",
+          "text": "Non-Resident Online Services Provider and/or Non-Resident Online Money Gaming Supplier"
+        }
+      ]
+    },
+    {
+      "form": 0,
+      "tag": "select",
+      "type": "select",
+      "id": "applnState",
+      "name": "applnState",
+      "selector": "#applnState",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "State/UT",
+      "labelSource": "label",
+      "section": "New Registration",
+      "required": true,
+      "requiredSource": "attribute",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 38,
+      "options": [
+        {
+          "value": "",
+          "text": "Select"
+        },
+        {
+          "value": "35",
+          "text": "Andaman and Nicobar Islands"
+        },
+        {
+          "value": "37",
+          "text": "Andhra Pradesh"
+        },
+        {
+          "value": "12",
+          "text": "Arunachal Pradesh"
+        },
+        {
+          "value": "18",
+          "text": "Assam"
+        },
+        {
+          "value": "10",
+          "text": "Bihar"
+        },
+        {
+          "value": "04",
+          "text": "Chandigarh"
+        },
+        {
+          "value": "22",
+          "text": "Chhattisgarh"
+        },
+        {
+          "value": "26",
+          "text": "Dadra and Nagar Haveli and Daman and Diu"
+        },
+        {
+          "value": "07",
+          "text": "Delhi"
+        },
+        {
+          "value": "30",
+          "text": "Goa"
+        },
+        {
+          "value": "24",
+          "text": "Gujarat"
+        },
+        {
+          "value": "06",
+          "text": "Haryana"
+        },
+        {
+          "value": "02",
+          "text": "Himachal Pradesh"
+        },
+        {
+          "value": "01",
+          "text": "Jammu and Kashmir"
+        },
+        {
+          "value": "20",
+          "text": "Jharkhand"
+        },
+        {
+          "value": "29",
+          "text": "Karnataka"
+        },
+        {
+          "value": "32",
+          "text": "Kerala"
+        },
+        {
+          "value": "38",
+          "text": "Ladakh"
+        },
+        {
+          "value": "31",
+          "text": "Lakshadweep"
+        },
+        {
+          "value": "23",
+          "text": "Madhya Pradesh"
+        },
+        {
+          "value": "27",
+          "text": "Maharashtra"
+        },
+        {
+          "value": "14",
+          "text": "Manipur"
+        },
+        {
+          "value": "17",
+          "text": "Meghalaya"
+        },
+        {
+          "value": "15",
+          "text": "Mizoram"
+        },
+        {
+          "value": "13",
+          "text": "Nagaland"
+        },
+        {
+          "value": "21",
+          "text": "Odisha"
+        },
+        {
+          "value": "97",
+          "text": "Other Territory"
+        },
+        {
+          "value": "34",
+          "text": "Puducherry"
+        },
+        {
+          "value": "03",
+          "text": "Punjab"
+        },
+        {
+          "value": "08",
+          "text": "Rajasthan"
+        },
+        {
+          "value": "11",
+          "text": "Sikkim"
+        },
+        {
+          "value": "33",
+          "text": "Tamil Nadu"
+        },
+        {
+          "value": "36",
+          "text": "Telangana"
+        },
+        {
+          "value": "16",
+          "text": "Tripura"
+        },
+        {
+          "value": "09",
+          "text": "Uttar Pradesh"
+        },
+        {
+          "value": "05",
+          "text": "Uttarakhand"
+        },
+        {
+          "value": "19",
+          "text": "West Bengal"
+        }
+      ]
+    },
+    {
+      "form": 0,
+      "tag": "select",
+      "type": "select",
+      "id": "applnDistr",
+      "name": "applnDistr",
+      "selector": "#applnDistr",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "District",
+      "labelSource": "label",
+      "section": "New Registration",
+      "required": true,
+      "requiredSource": "attribute",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "",
+      "autoComplete": "",
+      "optionCount": 1,
+      "options": [
+        {
+          "value": "",
+          "text": "Select"
+        }
+      ]
+    },
+    {
+      "form": 0,
+      "tag": "input",
+      "type": "text",
+      "id": "bnm",
+      "name": "lgnmbzpan",
+      "selector": "#bnm",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Legal Name of the Business (As mentioned in PAN)",
+      "labelSource": "label",
+      "section": "New Registration",
+      "required": true,
+      "requiredSource": "attribute",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": 0,
+      "tag": "input",
+      "type": "text",
+      "id": "pan_card",
+      "name": "pan_card",
+      "selector": "#pan_card",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Permanent Account Number (PAN)",
+      "labelSource": "label",
+      "section": "New Registration",
+      "required": true,
+      "requiredSource": "attribute",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": "identity"
+    },
+    {
+      "form": 0,
+      "tag": "input",
+      "type": "text",
+      "id": "email",
+      "name": "email",
+      "selector": "#email",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Email Address",
+      "labelSource": "label",
+      "section": "New Registration",
+      "required": true,
+      "requiredSource": "attribute",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Enter Email Address",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 254
+      }
+    },
+    {
+      "form": 0,
+      "tag": "input",
+      "type": "text",
+      "id": "mobile",
+      "name": "mobile",
+      "selector": "#mobile",
+      "selectorStable": true,
+      "selectorKind": "id",
+      "label": "Mobile Number",
+      "labelSource": "label",
+      "section": "New Registration",
+      "required": true,
+      "requiredSource": "attribute",
+      "visible": true,
+      "disabled": false,
+      "readOnly": false,
+      "filtered": null,
+      "placeholder": "Enter Mobile Number",
+      "autoComplete": "",
+      "validation": {
+        "maxLength": 10
+      }
+    }
+  ],
+  "buttons": [
+    {
+      "form": null,
+      "type": "button",
+      "label": "Toggle navigation",
+      "selector": ""
+    },
+    {
+      "form": 0,
+      "type": "submit",
+      "label": "Proceed",
+      "selector": ""
+    },
+    {
+      "form": null,
+      "type": "button",
+      "label": "OK",
+      "selector": ""
+    }
+  ],
+  "frameOrigins": [],
+  "filteredByKind": {
+    "password": 0,
+    "captcha": 0,
+    "otp": 0,
+    "identity": 2,
+    "payment": 0,
+    "file": 0
+  },
+  "counts": {
+    "forms": 1,
+    "fields": 8,
+    "visibleFields": 8,
+    "requiredFields": 7,
+    "filteredFields": 2,
+    "disabledOrReadOnlyFields": 0,
+    "unstableSelectors": 0,
+    "hiddenInputsOmitted": 0,
+    "redactedTexts": 0,
+    "beyondLimit": 0,
+    "frames": 0,
+    "shadowRootsWithFields": 0
+  },
+  "omitted": [
+    "typed values",
+    "values of disabled and read-only fields",
+    "selected options",
+    "checked state",
+    "file names",
+    "hidden inputs",
+    "options of disabled or read-only controls",
+    "placeholders and validation of password, CAPTCHA, OTP, identity and payment fields",
+    "greetings and account numbers shown on the page",
+    "cookies",
+    "web storage",
+    "request headers",
+    "query strings",
+    "fragments",
+    "token values",
+    "frame contents",
+    "shadow DOM contents"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "kind": "capture-set",
+  "version": 1,
+  "scaffoldId": "pmegp-application",
+  "steps": [
+    {
+      "id": "new-unit",
+      "name": "Application for new unit",
+      "captures": [{ "file": "01-new-unit-public.json", "state": "public page before Aadhaar validation, nothing entered", "gate": "before" }]
+    }
+  ]
+}

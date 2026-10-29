@@ -24,7 +24,13 @@ async function sendMail({ to, subject, html, text }) {
   });
   const accepted = Array.isArray(info.accepted) ? info.accepted.length : 0;
   console.log(`[mail] sent "${subject}" to ${to} (accepted=${accepted}, id=${info.messageId || "n/a"})`);
-  return { skipped: false, accepted, messageId: info.messageId };
+  return {
+    skipped: false,
+    accepted,
+    rejected: Array.isArray(info.rejected) ? info.rejected.length : 0,
+    response: info.response,
+    messageId: info.messageId,
+  };
 }
 
 // Welcome email sent when a new customer registers (never on login).

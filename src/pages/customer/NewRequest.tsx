@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import * as Req from "@/api/requests.api";
 import { getCategories, getServices, getService } from "@/api/services.api";
+import { getProfile, applicantPrefill } from "@/api/profile.api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import AnimatedList from "@/components/AnimatedList";
 import type { ServiceCategory, Service } from "@/types";
-import { ChevronLeft, Info, FileText, ArrowRight, Upload } from "lucide-react";
+import { ChevronLeft, Info, FileText, ArrowRight, Upload, UserRound } from "lucide-react";
 
 // Must match server upload + magic-byte policy (no GIF).
 const ACCEPTED = [
@@ -50,6 +51,23 @@ export default function NewRequest() {
   });
   const [notes, setNotes] = useState("");
   const [requiredFiles, setRequiredFiles] = useState<Record<string, File | null>>({});
+  const [prefill, setPrefill] = useState<ReturnType<typeof applicantPrefill>>({});
+
+  // Optional: a missing or unreadable profile simply hides the prefill button.
+  useEffect(() => {
+    let active = true;
+    getProfile()
+      .then((p) => active && setPrefill(applicantPrefill(p)))
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const applyPrefill = () => {
+    setApplicant((a) => ({ ...a, ...prefill }));
+    toast.success("Filled from your profile. Review and edit before creating the request.");
+  };
 
   // Initial load: categories, plus preselected service when serviceId is present.
   useEffect(() => {
@@ -303,13 +321,20 @@ export default function NewRequest() {
               {/* Applicant fields stay optional by design: catalog services enforce
                   requiredDocuments (files), not identity form fields. */}
               <Card className="rounded border border-border">
-                <CardHeader className="pb-2"><CardTitle className="font-display text-base text-navy">Applicant Details (optional)</CardTitle></CardHeader>
+                <CardHeader className="pb-2 flex flex-row items-center justify-between gap-2">
+                  <CardTitle className="font-display text-base text-navy">Applicant Details (optional)</CardTitle>
+                  {Object.keys(prefill).length > 0 && (
+                    <Button type="button" variant="outline" size="sm" onClick={applyPrefill} className="border-navy/20 text-navy hover:text-navy">
+                      <UserRound size={14} className="mr-1" /> Fill from my profile
+                    </Button>
+                  )}
+                </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div><Label htmlFor="fullName">Full Name</Label><Input id="fullName" value={applicant.fullName} onChange={(e) => setApplicant({ ...applicant, fullName: e.target.value })} /></div>
                     <div><Label htmlFor="fatherName">Father&apos;s Name</Label><Input id="fatherName" value={applicant.fatherName} onChange={(e) => setApplicant({ ...applicant, fatherName: e.target.value })} /></div>
                     <div><Label htmlFor="dob">Date of Birth</Label><Input id="dob" type="date" value={applicant.dob} onChange={(e) => setApplicant({ ...applicant, dob: e.target.value })} /></div>
-                    <div><Label htmlFor="ref">Reference Number</Label><Input id="ref" placeholder="Aadhaar / PAN / Roll No. etc." value={applicant.referenceNumber} onChange={(e) => setApplicant({ ...applicant, referenceNumber: e.target.value })} /></div>
+                    <div><Label htmlFor="ref">Reference Number</Label><Input id="ref" placeholder="Roll / Application No. (Aadhaar/PAN: last 4 only)" value={applicant.referenceNumber} onChange={(e) => setApplicant({ ...applicant, referenceNumber: e.target.value })} /></div>
                   </div>
                   <div>
                     <Label htmlFor="addl">Additional Info</Label>

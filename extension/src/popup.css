@@ -1,0 +1,38 @@
+body {
+  width: 420px;
+  margin: 0;
+  padding: 12px 14px;
+  font: 13px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: #1f2a44;
+}
+h1 { font-size: 15px; margin: 0 0 6px; color: #0b1f3a; }
+h2 { font-size: 13px; margin: 0 0 6px; color: #0b1f3a; }
+section { border-top: 1px solid #e4e8ef; padding: 10px 0; }
+label { display: block; font-size: 12px; color: #4b5563; margin: 6px 0 2px; }
+select, input, button { width: 100%; box-sizing: border-box; font: inherit; padding: 6px 8px; border-radius: 6px; border: 1px solid #cfd6e2; }
+button { margin-top: 8px; background: #c2a14d; border-color: #c2a14d; color: #0b1f3a; font-weight: 600; cursor: pointer; }
+button:disabled { background: #f1f3f6; border-color: #e4e8ef; color: #9aa3b2; cursor: not-allowed; }
+.message { margin: 6px 0 0; min-height: 0; }
+.hint { margin: 6px 0 0; font-size: 11px; color: #6b7280; }
+#status { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+#status .dot { width: 9px; height: 9px; border-radius: 50%; background: #9aa3b2; }
+#status[data-state="connected"] .dot { background: #16a34a; }
+#status[data-state="signed-out"] .dot { background: #d97706; }
+#status[data-state="error"] .dot { background: #dc2626; }
+.gap-title { margin: 8px 0 2px; font-size: 12px; font-weight: 600; }
+ul { margin: 2px 0 0; padding-left: 18px; font-size: 12px; }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; margin: 6px 0 0; font-size: 12px; }
+dt { color: #4b5563; }
+dd { margin: 0; }
+table { width: 100%; border-collapse: collapse; margin-top: 6px; font-size: 11px; table-layout: fixed; }
+th, td { text-align: left; padding: 3px 4px; border-bottom: 1px solid #e4e8ef; vertical-align: top; word-break: break-word; }
+th:first-child, td:first-child { width: 28px; }
+td input[type="checkbox"], .confirm input { width: auto; margin: 0 6px 0 0; }
+tr[data-status="ready"] td:last-child { color: #166534; }
+tr:not([data-status="ready"]) td:last-child { color: #92400e; }
+.confirm { display: flex; align-items: flex-start; color: #1f2a44; margin-top: 8px; }
+h3 { font-size: 12px; margin: 0 0 4px; color: #92400e; }
+#trial { margin-top: 10px; padding: 8px; border: 1px solid #d97706; border-radius: 6px; background: #fffbeb; }
+#trial-cancel, #preview-cancel { background: #fff; border-color: #cfd6e2; }
+#trial-record { max-height: 140px; overflow: auto; margin: 4px 0; padding: 6px; font-size: 10px; background: #fff; border: 1px solid #e4e8ef; white-space: pre-wrap; word-break: break-all; }
+#trial-download { display: inline-block; margin-top: 4px; font-size: 12px; }

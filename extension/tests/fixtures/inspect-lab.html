@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Synthetic inspector lab</title>
+<style>
+  body { font: 14px sans-serif; margin: 16px; }
+  label { display: block; margin-top: 6px; }
+  #trans_wrap { display: none; }
+</style>
+</head>
+<body>
+<!-- Local synthetic page. Not a government form. Every *SECRET* string, the typed values and
+     the identity-shaped numbers below must never appear in a capture. -->
+<h1>Synthetic Candidate Application</h1>
+<h3 id="welcome">Welcome SyntheticReadonlyValue</h3>
+<form id="application" name="application" method="post" action="/apply?token=QUERYSECRET#FRAGSECRET">
+  <input type="hidden" name="__VIEWSTATE" id="__VIEWSTATE" value="VIEWSTATESECRETTOKEN">
+  <input type="hidden" name="candidate_name_hidden" value="SyntheticHiddenName">
+  <!-- A short hidden value that is part of a label word: "Gender" must survive redaction. -->
+  <input type="hidden" name="flag_code" value="GEN">
+
+  <h2>Personal Details</h2>
+  <label for="full_name">Name of the Candidate *</label>
+  <input id="full_name" name="txtName" value="SyntheticTypedName" maxlength="50" pattern="[A-Za-z ]+" autocomplete="name">
+  <table id="family">
+    <tr><th>Father's Name</th><td><input id="father" name="txtFather"></td></tr>
+  </table>
+  <label for="dob">Date of Birth</label>
+  <input id="dob" name="txtDob" type="date" min="2005-01-01" max="2009-12-31" required>
+  <div role="radiogroup" aria-label="Gender">
+    <label><input type="radio" name="rdoGender" value="M" checked required> Male</label>
+    <label><input type="radio" name="rdoGender" value="F"> Female</label>
+    <label><input type="radio" name="rdoGender" value="T"> Transgender</label>
+  </div>
+  <div id="trans_wrap">
+    <label for="trans_sub">Select (In Case of Transgender)</label>
+    <select id="trans_sub" name="ddlTrans"><option value="">Select</option><option value="TM">Trans-Man</option><option value="TW">Trans-Woman</option></select>
+  </div>
+  <label>Category <select id="category" name="ddlCategory" aria-required="true">
+    <option value="">--Select--</option>
+    <option value="UR" selected>UR</option>
+    <option value="OBC">OBC</option>
+    <option value="leaked.option@test.local">leaked.option@test.local</option>
+  </select></label>
+  <label for="religion">Religion</label>
+  <input id="religion" name="txtReligion">
+  <input id=":r7:" name="" placeholder="Nationality">
+  <label for="dup">Identification mark</label>
+  <input id="dup" name="txtMark">
+  <input id="dup" name="txtMark2" aria-label="Second identification mark">
+  <label for="disabled_state">Registered State</label>
+  <select id="disabled_state" name="ddlRegState" disabled><option value="X">SYNTHETICDISABLEDOPTION</option></select>
+  <label for="ro_name">Registered name</label>
+  <input id="ro_name" name="txtRoName" value="SyntheticReadonlyValue" readonly>
+
+  <fieldset>
+    <legend>Contact Details</legend>
+    <label for="mobile">Mobile Number *</label>
+    <input id="mobile" name="txtMobile" type="tel" maxlength="10" pattern="[6-9][0-9]{9}" inputmode="numeric" value="9876543210">
+    <label for="mail">Email</label>
+    <input id="mail" name="txtMail" type="email" value="synthetic.person@test.local">
+  </fieldset>
+
+  <table id="edu">
+    <caption>Educational Qualification</caption>
+    <tr><th>Year of passing</th><td><select id="yop" name="ddlYop"><option value="">Select</option><option>2021</option><option>2022</option><option>2023</option></select></td></tr>
+  </table>
+
+  <h2>Identity and Security</h2>
+  <label for="aadhaar">Aadhaar Number</label>
+  <input id="aadhaar" name="txtAadhaar" value="999988887777" maxlength="12" placeholder="XXXX XXXX 1234">
+  <label for="pan">PAN</label>
+  <input id="pan" name="txtPan" value="ABCDE1234F">
+  <label for="pwd">Create Password</label>
+  <input id="pwd" name="txtPwd" type="password" value="SyntheticPassw0rd!">
+  <label for="otp">Enter OTP</label>
+  <input id="otp" name="txtOtp" value="OTPSECRET99">
+  <label for="captcha">Enter the text shown in below image</label>
+  <input id="captcha" name="txtCaptchaCode" autocomplete="off" value="CAPTCHASECRET">
+  <label for="photo">Upload Photograph</label>
+  <input id="photo" name="filePhoto" type="file" accept="image/jpeg,image/png">
+  <label for="upi">UPI ID</label>
+  <input id="upi" name="txtUpi" value="UPISECRET">
+
+  <!-- Framework-rendered controls without id or name. -->
+  <h2>Address</h2>
+  <div class="rx"><label>Village <input placeholder="Village / Town"></label></div>
+  <div class="rx"><input data-testid="pincode" aria-label="PIN Code" inputmode="numeric"></div>
+  <div class="rx"><span>District</span><input></div>
+  <div role="radiogroup" aria-label="Marital Status">
+    <label><input type="radio" id="mui-48213" name="rdoMarital" value="U"> Unmarried</label>
+    <label><input type="radio" id="mui-48214" name="rdoMarital" value="M"> Married</label>
+  </div>
+  <div id="shadow_host"></div>
+
+  <div id="late"></div>
+  <button type="submit" id="save_next">Save &amp; Next</button>
+  <input type="button" id="add_row" value="Add Row">
+</form>
+<!-- Account text with no matching input: must never become a section or title. -->
+<h4>Welcome SYNTHETICGREETNAME (Registration No: GDS26SYN123)</h4>
+<div class="panel-heading">Logged in as SYNTHETICGREETNAME</div>
+<label for="loose_note">Remarks</label>
+<input id="loose_note" name="loose_note" value="LOOSESECRET">
+<iframe title="frame" srcdoc="&lt;input name='f' value='IFRAMESECRET'&gt;"></iframe>
+<iframe title="frame2" src="/frame"></iframe>
+<script>
+  document.getElementById("shadow_host").attachShadow({ mode: "open" }).innerHTML = "<label>Shadow field <input value='SHADOWSECRET'></label>";
+  document.cookie = "js_cookie=JSCOOKIESECRET; path=/";
+  try { localStorage.setItem("lab", "LSSECRET"); sessionStorage.setItem("lab", "SSSECRET"); } catch (e) {}
+  window.__lab = { loadId: Math.random().toString(36).slice(2), events: {}, messages: 0, history: history.length };
+  for (const t of ["click", "focus", "focusin", "input", "change", "submit", "keydown", "beforeunload", "invalid", "reset"]) {
+    // Tab activation focuses the window itself; only element-targeted events indicate page interaction.
+    window.addEventListener(t, (e) => { if (e.target instanceof Element || t === "beforeunload") window.__lab.events[t] = (window.__lab.events[t] || 0) + 1; }, true);
+  }
+  window.addEventListener("message", () => { window.__lab.messages += 1; });
+  document.getElementById("application").addEventListener("submit", (e) => e.preventDefault());
+
+  // Simulates a framework that renders fields in bursts after load.
+  window.startRender = () => {
+    let n = 0;
+    const tick = () => {
+      n += 1;
+      const wrap = document.createElement("div");
+      wrap.innerHTML = `<label for="late_${n}">Late Field ${n}</label><input id="late_${n}" name="txtLate${n}">`;
+      document.getElementById("late").appendChild(wrap);
+      if (n < 4) setTimeout(tick, 200);
+    };
+    setTimeout(tick, 100);
+    return true;
+  };
+
+  // Simulates a page that changes between two captures.
+  window.mutateForRecapture = () => {
+    document.getElementById("religion").remove();
+    document.querySelector("label[for=religion]").remove();
+    document.querySelector("label[for=dup]").textContent = "Visible identification mark";
+    const l = document.createElement("label");
+    l.htmlFor = "nominee";
+    l.textContent = "Nominee Name";
+    const i = document.createElement("input");
+    i.id = "nominee";
+    i.name = "txtNominee";
+    document.getElementById("late").append(l, i);
+    return true;
+  };
+</script>
+</body>
+</html>

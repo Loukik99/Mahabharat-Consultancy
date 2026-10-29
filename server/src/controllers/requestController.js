@@ -1,11 +1,29 @@
 const mongoose = require("mongoose");
-const { ServiceRequest, Service } = require("../models");
+const { ServiceRequest, Service, CustomerProfile } = require("../models");
+const { serializeAutofill } = require("../utils/autofill");
 const { ApiError, asyncHandler } = require("../utils/apiError");
 const { serializeRequest } = require("../utils/serializers");
 const { audit, notify, nextRequestNumber } = require("../utils/helpers");
 const { persistFile, sendStoredFile, removeStoredFile } = require("../utils/storage");
 const { assertSafeUpload } = require("../utils/fileMagic");
 const { pick } = require("../utils/sanitize");
+const { containsFullIdentityNumber } = require("../utils/identity");
+
+const APPLICANT_FIELDS = ["fullName", "fatherName", "dob", "referenceNumber", "additionalInfo"];
+
+/** Allowlisted applicant details; full Aadhaar/PAN numbers are rejected (masked-only storage). */
+function applicantDetailsFrom(input) {
+  const details = pick(input && typeof input === "object" ? input : {}, APPLICANT_FIELDS);
+  for (const [field, value] of Object.entries(details)) {
+    if (typeof value === "string" && containsFullIdentityNumber(value)) {
+      throw new ApiError(
+        400,
+        `${field} must not contain a full Aadhaar or PAN number. Enter only the last 4 digits (e.g. XXXX-XXXX-1234).`
+      );
+    }
+  }
+  return details;
+}
 
 const POPULATE = [
   { path: "customer", select: "name email phone address" },
@@ -92,19 +110,37 @@ exports.get = asyncHandler(async (req, res) => {
   res.json({ success: true, request: serializeRequest(r, req.user.role) });
 });
 
+// GET /api/requests/:id/autofill — read-only form-filling data for one open request.
+// Same access rules as `get`, but unauthorized and nonexistent both return 404 so
+// the response never reveals whether another customer's request exists.
+exports.autofill = asyncHandler(async (req, res) => {
+  const notFound = () => new ApiError(404, "Request not found");
+  if (!mongoose.isValidObjectId(req.params.id)) throw notFound();
+  const r = await ServiceRequest.findById(req.params.id).populate({ path: "service", select: "name slug" });
+  if (!r) throw notFound();
+  try {
+    authorize(req.user, r);
+  } catch {
+    throw notFound();
+  }
+  if (TERMINAL.includes(r.status)) {
+    throw new ApiError(409, "Autofill is only available for open requests");
+  }
+
+  const profile = await CustomerProfile.findOne({ user: r.customer }).lean();
+  const payload = serializeAutofill(r, profile);
+  await audit(req.user, "autofill_data_accessed", "request", r._id, r.requestNumber);
+  res.set("Cache-Control", "no-store");
+  res.json({ success: true, autofill: payload });
+});
+
 exports.create = asyncHandler(async (req, res) => {
   const { serviceId, applicantDetails, notes } = req.body;
   if (!serviceId) throw new ApiError(400, "serviceId is required");
   const service = await resolveService(String(serviceId));
   if (!service || !service.isActive) throw new ApiError(400, "Invalid service");
 
-  const details = pick(applicantDetails || {}, [
-    "fullName",
-    "fatherName",
-    "dob",
-    "referenceNumber",
-    "additionalInfo",
-  ]);
+  const details = applicantDetailsFrom(applicantDetails);
 
   const r = await ServiceRequest.create({
     requestNumber: await nextRequestNumber(),
@@ -125,17 +161,13 @@ exports.update = asyncHandler(async (req, res) => {
   const r = await loadRequest(req.params.id);
   authorize(req.user, r);
 
+  let applicantEdited = false;
   if (req.user.role === "customer") {
     if (!EDITABLE.includes(r.status)) throw new ApiError(400, "This request can no longer be edited");
     if (req.body.notes !== undefined) r.notes = String(req.body.notes).slice(0, 2000);
     if (req.body.applicantDetails !== undefined) {
-      r.applicantDetails = pick(req.body.applicantDetails || {}, [
-        "fullName",
-        "fatherName",
-        "dob",
-        "referenceNumber",
-        "additionalInfo",
-      ]);
+      r.applicantDetails = applicantDetailsFrom(req.body.applicantDetails);
+      applicantEdited = true;
     }
   } else if (req.user.role === "agent") {
     if (TERMINAL.includes(r.status)) throw new ApiError(400, "This request can no longer be edited");
@@ -146,17 +178,16 @@ exports.update = asyncHandler(async (req, res) => {
     if (req.body.notes !== undefined) r.notes = String(req.body.notes).slice(0, 2000);
     if (req.body.adminNotes !== undefined) r.adminNotes = String(req.body.adminNotes).slice(0, 2000);
     if (req.body.applicantDetails !== undefined) {
-      r.applicantDetails = pick(req.body.applicantDetails || {}, [
-        "fullName",
-        "fatherName",
-        "dob",
-        "referenceNumber",
-        "additionalInfo",
-      ]);
+      r.applicantDetails = applicantDetailsFrom(req.body.applicantDetails);
+      applicantEdited = true;
     }
   }
 
   await r.save();
+  if (applicantEdited) {
+    const fields = Object.keys(r.applicantDetails?.toObject?.() || {}).filter((k) => r.applicantDetails[k]);
+    await audit(req.user, "applicant_details_updated", "request", r._id, `${r.requestNumber} fields: ${fields.join(", ") || "none"}`);
+  }
   res.json({ success: true, request: serializeRequest(r, req.user.role) });
 });
 
@@ -195,9 +226,12 @@ exports.removeDocument = asyncHandler(async (req, res) => {
   }
   const doc = r.documents.id(req.params.docId);
   if (doc) {
+    const docId = doc._id;
+    const label = doc.label || "document";
     await removeStoredFile(doc);
     doc.deleteOne();
     await r.save();
+    await audit(req.user, "document_removed", "file", docId, `${r.requestNumber} — ${label}`);
   }
   res.json({ success: true, request: serializeRequest(r, req.user.role) });
 });

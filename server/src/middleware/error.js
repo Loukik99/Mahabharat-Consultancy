@@ -4,7 +4,6 @@ function notFound(req, res, _next) {
   res.status(404).json({ success: false, message: "Not found" });
 }
 
-// eslint-disable-next-line no-unused-vars
 function errorHandler(err, req, res, _next) {
   let status = err.statusCode || 500;
   let message = err.message || "Internal Server Error";

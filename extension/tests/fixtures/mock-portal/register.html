@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mock Candidate Registration — local test fixture</title>
+<style>
+  body { font: 14px sans-serif; margin: 16px; }
+  label, .q { display: block; margin-top: 8px; }
+  fieldset { margin-top: 12px; }
+</style>
+</head>
+<body>
+<!-- Synthetic test page served from 127.0.0.1 only. Not a copy of any real government form. -->
+<h1>Mock Candidate Registration (synthetic test page)</h1>
+<form id="reg" action="/submitted" method="post">
+  <fieldset>
+    <legend>Personal Details</legend>
+    <label for="cand_name">Name of the Candidate *</label>
+    <input id="cand_name" name="txtCandidateName" required>
+    <label for="father">Father's Name</label>
+    <input id="father" name="txtFatherName">
+    <label for="mother">Mother's Name</label>
+    <input id="mother" name="txtMotherName">
+    <label for="dob">Date of Birth</label>
+    <input id="dob" name="txtDob" placeholder="DD/MM/YYYY">
+    <div role="radiogroup" aria-label="Gender">
+      <label><input type="radio" name="rdoGender" value="M" required> Male</label>
+      <label><input type="radio" name="rdoGender" value="F"> Female</label>
+      <label><input type="radio" name="rdoGender" value="T"> Transgender</label>
+    </div>
+    <label for="category">Category</label>
+    <select id="category" name="ddlCategory">
+      <option value="">--Select--</option>
+      <option value="GEN">General (UR)</option>
+      <option value="EWS">EWS</option>
+      <option value="OBC">OBC</option>
+      <option value="SC">SC</option>
+      <option value="ST">ST</option>
+    </select>
+    <label for="marital">Marital Status</label>
+    <select id="marital" name="ddlMarital">
+      <option value="">--Select--</option>
+      <option value="S">Single</option>
+      <option value="M">Married</option>
+      <option value="D">Divorced</option>
+    </select>
+    <label for="religion">Religion</label>
+    <input id="religion" name="txtReligion">
+    <label for="nationality">Nationality</label>
+    <select id="nationality" name="ddlNationality">
+      <option value="">--Select--</option>
+      <option value="IN">Indian</option>
+      <option value="OT">Other</option>
+    </select>
+    <label for="nominee">Nominee Name</label>
+    <input id="nominee" name="txtNominee">
+  </fieldset>
+
+  <fieldset>
+    <legend>Contact Details</legend>
+    <label for="mobile">Mobile Number</label>
+    <input id="mobile" name="txtMobile" type="tel" maxlength="10">
+    <label for="mobile_confirm">Confirm Mobile Number</label>
+    <input id="mobile_confirm" name="txtMobileConfirm" type="tel">
+    <label for="email">Email ID</label>
+    <input id="email" name="txtEmail" type="email">
+  </fieldset>
+
+  <fieldset>
+    <legend>Permanent Address</legend>
+    <label for="p_line">House No. / Street</label>
+    <input id="p_line" name="pLine">
+    <label for="p_village">Village / Town</label>
+    <input id="p_village" name="pVillage">
+    <label for="p_tehsil">Tehsil</label>
+    <input id="p_tehsil" name="pTehsil">
+    <label for="p_state">State</label>
+    <select id="p_state" name="pState">
+      <option value="">--Select State--</option>
+      <option value="MH">Maharashtra</option>
+      <option value="KA">Karnataka</option>
+    </select>
+    <label for="p_district">District</label>
+    <select id="p_district" name="pDistrict">
+      <option value="">--Select District--</option>
+    </select>
+    <label for="p_pin">PIN Code</label>
+    <input id="p_pin" name="pPin" maxlength="6">
+  </fieldset>
+
+  <fieldset>
+    <legend>Correspondence Address</legend>
+    <label><input type="checkbox" id="same_addr" name="chkSame"> Correspondence address same as permanent address</label>
+    <div id="corr_fields">
+      <label for="c_line">House No. / Street</label>
+      <input id="c_line" name="cLine">
+      <label for="c_village">Village / Town</label>
+      <input id="c_village" name="cVillage">
+      <label for="c_tehsil">Tehsil</label>
+      <input id="c_tehsil" name="cTehsil">
+      <label for="c_district">District</label>
+      <input id="c_district" name="cDistrict">
+      <label for="c_state">State</label>
+      <input id="c_state" name="cState">
+      <label for="c_pin">PIN Code</label>
+      <input id="c_pin" name="cPin">
+    </div>
+  </fieldset>
+
+  <table id="edu">
+    <caption>Educational Qualification</caption>
+    <thead><tr><th>Examination</th><th>Board / University</th><th>Roll Number</th><th>Year of Passing</th><th>Percentage</th></tr></thead>
+    <tbody>
+      <tr><td>10th / Matriculation</td><td><input name="e10Board"></td><td><input name="e10Roll"></td><td><input name="e10Year"></td><td><input name="e10Pct" type="number" step="0.01"></td></tr>
+      <tr><td>12th / Intermediate</td><td><input name="e12Board"></td><td><input name="e12Roll"></td><td><input name="e12Year"></td><td><input name="e12Pct" type="number" step="0.01"></td></tr>
+      <tr><td>Graduation</td><td><input name="eGBoard"></td><td><input name="eGRoll"></td><td><input name="eGYear"></td><td><input name="eGPct" type="number" step="0.01"></td></tr>
+    </tbody>
+  </table>
+
+  <fieldset>
+    <legend>Communication Details</legend>
+    <label for="mobile2">Mobile No.</label>
+    <input id="mobile2" name="txtMobile2" type="tel">
+  </fieldset>
+
+  <fieldset>
+    <legend>Application</legend>
+    <label for="ref_no">Your reference</label>
+    <input id="ref_no" name="txtRef">
+    <label for="app_no">Application Number</label>
+    <input id="app_no" name="txtAppNo" value="MOCK-APP-1" readonly>
+    <label for="aadhaar">Aadhaar Number</label>
+    <input id="aadhaar" name="txtAadhaar">
+    <label for="pan">PAN</label>
+    <input id="pan" name="txtPan">
+    <label for="photo">Upload Photograph</label>
+    <input id="photo" name="filePhoto" type="file">
+    <label for="sec_answer">Security answer (your first school)</label>
+    <input id="sec_answer" name="txtSecAnswer">
+    <label for="pwd">Create Password</label>
+    <input id="pwd" name="txtPwd" type="password">
+    <label for="otp">Enter OTP sent to your mobile</label>
+    <input id="otp" name="txtOtp">
+    <button type="button" id="send_otp">Send OTP</button>
+    <label for="upi">UPI ID for fee</label>
+    <input id="upi" name="txtUpi">
+    <button type="button" id="pay_btn">Pay Fee</button>
+    <a href="/pay" id="pay_link">Pay now</a>
+    <div id="remarks" contenteditable="true" aria-label="Additional remarks"></div>
+    <input id="height" type="range" aria-label="Height in cm" min="140" max="200">
+    <select id="centres" multiple aria-label="Preferred exam centres"><option>Centre A</option><option>Centre B</option></select>
+    <div style="display:none"><label for="h_name">Full Name</label><input id="h_name" name="txtHiddenName"></div>
+    <div class="captcha-row">
+      <label for="captcha_text">Enter the text in the image</label>
+      <img id="captchaImage" alt="captcha" src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" width="80" height="24">
+      <input id="captcha_text" name="txtImgText">
+    </div>
+    <label><input type="checkbox" id="declaration" name="chkDeclare"> I hereby declare that the information given above is true.</label>
+  </fieldset>
+  <button type="submit" id="submit_btn">Submit Application</button>
+</form>
+<script>
+  // Page-side instrumentation for the test: counts submissions, button/link clicks and value events.
+  window.__mock = { loadId: Math.random().toString(36).slice(2), submits: 0, buttonClicks: 0, inputs: 0, changes: 0 };
+  document.addEventListener("submit", (e) => { window.__mock.submits += 1; e.preventDefault(); }, true);
+  document.addEventListener("click", (e) => {
+    if (e.target.closest("button, a, input[type=submit], input[type=button], input[type=image]")) {
+      window.__mock.buttonClicks += 1;
+      e.preventDefault();
+    }
+  }, true);
+  document.addEventListener("input", () => { window.__mock.inputs += 1; }, true);
+  document.addEventListener("change", () => { window.__mock.changes += 1; }, true);
+  // Dependent dropdown: district options arrive shortly after the state changes.
+  const DISTRICTS = { MH: ["Pune", "Nagpur"], KA: ["Bengaluru Urban", "Mysuru"] };
+  const state = document.getElementById("p_state");
+  const district = document.getElementById("p_district");
+  state.addEventListener("change", () => {
+    setTimeout(() => {
+      district.replaceChildren(new Option("--Select District--", ""), ...(DISTRICTS[state.value] || []).map((d) => new Option(d, d)));
+    }, 150);
+  });
+  // "Same as permanent" hides the correspondence block (common portal behaviour).
+  document.getElementById("same_addr").addEventListener("change", (e) => {
+    document.getElementById("corr_fields").hidden = e.target.checked;
+  });
+</script>
+</body>
+</html>

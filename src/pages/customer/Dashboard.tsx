@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import type { RequestStatus, ServiceRequest } from "@/types";
-import { ClipboardList, Clock, IndianRupee, CheckCircle2, Eye, Plus, Wallet } from "lucide-react";
+import { ClipboardList, Clock, IndianRupee, CheckCircle2, Eye, Plus, UserRound, Wallet } from "lucide-react";
 
 const FILTERS: { value: "all" | RequestStatus; label: string }[] = [
   { value: "all", label: "All" },
@@ -68,9 +68,14 @@ export default function CustomerDashboard() {
           <h1 className="mt-1 font-display text-3xl font-semibold tracking-tight text-navy">Welcome, {user!.name}</h1>
           <p className="text-sm text-muted-foreground">Track your service requests and documents</p>
         </div>
-        <Button asChild className="mt-3 sm:mt-0 bg-gold font-semibold text-gold-foreground hover:bg-gold/90">
-          <Link to="/new-request"><Plus size={16} className="mr-1.5" /> New Request</Link>
-        </Button>
+        <div className="mt-3 sm:mt-0 flex gap-2">
+          <Button asChild variant="outline" className="border-navy/20 text-navy hover:text-navy">
+            <Link to="/profile"><UserRound size={16} className="mr-1.5" /> My Profile</Link>
+          </Button>
+          <Button asChild className="bg-gold font-semibold text-gold-foreground hover:bg-gold/90">
+            <Link to="/new-request"><Plus size={16} className="mr-1.5" /> New Request</Link>
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-7">

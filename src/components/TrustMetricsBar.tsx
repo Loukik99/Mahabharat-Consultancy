@@ -27,17 +27,11 @@ function prefersReducedMotion(): boolean {
 export function TrustMetricsBar() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const doneRef = useRef(false);
-  const [inView, setInView] = useState(false);
+  const [inView, setInView] = useState(() => prefersReducedMotion());
 
   useEffect(() => {
     const el = wrapRef.current;
-    if (!el || doneRef.current) return;
-
-    if (prefersReducedMotion()) {
-      doneRef.current = true;
-      setInView(true);
-      return;
-    }
+    if (!el || doneRef.current || inView) return;
 
     let observer: IntersectionObserver | null = null;
     const show = () => {
@@ -77,7 +71,7 @@ export function TrustMetricsBar() {
       observer?.disconnect();
       window.clearInterval(safety);
     };
-  }, []);
+  }, [inView]);
 
   return (
     <section className="bg-snow py-10 sm:py-14">

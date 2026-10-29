@@ -88,6 +88,8 @@ const env = {
     user: process.env.EMAIL_USER || "",
     pass: process.env.EMAIL_PASS || "",
     fromName: process.env.EMAIL_FROM_NAME || "Mahabharat Consultancy",
+    // Used only by scripts/test-welcome-email.js; never by app code paths.
+    testRecipient: (process.env.EMAIL_TEST_RECIPIENT || "").trim(),
   },
   // If the old hardcoded fallback may have signed tokens, operators must rotate.
   jwtMustRotate: process.env.JWT_SECRET_ROTATED !== "true" && isProd,

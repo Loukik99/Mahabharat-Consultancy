@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { listCallRequests, decideCallRequest, type CallRecord } from "@/api/calls.api";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,7 @@ export default function AdminCalls() {
   const [loading, setLoading] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
 
-  const load = async (f = filter) => {
+  const load = useCallback(async (f: string) => {
     setLoading(true);
     try {
       setCalls(await listCallRequests(f === "all" ? undefined : f));
@@ -32,16 +32,18 @@ export default function AdminCalls() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  useEffect(() => { load(filter); /* eslint-disable-next-line */ }, [filter]);
+  useEffect(() => {
+    load(filter);
+  }, [filter, load]);
 
   const decide = async (id: string, action: "approve" | "deny") => {
     setBusy(id);
     try {
       await decideCallRequest(id, action);
       toast.success(action === "approve" ? "Call approved, agent & customer notified." : "Call request denied.");
-      await load();
+      await load(filter);
     } catch (e) {
       toast.error((e as Error).message);
     } finally {

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Mahabharat Consultancy</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Mahabharat Consultancy</h1>
+      <div id="status" data-state="checking" role="status" aria-live="polite">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="status-text">Checking connection…</span>
+      </div>
+    </header>
+
+    <section aria-labelledby="connection-heading">
+      <h2 id="connection-heading">1. Connection</h2>
+      <label for="origin-select">Server</label>
+      <select id="origin-select"></select>
+      <p id="connection-message" class="message"></p>
+      <button id="signin" type="button" hidden>Open Mahabharat sign-in</button>
+      <p class="hint">Uses your existing website sign-in. Never enter your password here.</p>
+    </section>
+
+    <section id="requests-section" aria-labelledby="requests-heading" hidden>
+      <h2 id="requests-heading">Application request</h2>
+      <form id="request-form">
+        <label for="request-select">Open requests</label>
+        <select id="request-select"></select>
+        <p id="requests-message" class="message"></p>
+        <label for="request-id">or request ID</label>
+        <input id="request-id" type="text" inputmode="text" autocomplete="off" spellcheck="false" maxlength="24" placeholder="24-character request ID" />
+        <button type="submit">Check autofill readiness</button>
+      </form>
+      <p id="readiness" class="message" aria-live="polite"></p>
+      <div id="gaps" hidden>
+        <p class="gap-title">Missing in applicant profile</p>
+        <ul id="missing-list"></ul>
+        <p class="gap-title">Needs correction</p>
+        <ul id="invalid-list"></ul>
+      </div>
+    </section>
+
+    <section aria-labelledby="fill-heading">
+      <h2 id="fill-heading">2. Government form filling</h2>
+      <p id="page-status" class="message">Checking this page…</p>
+      <dl id="portal-info" hidden>
+        <dt>Portal</dt><dd id="portal-name"></dd>
+        <dt>Verification</dt><dd id="portal-verification"></dd>
+        <dt>Form</dt><dd id="portal-form"></dd>
+      </dl>
+      <button id="preview-button" type="button" disabled>Preview proposed values</button>
+      <p id="preview-message" class="message" aria-live="polite"></p>
+      <div id="preview" hidden>
+        <p id="preview-summary" class="message"></p>
+        <table id="preview-table">
+          <thead>
+            <tr><th scope="col">Fill</th><th scope="col">Field</th><th scope="col">Proposed value</th><th scope="col">Status</th></tr>
+          </thead>
+          <tbody id="preview-rows"></tbody>
+        </table>
+        <label class="confirm">
+          <input id="approve-confirm" type="checkbox" />
+          I reviewed these values. Fill only the ticked fields. I will complete CAPTCHA, OTP, declarations, uploads, payment and final submission myself.
+        </label>
+        <button id="fill-button" type="button" disabled>Fill selected fields</button>
+        <button id="preview-cancel" type="button">Cancel</button>
+      </div>
+      <div id="fill-result" hidden>
+        <p id="fill-headline" class="message"></p>
+        <ul id="fill-problems"></ul>
+        <p id="fill-reminder" class="hint"></p>
+      </div>
+      <div id="trial" hidden>
+        <h3>Supervised verification trial</h3>
+        <p id="trial-notice" class="hint"></p>
+        <dl id="trial-info">
+          <dt>Origin</dt><dd id="trial-origin"></dd>
+          <dt>Form</dt><dd id="trial-form"></dd>
+          <dt>Adapter</dt><dd id="trial-adapter"></dd>
+          <dt>Fields</dt><dd><ul id="trial-fields"></ul></dd>
+        </dl>
+        <button id="trial-start" type="button" disabled>Start supervised trial</button>
+        <p id="trial-message" class="message" aria-live="polite"></p>
+        <div id="trial-preview" hidden>
+          <table id="trial-table">
+            <thead>
+              <tr><th scope="col">Fill</th><th scope="col">Field</th><th scope="col">Proposed value</th><th scope="col">Check</th></tr>
+            </thead>
+            <tbody id="trial-rows"></tbody>
+          </table>
+          <label class="confirm">
+            <input id="trial-confirm" type="checkbox" />
+            I am the applicant and I am watching this page. Fill only the ticked fields, once, for this verification trial. I will handle CAPTCHA, OTP, Proceed, validation, declarations, payment and submission myself.
+          </label>
+          <button id="trial-fill" type="button" disabled>Fill ticked fields (trial)</button>
+          <button id="trial-cancel" type="button">Cancel trial</button>
+        </div>
+        <div id="trial-result" hidden>
+          <p id="trial-headline" class="message"></p>
+          <ul id="trial-problems"></ul>
+          <p id="trial-reminder" class="hint"></p>
+          <p class="hint">Verification record (no values you entered, no session data):</p>
+          <pre id="trial-record"></pre>
+          <a id="trial-download" download="supervised-trial.json">Download verification record</a>
+        </div>
+      </div>
+      <p class="hint">The extension never submits forms, solves CAPTCHA, enters OTPs, accepts declarations, uploads documents or makes payments.</p>
+    </section>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

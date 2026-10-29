@@ -14,16 +14,15 @@ function AnimatedItem({
   onClick?: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
+  const [inView, setInView] = useState(
+    () =>
+      typeof window !== "undefined" &&
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches === true
+  );
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
-
-    if (typeof window !== "undefined" && window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) {
-      setInView(true);
-      return;
-    }
+    if (!el || inView) return;
 
     let revealed = false;
     let raf1 = 0;
@@ -68,7 +67,7 @@ function AnimatedItem({
       cancelAnimationFrame(raf1);
       cancelAnimationFrame(raf2);
     };
-  }, []);
+  }, [inView]);
 
   return (
     <div
@@ -170,7 +169,7 @@ export default function AnimatedList({
         container.scrollTo({ top: bottom - container.clientHeight + margin, behavior: "smooth" });
       }
     }
-    setKeyboardNav(false);
+    requestAnimationFrame(() => setKeyboardNav(false));
   }, [selectedIndex, keyboardNav]);
 
   return (

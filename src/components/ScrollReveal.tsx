@@ -118,7 +118,7 @@ export function ScrollReveal({
 
     if (prefersReducedMotion()) {
       doneRef.current = true;
-      setShown(true);
+      requestAnimationFrame(() => setShown(true));
       return;
     }
 
@@ -126,7 +126,7 @@ export function ScrollReveal({
     // armed at opacity 0 — IntersectionObserver will not fire for them.
     if (!isLayoutVisible(el)) {
       doneRef.current = true;
-      setShown(true);
+      requestAnimationFrame(() => setShown(true));
       return;
     }
 

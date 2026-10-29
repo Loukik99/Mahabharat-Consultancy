@@ -1,0 +1,204 @@
+{
+  "checkedOn": "2026-10-27",
+  "method": "Unauthenticated read-only GET, then a headless Chrome DOM read. Nothing was typed or submitted. Input values were not stored.",
+  "applicationFormInspected": false,
+  "adapterImplemented": false,
+  "portals": [
+    {
+      "id": "army",
+      "officialUrl": "https://joinindianarmy.nic.in/",
+      "applicationFormInspected": false,
+      "pages": [
+        {
+          "url": "https://joinindianarmy.nic.in/Authentication.aspx",
+          "httpStatus": 200,
+          "title": "Join Indian Army",
+          "role": "public CAPTCHA gate and CEE 2026 admit-card schedule, not the application",
+          "alsoReachedFrom": ["https://joinindianarmy.nic.in/", "https://www.joinindianarmy.nic.in/", "https://www.joinindianarmy.nic.in/Authentication.aspx"],
+          "forms": [
+            {
+              "id": "form1",
+              "method": "post",
+              "actionPath": "/Authentication.aspx",
+              "fields": [
+                { "tag": "input", "type": "hidden", "id": "__EVENTTARGET", "name": "__EVENTTARGET", "sensitive": "token" },
+                { "tag": "input", "type": "hidden", "id": "__EVENTARGUMENT", "name": "__EVENTARGUMENT", "sensitive": "token" },
+                { "tag": "input", "type": "hidden", "id": "__VIEWSTATE", "name": "__VIEWSTATE", "sensitive": "token" },
+                { "tag": "input", "type": "hidden", "id": "__VIEWSTATEGENERATOR", "name": "__VIEWSTATEGENERATOR", "sensitive": "token" },
+                { "tag": "input", "type": "image", "id": "imgRefresh", "name": "imgRefresh" },
+                { "tag": "input", "type": "text", "id": "txtCaptchaCode", "name": "txtCaptchaCode", "autocomplete": "off", "sensitive": "captcha" },
+                { "tag": "input", "type": "submit", "id": "btnSubmit", "name": "btnSubmit" }
+              ]
+            }
+          ],
+          "notes": [
+            "Headless Chrome showed the same controls and the text “Please write text as shown in following image”.",
+            "/Registration.aspx and /Home.aspx returned 302 to /error.aspx.",
+            "https://cdn.digialm.com/EForms/configuredHtml/1258/2000519/login.html returned HTTP 500 to a plain GET and HTTP 403 in headless Chrome. That host is not an extension origin."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "postal-recruitment",
+      "officialUrl": "https://gdsrect.indiapost.gov.in/gdscandidate",
+      "applicationFormInspected": false,
+      "monitoring": {
+        "checkedAt": "2026-10-28T07:24:25Z",
+        "previousCheckAt": "2026-10-27T11:45:08Z",
+        "tool": "extension/tools/gds-status.mjs",
+        "status": "registration-closed",
+        "candidatePage": { "httpStatus": 200, "text": "Registration is closed for Schedule II, July - 2026" },
+        "noticePage": {
+          "httpStatus": 200,
+          "schedule": "Schedule-II, July-2026",
+          "userRegistration": "31-08-2026 to 19-09-2026 17:00 HRS",
+          "applicationSubmission": "02-09-2026 to 21-09-2026 17:00 HRS",
+          "editCorrection": "23-09-2026 to 24-09-2026 17:00 HRS"
+        },
+        "next": "Re-run the tool no more than once every 6 hours. Capture the registration form only after a new schedule opens."
+      },
+      "pages": [
+        {
+          "url": "https://www.indiapost.gov.in/gdsonlineengagement",
+          "httpStatus": 200,
+          "title": "India Post GDS Online Recruitment | Official Portal",
+          "role": "official notice, no application fields",
+          "notes": [
+            "Schedule-II July-2026. User registration 31 Aug 2026 to 19 Sep 2026 17:00. Application submission 2 Sep 2026 to 21 Sep 2026 17:00. Edit window 23 Sep 2026 to 24 Sep 2026 17:00. Closed on the day of this check.",
+            "The page links to https://gdsrect.indiapost.gov.in/gdscandidate."
+          ]
+        },
+        {
+          "url": "https://gdsrect.indiapost.gov.in/gdscandidate",
+          "httpStatus": 200,
+          "title": "India Post GDS Online Recruitment 2025 | Official Portal",
+          "role": "candidate landing page",
+          "notes": [
+            "Visible text says registration is closed for Schedule II, July 2026, and offers Candidate Login and Forgot Registration.",
+            "/gdscandidate/login and /gdscandidate/register returned 307 to the landing page with a callbackUrl and rendered no fields.",
+            "Legacy https://indiapostgdsonline.gov.in/ is a notice page with no application controls. /Reg_validation.aspx returned 404. https://indiapostgdsonline.cept.gov.in/ returned 503."
+          ]
+        },
+        {
+          "url": "https://gdsrect.indiapost.gov.in/gdscandidate/forgot-registration",
+          "httpStatus": 200,
+          "title": "India Post GDS Online Recruitment 2025 | Official Portal",
+          "role": "account recovery, not the application",
+          "fields": [
+            { "tag": "input", "type": "radio", "name": "identifierType", "choice": "mobile", "label": "mobile" },
+            { "tag": "input", "type": "radio", "name": "identifierType", "choice": "email", "label": "email" },
+            { "tag": "input", "type": "text", "id": "", "name": "", "placeholder": "Enter Mobile Number (10 digits)" }
+          ],
+          "notes": [
+            "In headless Chrome these three controls were not inside document.forms. The text input has no id or name in the served HTML.",
+            "This page retrieves a registration number. It is not an application form and is not adapted."
+          ]
+        }
+      ]
+    },
+    {
+      "id": "navy",
+      "officialUrl": "https://www.joinindiannavy.gov.in/",
+      "applicationFormInspected": false,
+      "pages": [
+        {
+          "url": "https://www.joinindiannavy.gov.in/",
+          "httpStatus": 200,
+          "title": "Join Indian Navy | Government of India",
+          "role": "information page",
+          "notes": [
+            "The only form is the site search box.",
+            "Agniveer pages are informational and link out to account registration and to https://agniveer.navydmpr.in/sailorscycle5/signUp.",
+            "That signup URL rendered no form controls in headless Chrome."
+          ]
+        },
+        {
+          "url": "https://www.joinindiannavy.gov.in/account/register",
+          "httpStatus": 200,
+          "title": "Register | Join Indian Navy",
+          "role": "public account creation, not the Agniveer application",
+          "forms": [
+            {
+              "id": "register",
+              "name": "register",
+              "method": "post",
+              "actionPath": "/account/register",
+              "fields": [
+                { "tag": "select", "id": "photo_id_option", "name": "photo_id_option", "label": "Govt/State Issued Photo ID *", "options": [
+                  { "value": "", "text": "Please Select" },
+                  { "value": "1", "text": "Voter ID" },
+                  { "value": "2", "text": "Driving License" },
+                  { "value": "3", "text": "PAN Card" },
+                  { "value": "4", "text": "10th/12th Passing Certificate" },
+                  { "value": "5", "text": "Passport" }
+                ] },
+                { "tag": "select", "id": "board_type", "name": "board_type", "label": "Select Board Type *", "options": [
+                  { "value": "", "text": "Please Select" },
+                  { "value": "1", "text": "10th Board" },
+                  { "value": "2", "text": "12th Board" }
+                ] },
+                { "tag": "select", "id": "board", "name": "board", "label": "Select Board *", "options": [{ "value": "", "text": "Please Select" }], "notes": "The board list stays on Please Select until a board type is chosen. Those options were not loaded." },
+                { "tag": "input", "type": "text", "id": "board_name", "name": "board_name", "label": "Enter Board Name *", "maxLength": 100 },
+                { "tag": "input", "type": "text", "id": "photo_id_value", "name": "photo_id_value", "label": "Enter Photo ID Number *", "maxLength": 20, "sensitive": "identity" },
+                { "tag": "input", "type": "text", "id": "captcha", "name": "captcha", "label": "Enter the text shown in below image", "maxLength": 6, "sensitive": "captcha" }
+              ]
+            }
+          ]
+        },
+        {
+          "url": "https://www.joinindiannavy.gov.in/account/state",
+          "httpStatus": 200,
+          "title": "Select Correspondence State | Join Indian Navy",
+          "role": "state gate in front of login",
+          "forms": [
+            {
+              "id": "state_form",
+              "name": "state_form",
+              "method": "post",
+              "actionPath": "/account/state",
+              "fields": [
+                { "tag": "select", "id": "state", "name": "state", "label": "Correspondence State *", "optionTexts": ["Please Select", "Current State", "ANDAMAN AND NICOBAR ISLANDS", "ANDHRA PRADESH", "ARUNACHAL PRADESH", "ASSAM", "BIHAR", "CHHATTISGARH", "DADRA AND NAGAR HAVELI", "DAMAN AND DIU", "DELHI", "Foreign Country", "GOA", "GUJARAT", "HARYANA", "HIMACHAL PRADESH", "JAMMU AND KASHMIR", "JHARKHAND", "KARNATAKA", "KERALA", "LADAKH", "LAKSHADWEEP", "MADHYA PRADESH", "MAHARASHTRA", "MANIPUR", "MEGHALAYA", "MIZORAM", "NAGALAND", "Nepal", "ODISHA", "PUDUCHERRY", "PUNJAB", "RAJASTHAN", "SIKKIM", "TAMIL NADU", "TELANGANA", "TRIPURA", "UT CHANDIGARH", "UTTAR PRADESH", "UTTARAKHAND", "WEST BENGAL"], "optionValues": "not recorded" },
+                { "tag": "input", "type": "text", "id": "captcha", "name": "captcha", "label": "Enter the text shown in below image", "maxLength": 6, "sensitive": "captcha" }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "airforce",
+      "officialUrl": "https://iafrecruitment.edcil.co.in/agniveervayu/",
+      "applicationFormInspected": false,
+      "pages": [
+        {
+          "url": "https://iafrecruitment.edcil.co.in/agniveervayu/",
+          "httpStatus": 200,
+          "title": "CASB - Home",
+          "role": "recruitment front door, no application form",
+          "notes": [
+            "Parent https://iafrecruitment.edcil.co.in/ HTTP 200, title “Indian Air Force – Join”.",
+            "https://agnipathvayu.cdac.in/ HTTP 503. https://careerindianairforce.cdac.in/ did not respond. https://indianairforce.nic.in/ did not respond. https://airmenselection.cdac.in/CASB/ HTTP 503.",
+            "The page links to DigiALM login.html for intakes 01/2027 (97277), Musician 01/2027 (101682) and 02/2027 (101256)."
+          ]
+        },
+        {
+          "url": "https://cdn.digialm.com/EForms/configuredHtml/1258/101256/login.html",
+          "plainGetStatus": 200,
+          "headlessChromeStatus": 403,
+          "title": "IAF Agniveervayu Intake 02/2027 : Applicant Login",
+          "role": "applicant login shell from the plain GET, not the application",
+          "fieldsPresentInStaticHtml": [
+            { "tag": "input", "type": "text", "id": "userid", "name": "userid", "placeholder": "Enter User ID", "maxLength": 70 },
+            { "tag": "input", "type": "password", "id": "confData", "name": "confData", "placeholder": "Enter Password", "maxLength": 50, "sensitive": "password" }
+          ],
+          "notes": [
+            "The same shell shape was returned for form 97277 (user id, not email) and form 101682 (user id described as email).",
+            "Page text tells the user to enter a CAPTCHA and offers Register Here. No captcha input and no candidate-name input were in the static HTML. Those controls are not recorded as selectors.",
+            "Headless Chrome was blocked with HTTP 403. cdn.digialm.com is not an extension origin."
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -25,7 +25,7 @@ export const tokenStore = {
       return null;
     }
   },
-  set: (_t?: string) => {
+  set: () => {
     try {
       sessionStorage.setItem(SESSION_KEY, "1");
       // Purge any legacy localStorage JWT from older builds.

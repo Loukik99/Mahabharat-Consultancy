@@ -19,9 +19,19 @@ const requests = require("../controllers/requestController");
 const payments = require("../controllers/paymentController");
 const users = require("../controllers/userController");
 const misc = require("../controllers/miscController");
+const profile = require("../controllers/profileController");
 const govtJobs = require("../data/govtJobs");
+const { getDatabaseHealth } = require("../config/db");
 
-router.get("/health", (_req, res) => res.json({ status: "ok", time: new Date().toISOString() }));
+router.get("/health", async (_req, res) => {
+  const db = await getDatabaseHealth();
+  const body = {
+    status: db.ok ? "ok" : "degraded",
+    time: new Date().toISOString(),
+    database: db,
+  };
+  res.status(db.ok ? 200 : 503).json(body);
+});
 
 // ── Auth ──────────────────────────────────────────────────────────
 router.post("/auth/register", registerLimiter, auth.register);
@@ -31,6 +41,10 @@ router.post("/auth/reset-password", resetLimiter, auth.resetPassword);
 router.post("/auth/logout", requireAuth, auth.logout);
 router.get("/auth/me", requireAuth, auth.me);
 router.delete("/account", requireAuth, auth.deleteMyAccount);
+
+// ── Applicant profile (customer self-service only; no staff access) ─
+router.get("/profile", requireAuth, requireRole("customer"), profile.get);
+router.put("/profile", requireAuth, requireRole("customer"), profile.update);
 
 // ── Services (public read; admin write) ───────────────────────────
 router.get("/services/categories", services.listCategories);
@@ -60,6 +74,7 @@ router.use("/requests", requireAuth);
 router.get("/requests", requests.list);
 router.post("/requests", requireRole("customer"), requestCreateLimiter, requests.create);
 router.get("/requests/:id", requests.get);
+router.get("/requests/:id/autofill", requests.autofill);
 router.patch("/requests/:id", requests.update);
 router.patch("/requests/:id/status", requests.setStatus);
 router.patch("/requests/:id/assign", requireRole("admin"), requests.assignAgent);
